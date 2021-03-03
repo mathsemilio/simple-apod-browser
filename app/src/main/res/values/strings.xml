@@ -13,9 +13,9 @@
     <!-- Toolbar Actions -->
     <string name="toolbar_action_title_search">Search</string>
     <string name="toolbar_action_title_pick_apod_by_date">Pick APoD by Date</string>
+    <string name="toolbar_action_title_add_to_favorites">Add to Favorites</string>
 
     <!-- Lorem Ipsum -->
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur interdum, magna nec sagittis consequat, sem augue placerat sapien, a feugiat velit neque eu massa. Suspendisse aliquam lobortis lacus eu pellentesque. Suspendisse potenti. Aenean convallis libero a tortor ullamcorper semper. Vestibulum ac ipsum eu elit luctus aliquam non at ipsum. Integer cursus lacus ut porttitor pellentesque. Fusce erat lacus, facilisis eu nunc ac, feugiat venenatis mauris. Mauris nec ligula vel purus mattis interdum id vel lacus. Ut a velit ut lorem semper posuere. Proin vehicula odio mattis diam mattis lobortis. Quisque hendrerit semper neque, at tempus ex posuere non. Suspendisse sed sodales ante. </string>
-    <string name="toolbar_action_title_add_to_favorites">Add to Favorites</string>
 
 </resources>
