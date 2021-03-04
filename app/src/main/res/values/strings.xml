@@ -9,6 +9,7 @@
     <!-- Common -->
     <string name="explore">Explore</string>
     <string name="favorites">Favorites</string>
+    <string name="details">Details</string>
 
     <!-- Toolbar Actions -->
     <string name="toolbar_action_title_search">Search</string>
