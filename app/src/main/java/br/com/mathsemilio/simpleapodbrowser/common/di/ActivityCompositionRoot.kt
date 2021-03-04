@@ -1,6 +1,8 @@
 package br.com.mathsemilio.simpleapodbrowser.common.di
 
 import androidx.appcompat.app.AppCompatActivity
+import br.com.mathsemilio.simpleapodbrowser.data.repository.APoDRepository
+import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteAPoDDatabase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 
 class ActivityCompositionRoot(
@@ -11,8 +13,19 @@ class ActivityCompositionRoot(
 
     private val aPoDApi get() = compositionRoot.retrofitBuilder.apodApi
 
+    private val favoriteAPoDDatabase get() = FavoriteAPoDDatabase.getDatabase(activity)
+
+    private val favoriteAPoDDAO get() = favoriteAPoDDatabase.favoriteApodDAO
+
+    val eventPoster get() = compositionRoot.eventPoster
+
     private val _viewFactory by lazy {
         ViewFactory(activity.layoutInflater)
     }
     val viewFactory get() = _viewFactory
+
+    private val _apodRepository by lazy {
+        APoDRepository(aPoDApi, favoriteAPoDDAO)
+    }
+    val apodRepository get() = _apodRepository
 }
