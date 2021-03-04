@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarActionClickEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
 class APoDListScreen : BaseFragment(),
     APoDListContract.View.Listener,
@@ -63,7 +66,17 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onEvent(event: Any) {
-        TODO("Not yet implemented")
+        when (event) {
+            is ToolbarActionClickEvent -> handleToolbarActionClickEvent(event.action)
+        }
+    }
+
+    private fun handleToolbarActionClickEvent(action: ToolbarAction) {
+        when (action) {
+            ToolbarAction.SEARCH_EXPLORE -> onToolbarActionSearchClicked()
+            ToolbarAction.PICK_APOD_BY_DATE -> onToolbarActionPickApodByDateClicked()
+            else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
+        }
     }
 
     override fun onStart() {

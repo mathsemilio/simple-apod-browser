@@ -5,9 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
+import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarActionClickEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
+import java.io.Serializable
 
 class APoDDetailsVideoScreen : BaseFragment(),
     APoDDetailsVideoContract.View.Listener,
@@ -15,11 +19,11 @@ class APoDDetailsVideoScreen : BaseFragment(),
     EventPoster.EventListener {
 
     companion object {
-        fun newInstance(apod: APoD): APoDDetailsVideoScreen {
+        fun <T: Serializable> newInstance(apod: T): APoDDetailsVideoScreen {
             val args = Bundle(1).apply { putSerializable(ARG_APOD, apod) }
-            val fragment = APoDDetailsVideoScreen()
-            fragment.arguments = args
-            return fragment
+            val aPoDDetailsVideoScreen = APoDDetailsVideoScreen()
+            aPoDDetailsVideoScreen.arguments = args
+            return aPoDDetailsVideoScreen
         }
     }
 
@@ -44,16 +48,25 @@ class APoDDetailsVideoScreen : BaseFragment(),
         return arguments?.getSerializable(ARG_APOD) as APoD
     }
 
-    override fun onToolbarActionAddToFavoritesClicked() {
-        TODO("Not yet implemented")
-    }
-
     override fun onButtonPlayClicked() {
         TODO("Not yet implemented")
     }
 
-    override fun onEvent(event: Any) {
+    override fun onToolbarActionAddToFavoritesClicked() {
         TODO("Not yet implemented")
+    }
+
+    override fun handleToolbarActionClickEvent(action: ToolbarAction) {
+        when (action) {
+            ToolbarAction.ADD_TO_FAVORITES -> onToolbarActionAddToFavoritesClicked()
+            else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
+        }
+    }
+
+    override fun onEvent(event: Any) {
+        when (event) {
+           is ToolbarActionClickEvent -> handleToolbarActionClickEvent(event.action)
+        }
     }
 
     override fun onStart() {

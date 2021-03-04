@@ -7,3 +7,5 @@ const val FAVORITE_APoDS_TABLE = "favorite_apods_table"
 const val FAVORITE_APoDS_DATABASE = "favorite_apods"
 
 const val ARG_APOD = "ARG_APOD"
+
+const val ILLEGAL_TOOLBAR_ACTION = "Illegal Toolbar action for this screen"

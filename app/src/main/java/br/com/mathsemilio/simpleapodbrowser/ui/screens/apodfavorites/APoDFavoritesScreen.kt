@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarActionClickEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
 class APoDFavoritesScreen : BaseFragment(),
     APoDFavoritesContract.View.Listener,
@@ -46,16 +49,25 @@ class APoDFavoritesScreen : BaseFragment(),
         TODO("Not yet implemented")
     }
 
-    override fun onToolbarActionSearchClicked() {
-        TODO("Not yet implemented")
-    }
-
     override fun onFavoriteAPoDClicked(apod: APoD) {
         TODO("Not yet implemented")
     }
 
-    override fun onEvent(event: Any) {
+    override fun onToolbarActionSearchClicked() {
         TODO("Not yet implemented")
+    }
+
+    override fun handleToolbarActionClickEvent(action: ToolbarAction) {
+        when (action) {
+            ToolbarAction.SEARCH_FAVORITES -> onToolbarActionSearchClicked()
+            else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
+        }
+    }
+
+    override fun onEvent(event: Any) {
+        when (event) {
+            is ToolbarActionClickEvent -> handleToolbarActionClickEvent(event.action)
+        }
     }
 
     override fun onStart() {

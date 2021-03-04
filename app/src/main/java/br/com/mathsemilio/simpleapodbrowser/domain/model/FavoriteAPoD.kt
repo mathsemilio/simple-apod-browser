@@ -2,6 +2,7 @@ package br.com.mathsemilio.simpleapodbrowser.domain.model
 
 import androidx.room.Entity
 import br.com.mathsemilio.simpleapodbrowser.common.FAVORITE_APoDS_TABLE
+import java.io.Serializable
 
 @Entity(tableName = FAVORITE_APoDS_TABLE)
 data class FavoriteAPoD(
@@ -11,4 +12,4 @@ data class FavoriteAPoD(
     val mediaType: String,
     val explanation: String,
     val thumbnailUrl: String?
-)
+) : Serializable
