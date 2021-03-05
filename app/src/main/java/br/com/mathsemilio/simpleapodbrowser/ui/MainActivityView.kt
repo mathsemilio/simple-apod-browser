@@ -4,8 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.hideGroup
+import br.com.mathsemilio.simpleapodbrowser.common.onQueryTextChanged
 import br.com.mathsemilio.simpleapodbrowser.common.showGroup
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavigationViewItem
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
@@ -26,7 +29,9 @@ class MainActivityView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
         rootView = layoutInflater.inflate(R.layout.activity_main, parent, false)
         initializeViews()
         setOnBottomNavViewItemSelectedListener()
+        setToolbarOnNavigationClickListener()
         setToolbarOnMenuItemClickListener()
+        setToolbarSearchViewOnQueryTextListener()
     }
 
     private fun initializeViews() {
@@ -51,28 +56,43 @@ class MainActivityView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
         }
     }
 
+    private fun setToolbarOnNavigationClickListener() {
+        materialToolbarApp.setNavigationOnClickListener {
+            onToolbarNavigationIconClicked()
+        }
+    }
+
     private fun setToolbarOnMenuItemClickListener() {
         materialToolbarApp.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
-                R.id.toolbar_action_search_explore -> {
-                    onToolbarActionClicked(ToolbarAction.SEARCH_EXPLORE)
-                    true
-                }
                 R.id.toolbar_action_pick_date -> {
                     onToolbarActionClicked(ToolbarAction.PICK_APOD_BY_DATE)
-                    true
-                }
-                R.id.toolbar_action_search_favorites -> {
-                    onToolbarActionClicked(ToolbarAction.SEARCH_FAVORITES)
                     true
                 }
                 R.id.toolbar_action_add_to_favorite -> {
                     onToolbarActionClicked(ToolbarAction.ADD_TO_FAVORITES)
                     true
                 }
+                R.id.toolbar_action_get_random_apod -> {
+                    onToolbarActionClicked(ToolbarAction.GET_RANDOM_APOD)
+                    true
+                }
+                R.id.toolbar_action_visit_apod_website -> {
+                    onToolbarActionClicked(ToolbarAction.VISIT_APOD_WEBSITE)
+                    true
+                }
                 else -> false
             }
         }
+    }
+
+    private fun setToolbarSearchViewOnQueryTextListener() {
+        val toolbarMenu = materialToolbarApp.menu
+
+        val toolbarSearchWidget = toolbarMenu.findItem(R.id.toolbar_action_search_favorites)
+        val searchView = toolbarSearchWidget.actionView as SearchView
+
+        searchView.onQueryTextChanged { onSearchFavoritesSearchViewTextEntered(it) }
     }
 
     override val fragmentContainer get() = frameLayoutScreenContainer
@@ -116,11 +136,30 @@ class MainActivityView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
             NavDestination.APOD_DETAILS_SCREEN -> {
                 toolbarMenu.hideGroup(
                     R.id.toolbar_menu_group_explore,
-                    R.id.toolbar_menu_group_favorites
+                    R.id.toolbar_menu_group_favorites,
+                    R.id.toolbar_menu_group_visit_apod_website
                 )
                 toolbarMenu.showGroup(R.id.toolbar_menu_group_details)
             }
         }
+    }
+
+    override fun showToolbarNavigationIcon() {
+        materialToolbarApp.navigationIcon = ResourcesCompat.getDrawable(
+            context.resources, R.drawable.ic_baseline_arrow_back_24, null
+        )
+    }
+
+    override fun hideToolbarNaviagtionIcon() {
+        materialToolbarApp.navigationIcon = null
+    }
+
+    private fun onToolbarNavigationIconClicked() {
+        listeners.forEach { it.onToolbarNavigationIconClicked() }
+    }
+
+    private fun onSearchFavoritesSearchViewTextEntered(input: String) {
+        listeners.forEach { it.onSearchFavoritesSearchViewTextEntered(input) }
     }
 
     private fun onBottomNavViewItemSelected(item: BottomNavigationViewItem) {

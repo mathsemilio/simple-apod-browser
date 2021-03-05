@@ -31,12 +31,14 @@
             android:id="@+id/image_view_apod_detail_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@android:color/black"
             android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/guideline_apod_detail_with_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_example_apod" />
 
         <TextView
             android:id="@+id/text_view_apod_detail_with_image_title"

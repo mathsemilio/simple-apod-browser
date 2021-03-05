@@ -1,12 +1,22 @@
 package br.com.mathsemilio.simpleapodbrowser.networking
 
-import br.com.mathsemilio.simpleapodbrowser.common.API_KEY
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface APoDApi {
 
-    @GET("?api_key=$API_KEY")
-    suspend fun getAPoD(): Response<List<APoD>>
+    @GET("/apod")
+    suspend fun getAPoDsBasedOnDateRange(
+        @Query("api_key") key: String,
+        @Query("start_date") startDate: String,
+        @Query("end_date") endDate: String
+    ): Response<List<APoD>>
+
+    @GET("/apod")
+    suspend fun getRandomAPoD(
+        @Query("api_key") key: String,
+        @Query("count") count: Int
+    ): Response<APoD>
 }

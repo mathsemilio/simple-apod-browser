@@ -8,8 +8,8 @@ import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarActionClickEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarActionClickEvent
+import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 import java.io.Serializable
 

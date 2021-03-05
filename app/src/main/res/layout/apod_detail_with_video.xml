@@ -31,6 +31,7 @@
             android:id="@+id/video_view_apod_detail_video"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@android:color/black"
             android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/guideline_apod_detail_with_video"

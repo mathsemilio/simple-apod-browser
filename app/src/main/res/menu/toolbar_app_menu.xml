@@ -2,34 +2,54 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <group android:id="@+id/toolbar_menu_group_explore">
-        <item
-            android:id="@+id/toolbar_action_search_explore"
-            android:icon="@drawable/ic_baseline_search_24"
-            android:title="@string/toolbar_action_title_search"
-            app:showAsAction="ifRoom" />
+
         <item
             android:id="@+id/toolbar_action_pick_date"
             android:icon="@drawable/ic_baseline_date_range_24"
             android:title="@string/toolbar_action_title_pick_apod_by_date"
             app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/toolbar_action_get_random_apod"
+            android:title="@string/toolbar_action_title_get_random_apod"
+            app:showAsAction="never" />
+
     </group>
+
     <group
         android:id="@+id/toolbar_menu_group_favorites"
         tools:visible="false">
+
         <item
             android:id="@+id/toolbar_action_search_favorites"
             android:icon="@drawable/ic_baseline_search_24"
             android:title="@string/toolbar_action_title_search"
-            app:showAsAction="ifRoom" />
+            app:actionViewClass="androidx.appcompat.widget.SearchView"
+            app:showAsAction="always|collapseActionView" />
+
     </group>
+
     <group
         android:id="@+id/toolbar_menu_group_details"
         tools:visible="false">
+
         <item
             android:id="@+id/toolbar_action_add_to_favorite"
             android:icon="@drawable/ic_baseline_star_24"
             android:title="@string/toolbar_action_title_add_to_favorites"
             app:showAsAction="ifRoom" />
+
     </group>
+
+    <group android:id="@+id/toolbar_menu_group_visit_apod_website">
+
+        <item
+            android:id="@+id/toolbar_action_visit_apod_website"
+            android:title="@string/toolbar_action_title_visit_apod_website"
+            app:showAsAction="never" />
+
+    </group>
+
 </menu>

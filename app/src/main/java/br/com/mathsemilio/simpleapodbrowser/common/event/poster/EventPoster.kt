@@ -1,4 +1,4 @@
-package br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster
+package br.com.mathsemilio.simpleapodbrowser.common.event.poster
 
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
 

@@ -1,5 +1,6 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavorites
 
+import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarSearchViewEvent
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
@@ -14,7 +15,10 @@ interface APoDFavoritesContract {
 
         fun onFetchApodsFailed(errorMessage: String)
 
-        fun onToolbarActionSearchClicked()
+        fun handleToolbarSearchViewEvent(
+            event: ToolbarSearchViewEvent.Event,
+            textEnteredByUser: String
+        )
 
         fun handleToolbarActionClickEvent(action: ToolbarAction)
     }

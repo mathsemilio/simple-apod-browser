@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
+import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarActionClickEvent
+import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarActionClickEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
 class APoDListScreen : BaseFragment(),
@@ -57,25 +57,30 @@ class APoDListScreen : BaseFragment(),
         TODO("Not yet implemented")
     }
 
-    override fun onToolbarActionSearchClicked() {
+    override fun onToolbarActionPickApodByDateClicked() {
         TODO("Not yet implemented")
     }
 
-    override fun onToolbarActionPickApodByDateClicked() {
+    override fun onToolbarActionGetRandomAPoDClicked() {
         TODO("Not yet implemented")
+    }
+
+    override fun onToolbarActionVisitApodWebsiteClicked() {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleToolbarActionClickEvent(action: ToolbarAction) {
+        when (action) {
+            ToolbarAction.PICK_APOD_BY_DATE -> onToolbarActionPickApodByDateClicked()
+            ToolbarAction.GET_RANDOM_APOD -> onToolbarActionGetRandomAPoDClicked()
+            ToolbarAction.VISIT_APOD_WEBSITE -> onToolbarActionVisitApodWebsiteClicked()
+            else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
+        }
     }
 
     override fun onEvent(event: Any) {
         when (event) {
             is ToolbarActionClickEvent -> handleToolbarActionClickEvent(event.action)
-        }
-    }
-
-    private fun handleToolbarActionClickEvent(action: ToolbarAction) {
-        when (action) {
-            ToolbarAction.SEARCH_EXPLORE -> onToolbarActionSearchClicked()
-            ToolbarAction.PICK_APOD_BY_DATE -> onToolbarActionPickApodByDateClicked()
-            else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
         }
     }
 

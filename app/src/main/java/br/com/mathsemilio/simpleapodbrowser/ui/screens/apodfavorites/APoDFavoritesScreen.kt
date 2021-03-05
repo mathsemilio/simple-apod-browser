@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
+import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarActionClickEvent
+import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarSearchViewEvent
+import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarActionClickEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
 class APoDFavoritesScreen : BaseFragment(),
@@ -53,20 +54,28 @@ class APoDFavoritesScreen : BaseFragment(),
         TODO("Not yet implemented")
     }
 
-    override fun onToolbarActionSearchClicked() {
-        TODO("Not yet implemented")
+    override fun handleToolbarSearchViewEvent(
+        event: ToolbarSearchViewEvent.Event,
+        textEnteredByUser: String
+    ) {
+        when (event) {
+            ToolbarSearchViewEvent.Event.TEXT_ENTERED_BY_USER -> TODO()
+        }
     }
 
     override fun handleToolbarActionClickEvent(action: ToolbarAction) {
         when (action) {
-            ToolbarAction.SEARCH_FAVORITES -> onToolbarActionSearchClicked()
+            ToolbarAction.VISIT_APOD_WEBSITE -> TODO()
             else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
         }
     }
 
     override fun onEvent(event: Any) {
         when (event) {
-            is ToolbarActionClickEvent -> handleToolbarActionClickEvent(event.action)
+            is ToolbarSearchViewEvent ->
+                handleToolbarSearchViewEvent(event.searchViewEvent, event.textEnteredByUser)
+            is ToolbarActionClickEvent ->
+                handleToolbarActionClickEvent(event.action)
         }
     }
 

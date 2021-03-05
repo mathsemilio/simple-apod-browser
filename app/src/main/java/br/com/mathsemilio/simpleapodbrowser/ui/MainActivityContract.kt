@@ -10,10 +10,16 @@ interface MainActivityContract {
     interface View {
         interface Listener {
             fun onBottomNavigationViewItemClicked(item: BottomNavigationViewItem)
+            fun onToolbarNavigationIconClicked()
             fun onToolbarActionClicked(action: ToolbarAction)
+            fun onSearchFavoritesSearchViewTextEntered(userInput: String)
         }
 
         val fragmentContainer: FrameLayout
+
+        fun showToolbarNavigationIcon()
+
+        fun hideToolbarNaviagtionIcon()
 
         fun showToolbar()
 

@@ -1,4 +1,4 @@
-package br.com.mathsemilio.simpleapodbrowser.ui.common.event
+package br.com.mathsemilio.simpleapodbrowser.common.event
 
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 

@@ -22,7 +22,11 @@ class ActivityCompositionRoot(
     val eventPoster get() = compositionRoot.eventPoster
 
     private val _screensNavigator by lazy {
-        ScreensNavigator(activity.supportFragmentManager, activity as FragmentContainerHelper)
+        ScreensNavigator(
+            eventPoster,
+            activity.supportFragmentManager,
+            activity as FragmentContainerHelper
+        )
     }
     val screensNavigator get() = _screensNavigator
 

@@ -1,6 +1,7 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
 interface APoDListContract {
 
@@ -13,9 +14,13 @@ interface APoDListContract {
 
         fun onFetchApodsFailed(errorMessage: String)
 
-        fun onToolbarActionSearchClicked()
-
         fun onToolbarActionPickApodByDateClicked()
+
+        fun onToolbarActionGetRandomAPoDClicked()
+
+        fun onToolbarActionVisitApodWebsiteClicked()
+
+        fun handleToolbarActionClickEvent(action: ToolbarAction)
     }
 
     interface View {
