@@ -15,6 +15,12 @@ interface APoDApi {
     ): Response<List<APoD>>
 
     @GET("/apod")
+    suspend fun getAPoDBasedOnDate(
+        @Query("api_key") key: String,
+        @Query("date") date: String
+    ) : Response<APoD>
+
+    @GET("/apod")
     suspend fun getRandomAPoD(
         @Query("api_key") key: String,
         @Query("count") count: Int

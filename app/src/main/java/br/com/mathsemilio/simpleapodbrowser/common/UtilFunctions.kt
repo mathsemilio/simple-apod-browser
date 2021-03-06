@@ -1,7 +1,30 @@
 package br.com.mathsemilio.simpleapodbrowser.common
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.Menu
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import br.com.mathsemilio.simpleapodbrowser.R
+
+fun getErrorStringWithResponseCode(context: Context, responseCode: String) =
+    context.getString(R.string.http_error, responseCode)
+
+fun Context.showShortToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+}
+
+fun Context.showLongToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
+fun launchWebPage(context: Context, url: String) {
+    val page = Uri.parse(url)
+    val intent = Intent(Intent.ACTION_VIEW, page)
+    if (intent.resolveActivity(context.packageManager) != null)
+        context.startActivity(intent)
+}
 
 fun Menu.hideGroup(vararg groupId: Int) = groupId.forEach { this.setGroupVisible(it, false) }
 

@@ -12,7 +12,7 @@ interface APoDListContract {
 
         fun onFetchApodsCompleted(apods: List<APoD>)
 
-        fun onFetchApodsFailed(errorMessage: String)
+        fun onFetchApodsFailed(errorCode: String)
 
         fun onToolbarActionPickApodByDateClicked()
 
@@ -36,6 +36,10 @@ interface APoDListContract {
         fun hideProgressIndicator()
 
         fun onRefreshCompleted()
+
+        fun showNetworkRequestErrorState(errorCode: String)
+
+        fun hideNetworkRequestFailedState()
     }
 
     interface ListItem {

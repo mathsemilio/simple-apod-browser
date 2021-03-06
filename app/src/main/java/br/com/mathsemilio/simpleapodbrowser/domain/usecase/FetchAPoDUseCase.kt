@@ -31,6 +31,23 @@ class FetchAPoDUseCase(
         }
     }
 
+    suspend fun fetchAPoDBasedOnDate(date: String) {
+        onFetchAPoDBasedOnDateStarted()
+        withContext(dispatcherProvider.BACKGROUND) {
+            val response = aPoDRepository.getAPoDBasedOnDate(date)
+            if (response.isSuccessful)
+                withContext(dispatcherProvider.MAIN) {
+                    val apod = mutableListOf<APoD>()
+                    apod.add(response.body()!!)
+                    onFetchAPoDBasedOnDateCompleted(apod)
+                }
+            else
+                withContext(dispatcherProvider.MAIN) {
+                    onFetchAPoDBasedOnDateFailed(response.code().toString())
+                }
+        }
+    }
+
     suspend fun fetchRandomAPoD() {
         onFetchRandomAPoDStarted()
         withContext(dispatcherProvider.BACKGROUND) {
@@ -52,6 +69,10 @@ class FetchAPoDUseCase(
         listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnStarted) }
     }
 
+    private fun onFetchAPoDBasedOnDateStarted() {
+        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnStarted) }
+    }
+
     private fun onFetchRandomAPoDStarted() {
         listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnStarted) }
     }
@@ -60,11 +81,19 @@ class FetchAPoDUseCase(
         listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnCompleted(apods)) }
     }
 
+    private fun onFetchAPoDBasedOnDateCompleted(apod: List<APoD>) {
+        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnCompleted(apod)) }
+    }
+
     private fun onFetchRandomAPoDCompleted(apod: List<APoD>) {
         listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnCompleted(apod)) }
     }
 
     private fun onFetchAPoDsFailed(errorCode: String) {
+        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnError(errorCode)) }
+    }
+
+    private fun onFetchAPoDBasedOnDateFailed(errorCode: String) {
         listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnError(errorCode)) }
     }
 

@@ -4,24 +4,40 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarActionClickEvent
 import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.domain.model.OperationResult
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancelChildren
 
 class APoDListScreen : BaseFragment(),
     APoDListContract.View.Listener,
     APoDListContract.Screen,
-    EventPoster.EventListener {
+    EventPoster.EventListener,
+    FetchAPoDUseCase.Listener {
 
     private lateinit var view: APoDListScreenView
+
+    private lateinit var screensNavigator: ScreensNavigator
+    private lateinit var coroutineScope: CoroutineScope
     private lateinit var eventPoster: EventPoster
+
+    private lateinit var fetchAPoDUseCase: FetchAPoDUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        screensNavigator = compositionRoot.screensNavigator
+        coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
         eventPoster = compositionRoot.eventPoster
+        fetchAPoDUseCase = compositionRoot.fetchAPoDUseCase
     }
 
     override fun onCreateView(
@@ -34,39 +50,43 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onApodClicked(apod: APoD) {
-        TODO("Not yet implemented")
+        screensNavigator.navigateToAPoDDetailsScreen(apod, apod.mediaType)
     }
 
     override fun onScreenSwipedToRefresh() {
-        TODO("Not yet implemented")
+        fetchApods()
     }
 
     override fun fetchApods() {
-        TODO("Not yet implemented")
+        // TODO Fetch APoDs
     }
 
     override fun onFetchApodsStarted() {
-        TODO("Not yet implemented")
+        view.showProgressIndicator()
     }
 
     override fun onFetchApodsCompleted(apods: List<APoD>) {
-        TODO("Not yet implemented")
+        view.hideNetworkRequestFailedState()
+        view.hideProgressIndicator()
+        view.onRefreshCompleted()
+        view.bindApods(apods)
     }
 
-    override fun onFetchApodsFailed(errorMessage: String) {
-        TODO("Not yet implemented")
+    override fun onFetchApodsFailed(errorCode: String) {
+        view.hideProgressIndicator()
+        view.showNetworkRequestErrorState(errorCode)
     }
 
     override fun onToolbarActionPickApodByDateClicked() {
-        TODO("Not yet implemented")
+        // TODO Show Date Picker Dialog
     }
 
     override fun onToolbarActionGetRandomAPoDClicked() {
-        TODO("Not yet implemented")
+        // TODO Fetch random APoD and launch Details Screen
     }
 
     override fun onToolbarActionVisitApodWebsiteClicked() {
-        TODO("Not yet implemented")
+        launchWebPage(requireContext(), getString(R.string.apod_website_url))
     }
 
     override fun handleToolbarActionClickEvent(action: ToolbarAction) {
@@ -84,19 +104,31 @@ class APoDListScreen : BaseFragment(),
         }
     }
 
+    override fun onFetchAPodUseCaseEvent(result: OperationResult<List<APoD>>) {
+        when (result) {
+            OperationResult.OnStarted -> onFetchApodsStarted()
+            is OperationResult.OnCompleted -> onFetchApodsCompleted(result.data!!)
+            is OperationResult.OnError -> onFetchApodsFailed(result.errorMessage!!)
+        }
+    }
+
     override fun onStart() {
         view.addListener(this)
         eventPoster.addListener(this)
+        fetchAPoDUseCase.addListener(this)
+        fetchApods()
         super.onStart()
     }
 
     override fun onStop() {
         view.removeListener(this)
         eventPoster.removeListener(this)
+        fetchAPoDUseCase.removeListener(this)
         super.onStop()
     }
 
     override fun onDestroy() {
+        coroutineScope.coroutineContext.cancelChildren()
         super.onDestroy()
     }
 }

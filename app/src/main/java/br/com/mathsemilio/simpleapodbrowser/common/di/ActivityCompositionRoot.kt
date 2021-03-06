@@ -1,9 +1,13 @@
 package br.com.mathsemilio.simpleapodbrowser.common.di
 
 import androidx.appcompat.app.AppCompatActivity
+import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
+import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
 import br.com.mathsemilio.simpleapodbrowser.data.repository.APoDRepository
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteAPoDDatabase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 
@@ -19,7 +23,18 @@ class ActivityCompositionRoot(
 
     private val favoriteAPoDDAO get() = favoriteAPoDDatabase.favoriteApodDAO
 
+    private val apodRepository get() = APoDRepository(aPoDApi, favoriteAPoDDAO)
+
+    private val dispatcherProvider get() = DispatcherProvider
+
+    val coroutineScopeProvider get() = CoroutineScopeProvider
+
     val eventPoster get() = compositionRoot.eventPoster
+
+    private val _messagesManager by lazy {
+        MessagesManager(activity)
+    }
+    val messagesManager get() = _messagesManager
 
     private val _screensNavigator by lazy {
         ScreensNavigator(
@@ -35,8 +50,8 @@ class ActivityCompositionRoot(
     }
     val viewFactory get() = _viewFactory
 
-    private val _apodRepository by lazy {
-        APoDRepository(aPoDApi, favoriteAPoDDAO)
+    private val _fetchAPoDUseCase by lazy {
+        FetchAPoDUseCase(apodRepository, dispatcherProvider)
     }
-    val apodRepository get() = _apodRepository
+    val fetchAPoDUseCase get() = _fetchAPoDUseCase
 }

@@ -12,6 +12,8 @@ class APoDRepository(
     suspend fun getAPoDsBasedOnDateRange(startDate: String, endDate: String) =
         aPoDApi.getAPoDsBasedOnDateRange(API_KEY, startDate, endDate)
 
+    suspend fun getAPoDBasedOnDate(date: String) = aPoDApi.getAPoDBasedOnDate(API_KEY, date)
+
     suspend fun getRandomAPoD(count: Int) = aPoDApi.getRandomAPoD(API_KEY, count)
 
     suspend fun addFavoriteApod(favoriteAPoD: FavoriteAPoD) =
