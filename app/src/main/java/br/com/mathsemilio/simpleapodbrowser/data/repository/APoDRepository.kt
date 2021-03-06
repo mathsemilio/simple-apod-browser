@@ -23,4 +23,7 @@ class APoDRepository(
         favoriteApodDAO.deleteFavoriteAPoD(favoriteAPoD)
 
     suspend fun getFavoriteAPoDs() = favoriteApodDAO.getFavoriteAPoDs()
+
+    suspend fun getFavoriteAPoDBasedOnName(name: String) =
+        favoriteApodDAO.getFavoriteAPoDBasedOnName(name)
 }

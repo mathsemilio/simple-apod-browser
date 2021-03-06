@@ -15,6 +15,9 @@ interface FavoriteApodDAO {
     @Delete
     suspend fun deleteFavoriteAPoD(favoriteAPoD: FavoriteAPoD)
 
-    @Query("SELECT * FROM favorite_apod_table")
+    @Query("SELECT * FROM favorite_apods_table")
     suspend fun getFavoriteAPoDs(): List<FavoriteAPoD>
+
+    @Query("SELECT * FROM favorite_apods_table WHERE title LIKE :name")
+    suspend fun getFavoriteAPoDBasedOnName(name: String): List<FavoriteAPoD>
 }

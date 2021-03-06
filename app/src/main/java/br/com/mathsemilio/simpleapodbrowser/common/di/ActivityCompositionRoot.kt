@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
 import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
 import br.com.mathsemilio.simpleapodbrowser.data.repository.APoDRepository
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.DeleteFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteAPoDDatabase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
@@ -15,8 +17,6 @@ class ActivityCompositionRoot(
     private val activity: AppCompatActivity,
     private val compositionRoot: CompositionRoot
 ) {
-    private val retrofit get() = compositionRoot.retrofitBuilder.retroFit
-
     private val aPoDApi get() = compositionRoot.retrofitBuilder.apodApi
 
     private val favoriteAPoDDatabase get() = FavoriteAPoDDatabase.getDatabase(activity)
@@ -32,7 +32,7 @@ class ActivityCompositionRoot(
     val eventPoster get() = compositionRoot.eventPoster
 
     private val _messagesManager by lazy {
-        MessagesManager(activity)
+        MessagesManager(activity, eventPoster)
     }
     val messagesManager get() = _messagesManager
 
@@ -54,4 +54,14 @@ class ActivityCompositionRoot(
         FetchAPoDUseCase(apodRepository, dispatcherProvider)
     }
     val fetchAPoDUseCase get() = _fetchAPoDUseCase
+
+    private val _fetchFavoriteAPoDUseCase by lazy {
+        FetchFavoriteAPoDUseCase(apodRepository, dispatcherProvider)
+    }
+    val fetchFavoriteAPoDUseCase get() = _fetchFavoriteAPoDUseCase
+
+    private val _deleteFavoriteAPoDUseCase by lazy {
+        DeleteFavoriteAPoDUseCase(apodRepository, dispatcherProvider)
+    }
+    val deleteFavoriteAPoDUseCase get() = _deleteFavoriteAPoDUseCase
 }

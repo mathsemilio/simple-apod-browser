@@ -32,15 +32,48 @@ class FetchFavoriteAPoDUseCase(
         }
     }
 
+    suspend fun fetchFavoriteAPoDBasedOnName(name: String) {
+        withContext(dispatcherProvider.BACKGROUND) {
+            try {
+                val favoriteApodsBasedOnName = aPoDRepository.getFavoriteAPoDBasedOnName(name)
+                withContext(dispatcherProvider.MAIN) {
+                    onFetchFavoriteAPoDBasedOnNameCompleted(favoriteApodsBasedOnName)
+                }
+            } catch (e: Exception) {
+                withContext(dispatcherProvider.MAIN) {
+                    onFetchFavoriteAPoDBasedOnNameFailed(e.message!!)
+                }
+            }
+        }
+    }
+
     private fun onFetchFavoriteAPoDStarted() {
-        listeners.forEach { it.onFetchFavoriteAPodUseCaseEvent(OperationResult.OnStarted) }
+        listeners.forEach {
+            it.onFetchFavoriteAPodUseCaseEvent(OperationResult.OnStarted)
+        }
     }
 
     private fun onFetchFavoriteAPoDCompleted(favoriteApods: List<FavoriteAPoD>) {
-        listeners.forEach { it.onFetchFavoriteAPodUseCaseEvent(OperationResult.OnCompleted(favoriteApods)) }
+        listeners.forEach {
+            it.onFetchFavoriteAPodUseCaseEvent(OperationResult.OnCompleted(favoriteApods))
+        }
+    }
+
+    private fun onFetchFavoriteAPoDBasedOnNameCompleted(favoriteApods: List<FavoriteAPoD>) {
+        listeners.forEach {
+            it.onFetchFavoriteAPodUseCaseEvent(OperationResult.OnCompleted(favoriteApods))
+        }
     }
 
     private fun onFetchFavoriteAPoDFailed(errorMessage: String) {
-        listeners.forEach { it.onFetchFavoriteAPodUseCaseEvent(OperationResult.OnError(errorMessage)) }
+        listeners.forEach {
+            it.onFetchFavoriteAPodUseCaseEvent(OperationResult.OnError(errorMessage))
+        }
+    }
+
+    private fun onFetchFavoriteAPoDBasedOnNameFailed(errorMessage: String) {
+        listeners.forEach {
+            it.onFetchFavoriteAPodUseCaseEvent(OperationResult.OnError(errorMessage))
+        }
     }
 }

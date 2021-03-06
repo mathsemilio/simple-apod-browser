@@ -1,7 +1,8 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavorites
 
+import br.com.mathsemilio.simpleapodbrowser.common.event.SnackBarActionEvent
 import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarSearchViewEvent
-import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
 interface APoDFavoritesContract {
@@ -9,11 +10,23 @@ interface APoDFavoritesContract {
     interface Screen {
         fun fetchApods()
 
-        fun onFetchApodsStarted()
+        fun onFetchFavoriteApodsStarted()
 
-        fun onFetchApodsCompleted(apods: List<APoD>)
+        fun onFetchFavoriteApodsCompleted(favoriteApods: List<FavoriteAPoD>)
 
-        fun onFetchApodsFailed(errorMessage: String)
+        fun onFetchFavoriteApodsFailed(errorMessage: String)
+
+        fun onDeleteFavoriteApodStarted()
+
+        fun onDeleteFavoriteApodCompleted()
+
+        fun onDeleteFavoriteApodFailed(errorMessage: String)
+
+        fun onToolbarActionVisitApodWebsiteClicked()
+
+        fun onToolbarSearchViewTextEntered(userInput: String)
+
+        fun onSnackBarActionUndoClicked()
 
         fun handleToolbarSearchViewEvent(
             event: ToolbarSearchViewEvent.Event,
@@ -21,14 +34,17 @@ interface APoDFavoritesContract {
         )
 
         fun handleToolbarActionClickEvent(action: ToolbarAction)
+
+        fun handleSnackBarActionEvent(event: SnackBarActionEvent.Event)
     }
 
     interface View {
         interface Listener {
-            fun onFavoriteAPoDClicked(apod: APoD)
+            fun onFavoriteAPoDClicked(favoriteApod: FavoriteAPoD)
+            fun onRemoveFavoriteAPoDIconClicked(favoriteApod: FavoriteAPoD)
         }
 
-        fun bindFavoriteApods(apods: List<APoD>)
+        fun bindFavoriteApods(favoritesApods: List<FavoriteAPoD>)
 
         fun showProgressIndicator()
 
@@ -37,9 +53,10 @@ interface APoDFavoritesContract {
 
     interface ListItem {
         interface Listener {
-            fun onFavoriteAPoDClicked(apod: APoD)
+            fun onFavoriteAPoDClicked(favoriteApod: FavoriteAPoD)
+            fun onRemoveFavoriteAPoDIconClicked(favoriteApod: FavoriteAPoD)
         }
 
-        fun bindAPoDDetails(apod: APoD)
+        fun bindAPoDDetails(favoriteApod: FavoriteAPoD)
     }
 }

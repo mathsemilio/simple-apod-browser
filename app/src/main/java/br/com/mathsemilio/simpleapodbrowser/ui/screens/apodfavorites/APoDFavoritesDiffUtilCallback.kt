@@ -5,10 +5,10 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
 
 class APoDFavoritesDiffUtilCallback : DiffUtil.ItemCallback<FavoriteAPoD>() {
     override fun areItemsTheSame(oldItem: FavoriteAPoD, newItem: FavoriteAPoD): Boolean {
-        TODO("Not yet implemented")
+        return oldItem.date == newItem.date
     }
 
     override fun areContentsTheSame(oldItem: FavoriteAPoD, newItem: FavoriteAPoD): Boolean {
-        TODO("Not yet implemented")
+        return oldItem == newItem
     }
 }

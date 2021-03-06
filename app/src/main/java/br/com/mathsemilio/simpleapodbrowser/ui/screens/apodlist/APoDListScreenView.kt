@@ -3,9 +3,9 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mathsemilio.simpleapodbrowser.R
@@ -18,8 +18,7 @@ class APoDListScreenView(layoutInflater: LayoutInflater, container: ViewGroup?) 
     APoDListScreenListAdapter.Listener {
 
     private lateinit var progressBarApodList: ProgressBar
-    private lateinit var imageViewApodListNetworkRequestError: ImageView
-    private lateinit var textViewApodListHttpError: TextView
+    private lateinit var apodListNetworkError: ConstraintLayout
     private lateinit var swipeRefreshLayoutApodListScreen: SwipeRefreshLayout
     private lateinit var recyclerViewApodList: RecyclerView
 
@@ -34,8 +33,7 @@ class APoDListScreenView(layoutInflater: LayoutInflater, container: ViewGroup?) 
 
     private fun initializeViews() {
         progressBarApodList = findViewById(R.id.progress_bar_apod_list)
-        imageViewApodListNetworkRequestError = findViewById(R.id.image_view_apod_list_network_request_error)
-        textViewApodListHttpError = findViewById(R.id.text_view_apod_list_http_error)
+        apodListNetworkError = findViewById(R.id.apod_list_network_request_error)
         swipeRefreshLayoutApodListScreen = findViewById(R.id.swipe_refresh_layout_apod_list_screen)
         recyclerViewApodList = findViewById(R.id.recycler_view_apod_list)
     }
@@ -69,17 +67,16 @@ class APoDListScreenView(layoutInflater: LayoutInflater, container: ViewGroup?) 
 
     override fun showNetworkRequestErrorState(errorCode: String) {
         recyclerViewApodList.visibility = View.GONE
-        imageViewApodListNetworkRequestError.visibility = View.VISIBLE
-        textViewApodListHttpError.apply {
-            visibility = View.VISIBLE
-            text = context.getString(R.string.something_went_wrong_http_error, errorCode)
-        }
+        apodListNetworkError.visibility = View.VISIBLE
+        val errorTextView = apodListNetworkError.getViewById(
+            R.id.text_view_network_request_error_title
+        ) as TextView
+        errorTextView.text = context.getString(R.string.something_went_wrong_http_error, errorCode)
     }
 
     override fun hideNetworkRequestFailedState() {
         recyclerViewApodList.visibility = View.VISIBLE
-        imageViewApodListNetworkRequestError.visibility = View.GONE
-        textViewApodListHttpError.visibility = View.GONE
+        apodListNetworkError.visibility = View.GONE
     }
 
     override fun onAPoDClicked(apod: APoD) {

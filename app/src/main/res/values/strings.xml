@@ -19,11 +19,14 @@
     <string name="toolbar_action_title_get_random_apod">Get Random APoD</string>
     <string name="toolbar_action_title_visit_apod_website">Visit APoD Website</string>
 
+    <!-- Snack Bar APoD deleted successfully -->
+    <string name="favorite_apod_deleted_successfully">Favorite APoD deleted successfully</string>
+    <string name="undo">Undo</string>
+
     <!-- Favorite APoDS List Screen -->
     <string name="no_favorite_apod_found">To add an APoD to the favorites, Click on the\"Add to Favorites"\ option in the details screen.</string>
 
     <!-- Misc. -->
-    <string name="http_error">HTTP error %s</string>
     <string name="something_went_wrong_http_error">Oops, something went wrong… \n HTTP error %s</string>
     <string name="apod_website_url">https://apod.nasa.gov/apod/astropix.html</string>
 

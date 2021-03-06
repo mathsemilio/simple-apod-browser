@@ -12,10 +12,9 @@ class RetrofitBuilder {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-    val retroFit: Retrofit get() = _retroFit
 
     private val _apodApi by lazy {
-        retroFit.create(APoDApi::class.java)
+        _retroFit.create(APoDApi::class.java)
     }
     val apodApi: APoDApi get() = _apodApi
 }

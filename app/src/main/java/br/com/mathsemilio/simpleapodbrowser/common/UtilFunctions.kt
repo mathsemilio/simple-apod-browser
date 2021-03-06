@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.Menu
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import br.com.mathsemilio.simpleapodbrowser.R
-
-fun getErrorStringWithResponseCode(context: Context, responseCode: String) =
-    context.getString(R.string.http_error, responseCode)
+import com.google.android.material.snackbar.Snackbar
 
 fun Context.showShortToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -17,6 +15,16 @@ fun Context.showShortToast(message: String) {
 
 fun Context.showLongToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
+fun showSnackBarWithAction(
+    view: View,
+    message: String,
+    actionText: String,
+    onActionClicked: () -> Unit
+) {
+    Snackbar.make(view, message, Snackbar.LENGTH_LONG).setAction(actionText
+    ) { onActionClicked() }
 }
 
 fun launchWebPage(context: Context, url: String) {

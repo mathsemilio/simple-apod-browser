@@ -27,6 +27,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <include
+            android:id="@+id/apod_detail_image_network_request_error"
+            layout="@layout/network_request_error"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/image_view_apod_detail_image"
             android:layout_width="0dp"

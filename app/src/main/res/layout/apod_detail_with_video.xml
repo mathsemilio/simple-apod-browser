@@ -27,17 +27,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <VideoView
-            android:id="@+id/video_view_apod_detail_video"
+        <include
+            android:id="@+id/apod_detail_video_network_request_error"
+            layout="@layout/network_request_error"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/frame_layout_video_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@android:color/black"
-            android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
-            android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/guideline_apod_detail_with_video"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <VideoView
+                android:id="@+id/video_view_apod_detail_video"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
+                android:scaleType="centerCrop" />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/text_view_apod_detail_with_video_title"
