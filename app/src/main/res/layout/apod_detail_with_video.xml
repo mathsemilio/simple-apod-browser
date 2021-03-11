@@ -17,23 +17,8 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.35" />
 
-        <ProgressBar
-            android:id="@+id/progress_bar_apod_detail_with_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/apod_detail_video_network_request_error"
-            layout="@layout/network_request_error"
-            android:visibility="gone" />
-
-        <FrameLayout
-            android:id="@+id/frame_layout_video_container"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout_video_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/guideline_apod_detail_with_video"
@@ -43,12 +28,27 @@
 
             <VideoView
                 android:id="@+id/video_view_apod_detail_video"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </FrameLayout>
+            <ImageView
+                android:id="@+id/image_view_apod_detail_video_play_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/content_description_play_video"
+                android:src="@drawable/ic_baseline_play_circle_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/text_view_apod_detail_with_video_title"

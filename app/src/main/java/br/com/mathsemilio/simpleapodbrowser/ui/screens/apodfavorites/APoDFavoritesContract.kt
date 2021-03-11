@@ -8,19 +8,7 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 interface APoDFavoritesContract {
 
     interface Screen {
-        fun fetchApods()
-
-        fun onFetchFavoriteApodsStarted()
-
-        fun onFetchFavoriteApodsCompleted(favoriteApods: List<FavoriteAPoD>)
-
-        fun onFetchFavoriteApodsFailed(errorMessage: String)
-
-        fun onDeleteFavoriteApodStarted()
-
-        fun onDeleteFavoriteApodCompleted()
-
-        fun onDeleteFavoriteApodFailed(errorMessage: String)
+        fun fetchFavoriteApods()
 
         fun onToolbarActionVisitApodWebsiteClicked()
 
@@ -36,6 +24,24 @@ interface APoDFavoritesContract {
         fun handleToolbarActionClickEvent(action: ToolbarAction)
 
         fun handleSnackBarActionEvent(event: SnackBarActionEvent.Event)
+
+        fun onAddFavoriteAPoDStarted()
+
+        fun onAddFavoriteAPoDCompleted()
+
+        fun onAddFavoriteAPoDFailed(errorMessage: String)
+
+        fun onFetchFavoriteApodsStarted()
+
+        fun onFetchFavoriteApodsCompleted(favoriteApods: List<FavoriteAPoD>)
+
+        fun onFetchFavoriteApodsFailed(errorMessage: String)
+
+        fun onDeleteFavoriteApodStarted()
+
+        fun onDeleteFavoriteApodCompleted()
+
+        fun onDeleteFavoriteApodFailed(errorMessage: String)
     }
 
     interface View {

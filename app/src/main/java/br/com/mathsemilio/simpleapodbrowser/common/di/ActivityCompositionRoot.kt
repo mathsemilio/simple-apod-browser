@@ -3,11 +3,14 @@ package br.com.mathsemilio.simpleapodbrowser.common.di
 import androidx.appcompat.app.AppCompatActivity
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
 import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
+import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.data.repository.APoDRepository
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.AddFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.DeleteFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteAPoDDatabase
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
@@ -31,6 +34,13 @@ class ActivityCompositionRoot(
 
     val eventPoster get() = compositionRoot.eventPoster
 
+    private val _dialogManager by lazy {
+        DialogManager(activity.supportFragmentManager)
+    }
+    val dialogManager get() = _dialogManager
+
+    private val glideProvider by lazy { GlideProvider(activity) }
+
     private val _messagesManager by lazy {
         MessagesManager(activity, eventPoster)
     }
@@ -46,9 +56,14 @@ class ActivityCompositionRoot(
     val screensNavigator get() = _screensNavigator
 
     private val _viewFactory by lazy {
-        ViewFactory(activity.layoutInflater)
+        ViewFactory(activity.layoutInflater, glideProvider)
     }
     val viewFactory get() = _viewFactory
+
+    private val _addFavoriteAPoDUseCase by lazy {
+        AddFavoriteAPoDUseCase(apodRepository, dispatcherProvider)
+    }
+    val addFavoriteAPoDUseCase get() = _addFavoriteAPoDUseCase
 
     private val _fetchAPoDUseCase by lazy {
         FetchAPoDUseCase(apodRepository, dispatcherProvider)

@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
 
 class APoDFavoritesListAdapter(
     private val layoutInflater: LayoutInflater,
+    private val glideProvider: GlideProvider,
     private val listener: Listener
 ) : ListAdapter<FavoriteAPoD, APoDFavoritesListAdapter.ViewHolder>(APoDFavoritesDiffUtilCallback()),
     APoDFavoritesContract.ListItem.Listener {
@@ -23,7 +25,7 @@ class APoDFavoritesListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val apodFavoritesListItem = APoDFavoritesListItemView(layoutInflater, parent)
+        val apodFavoritesListItem = APoDFavoritesListItemView(glideProvider, layoutInflater, parent)
         apodFavoritesListItem.addListener(this)
         return ViewHolder(apodFavoritesListItem)
     }

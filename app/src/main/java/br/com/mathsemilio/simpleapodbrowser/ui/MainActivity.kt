@@ -1,7 +1,6 @@
 package br.com.mathsemilio.simpleapodbrowser.ui
 
 import android.os.Bundle
-import android.widget.FrameLayout
 import br.com.mathsemilio.simpleapodbrowser.common.event.NavigationEvent
 import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarActionClickEvent
 import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarSearchViewEvent
@@ -18,8 +17,11 @@ class MainActivity : BaseActivity(),
     EventPoster.EventListener {
 
     private lateinit var view: MainActivityView
+
     private lateinit var eventPoster: EventPoster
     private lateinit var screensNavigator: ScreensNavigator
+
+    private lateinit var latestTopDestination: NavDestination
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +33,24 @@ class MainActivity : BaseActivity(),
 
         setContentView(view.rootView)
 
-        if (savedInstanceState == null)
-            screensNavigator.navigateToAPoDListScreen()
+        screensNavigator.navigateToAPoDListScreen()
+
+        attachOnBackStackChangedListener()
+    }
+
+    private fun attachOnBackStackChangedListener() {
+        supportFragmentManager.addOnBackStackChangedListener {
+            if (supportFragmentManager.backStackEntryCount == 0) {
+                view.setToolbarMenuBasedOnDestination(latestTopDestination)
+                view.setToolbarTitleBasedOnDestination(latestTopDestination)
+                view.hideToolbarNaviagtionIcon()
+            }
+        }
     }
 
     override fun onBottomNavigationViewItemClicked(item: BottomNavigationViewItem) {
         when (item) {
-            BottomNavigationViewItem.EXPLORE -> screensNavigator.navigateToAPoDListScreen()
+            BottomNavigationViewItem.LATEST -> screensNavigator.navigateToAPoDListScreen()
             BottomNavigationViewItem.FAVORITES -> screensNavigator.navigateToAPoDFavoritesScreen()
         }
     }
@@ -68,18 +81,21 @@ class MainActivity : BaseActivity(),
         )
     }
 
-    override val fragmentContainer: FrameLayout
-        get() {
-            return view.fragmentContainer
-        }
+    override val fragmentContainer get() = view.fragmentContainer
 
     override fun onEvent(event: Any) {
         when (event) {
-            is NavigationEvent -> handleNavigationEvent(event.navDestination)
+            is NavigationEvent -> handleNavigationEvent(event.navEvent, event.navDestination)
         }
     }
 
-    private fun handleNavigationEvent(destination: NavDestination) {
+    private fun handleNavigationEvent(event: NavigationEvent.Event?, destination: NavDestination) {
+        if (event != null) {
+            when (event) {
+                NavigationEvent.Event.UPDATE_TOP_DESTINATION -> latestTopDestination = destination
+            }
+        }
+
         view.setToolbarTitleBasedOnDestination(destination)
         view.setToolbarMenuBasedOnDestination(destination)
 

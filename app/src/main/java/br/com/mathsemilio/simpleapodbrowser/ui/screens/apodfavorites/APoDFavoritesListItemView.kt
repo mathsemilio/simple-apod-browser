@@ -5,11 +5,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-class APoDFavoritesListItemView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
-    BaseObservableView<APoDFavoritesContract.ListItem.Listener>(),
+class APoDFavoritesListItemView(
+    private val glideProvider: GlideProvider,
+    layoutInflater: LayoutInflater,
+    parent: ViewGroup?
+) : BaseObservableView<APoDFavoritesContract.ListItem.Listener>(),
     APoDFavoritesContract.ListItem {
 
     private lateinit var imageViewApodListItemImageFavorite: ImageView
@@ -41,7 +45,7 @@ class APoDFavoritesListItemView(layoutInflater: LayoutInflater, parent: ViewGrou
 
     override fun bindAPoDDetails(favoriteApod: FavoriteAPoD) {
         currentFavoriteAPoD = favoriteApod
-        // TODO Set APoD image from URL
+        glideProvider.loadResourceFromUrl(favoriteApod.url, imageViewApodListItemImageFavorite)
         textViewApodListItemTitleFavoriteAPoD.text = favoriteApod.title
         textViewApodListItemShortExplanationFavorite.text = favoriteApod.explanation
     }

@@ -13,6 +13,7 @@ import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.OperationResult
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.AddFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.DeleteFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
@@ -26,6 +27,7 @@ import kotlinx.coroutines.launch
 class APoDFavoritesScreen : BaseFragment(),
     APoDFavoritesContract.View.Listener,
     APoDFavoritesContract.Screen,
+    AddFavoriteAPoDUseCase.Listener,
     FetchFavoriteAPoDUseCase.Listener,
     DeleteFavoriteAPoDUseCase.Listener,
     EventPoster.EventListener {
@@ -37,8 +39,11 @@ class APoDFavoritesScreen : BaseFragment(),
     private lateinit var coroutineScope: CoroutineScope
     private lateinit var eventPoster: EventPoster
 
+    private lateinit var addFavoriteAPoDUseCase: AddFavoriteAPoDUseCase
     private lateinit var fetchFavoriteAPoDUseCase: FetchFavoriteAPoDUseCase
     private lateinit var deleteFavoriteAPoDUseCase: DeleteFavoriteAPoDUseCase
+
+    private lateinit var lastDeletedFavoriteAPoD: FavoriteAPoD
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +51,7 @@ class APoDFavoritesScreen : BaseFragment(),
         messagesManager = compositionRoot.messagesManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
         eventPoster = compositionRoot.eventPoster
+        addFavoriteAPoDUseCase = compositionRoot.addFavoriteAPoDUseCase
         fetchFavoriteAPoDUseCase = compositionRoot.fetchFavoriteAPoDUseCase
         deleteFavoriteAPoDUseCase = compositionRoot.deleteFavoriteAPoDUseCase
     }
@@ -64,39 +70,12 @@ class APoDFavoritesScreen : BaseFragment(),
     }
 
     override fun onRemoveFavoriteAPoDIconClicked(favoriteApod: FavoriteAPoD) {
+        lastDeletedFavoriteAPoD = favoriteApod
         coroutineScope.launch { deleteFavoriteAPoDUseCase.deleteFavoriteAPoD(favoriteApod) }
     }
 
-    override fun fetchApods() {
+    override fun fetchFavoriteApods() {
         coroutineScope.launch { fetchFavoriteAPoDUseCase.fetchFavoriteAPoDs() }
-    }
-
-    override fun onFetchFavoriteApodsStarted() {
-        view.showProgressIndicator()
-    }
-
-    override fun onFetchFavoriteApodsCompleted(favoriteApods: List<FavoriteAPoD>) {
-        view.hideProgressIndicator()
-        view.bindFavoriteApods(favoriteApods)
-    }
-
-    override fun onFetchFavoriteApodsFailed(errorMessage: String) {
-        view.hideProgressIndicator()
-        messagesManager.showUseCaseErrorMessage(errorMessage)
-    }
-
-    override fun onDeleteFavoriteApodStarted() {
-        view.showProgressIndicator()
-    }
-
-    override fun onDeleteFavoriteApodCompleted() {
-        view.hideProgressIndicator()
-        messagesManager.showDeleteFavoriteAPoDSuccessMessage(view.rootView)
-    }
-
-    override fun onDeleteFavoriteApodFailed(errorMessage: String) {
-        view.hideProgressIndicator()
-        messagesManager.showUseCaseErrorMessage(errorMessage)
     }
 
     override fun onToolbarActionVisitApodWebsiteClicked() {
@@ -108,7 +87,7 @@ class APoDFavoritesScreen : BaseFragment(),
     }
 
     override fun onSnackBarActionUndoClicked() {
-        // TODO Re-add the deleted apod to the favorites database
+        coroutineScope.launch { addFavoriteAPoDUseCase.addFavoriteAPoD(lastDeletedFavoriteAPoD) }
     }
 
     override fun handleToolbarSearchViewEvent(
@@ -134,6 +113,28 @@ class APoDFavoritesScreen : BaseFragment(),
         }
     }
 
+    override fun onAddFavoriteAPodUseCaseEvent(result: OperationResult<Nothing>) {
+        when (result) {
+            OperationResult.OnStarted -> onAddFavoriteAPoDCompleted()
+            is OperationResult.OnCompleted -> onAddFavoriteAPoDCompleted()
+            is OperationResult.OnError -> onAddFavoriteAPoDFailed(result.errorMessage!!)
+        }
+    }
+
+    override fun onAddFavoriteAPoDStarted() {
+        view.showProgressIndicator()
+    }
+
+    override fun onAddFavoriteAPoDCompleted() {
+        view.hideProgressIndicator()
+        fetchFavoriteApods()
+    }
+
+    override fun onAddFavoriteAPoDFailed(errorMessage: String) {
+        view.hideProgressIndicator()
+        messagesManager.showUseCaseErrorMessage(errorMessage)
+    }
+
     override fun onFetchFavoriteAPodUseCaseEvent(result: OperationResult<List<FavoriteAPoD>>) {
         when (result) {
             OperationResult.OnStarted -> onFetchFavoriteApodsStarted()
@@ -142,12 +143,40 @@ class APoDFavoritesScreen : BaseFragment(),
         }
     }
 
+    override fun onFetchFavoriteApodsStarted() {
+        view.showProgressIndicator()
+    }
+
+    override fun onFetchFavoriteApodsCompleted(favoriteApods: List<FavoriteAPoD>) {
+        view.hideProgressIndicator()
+        view.bindFavoriteApods(favoriteApods)
+    }
+
+    override fun onFetchFavoriteApodsFailed(errorMessage: String) {
+        view.hideProgressIndicator()
+        messagesManager.showUseCaseErrorMessage(errorMessage)
+    }
+
     override fun onDeleteFavoriteAPodUseCaseEvent(result: OperationResult<Nothing>) {
         when (result) {
             OperationResult.OnStarted -> onDeleteFavoriteApodStarted()
             is OperationResult.OnCompleted -> onDeleteFavoriteApodCompleted()
             is OperationResult.OnError -> onDeleteFavoriteApodFailed(result.errorMessage!!)
         }
+    }
+
+    override fun onDeleteFavoriteApodStarted() {
+        view.showProgressIndicator()
+    }
+
+    override fun onDeleteFavoriteApodCompleted() {
+        view.hideProgressIndicator()
+        messagesManager.showDeleteFavoriteAPoDSuccessMessage(view.rootView)
+    }
+
+    override fun onDeleteFavoriteApodFailed(errorMessage: String) {
+        view.hideProgressIndicator()
+        messagesManager.showUseCaseErrorMessage(errorMessage)
     }
 
     override fun onEvent(event: Any) {
@@ -166,6 +195,7 @@ class APoDFavoritesScreen : BaseFragment(),
         eventPoster.addListener(this)
         fetchFavoriteAPoDUseCase.addListener(this)
         deleteFavoriteAPoDUseCase.addListener(this)
+        fetchFavoriteApods()
         super.onStart()
     }
 

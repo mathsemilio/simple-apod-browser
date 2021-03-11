@@ -12,7 +12,6 @@ import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetailsvideo.APoDDeta
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavorites.APoDFavoritesScreen
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.APoDListScreen
 import java.io.Serializable
-import java.lang.RuntimeException
 
 class ScreensNavigator(
     private val eventPoster: EventPoster,
@@ -24,7 +23,12 @@ class ScreensNavigator(
             setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             replace(fragmentContainerHelper.fragmentContainer.id, APoDListScreen())
             commitNow()
-            eventPoster.postEvent(NavigationEvent(NavDestination.EXPLORE_SCREEN))
+            eventPoster.postEvent(
+                NavigationEvent(
+                    NavigationEvent.Event.UPDATE_TOP_DESTINATION,
+                    NavDestination.LATEST_SCREEN
+                )
+            )
         }
     }
 
@@ -33,7 +37,12 @@ class ScreensNavigator(
             setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             replace(fragmentContainerHelper.fragmentContainer.id, APoDFavoritesScreen())
             commitNow()
-            eventPoster.postEvent(NavigationEvent(NavDestination.FAVORITES_SCREEN))
+            eventPoster.postEvent(
+                NavigationEvent(
+                    NavigationEvent.Event.UPDATE_TOP_DESTINATION,
+                    NavDestination.FAVORITES_SCREEN
+                )
+            )
         }
     }
 
@@ -57,7 +66,7 @@ class ScreensNavigator(
             )
             addToBackStack(null)
             commit()
-            eventPoster.postEvent(NavigationEvent(NavDestination.APOD_DETAILS_SCREEN))
+            eventPoster.postEvent(NavigationEvent(null, NavDestination.APOD_DETAILS_SCREEN))
         }
     }
 }

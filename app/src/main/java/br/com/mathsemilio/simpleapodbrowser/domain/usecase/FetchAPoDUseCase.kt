@@ -13,91 +13,69 @@ class FetchAPoDUseCase(
 ) : BaseObservable<FetchAPoDUseCase.Listener>() {
 
     interface Listener {
-        fun onFetchAPodUseCaseEvent(result: OperationResult<List<APoD>>)
+        fun onFetchAPoDUseCaseEvent(result: OperationResult<List<APoD>>)
     }
 
-    suspend fun fetchAPoDsBasedOnDateRange(startDate: String, endDate: String) {
+    suspend fun fetchAPoDsBasedOnDateRange(startDate: String) {
         onFetchAPoDStarted()
         withContext(dispatcherProvider.BACKGROUND) {
-            val response = aPoDRepository.getAPoDsBasedOnDateRange(startDate, endDate)
+            val response = aPoDRepository.getAPoDsBasedOnDateRange(startDate)
             if (response.isSuccessful)
                 withContext(dispatcherProvider.MAIN) {
-                    onFetchAPoDsCompleted(response.body()!!)
+                    onFetchAPoDCompleted(response.body()!!)
                 }
             else
                 withContext(dispatcherProvider.MAIN) {
-                    onFetchAPoDsFailed(response.code().toString())
+                    onFetchAPoDFailed(response.code().toString())
                 }
         }
     }
 
     suspend fun fetchAPoDBasedOnDate(date: String) {
-        onFetchAPoDBasedOnDateStarted()
+        onFetchAPoDStarted()
         withContext(dispatcherProvider.BACKGROUND) {
             val response = aPoDRepository.getAPoDBasedOnDate(date)
-            if (response.isSuccessful)
+            if (response.isSuccessful) {
+                val apodList = mutableListOf<APoD>()
+                apodList.add(response.body()!!)
                 withContext(dispatcherProvider.MAIN) {
-                    val apod = mutableListOf<APoD>()
-                    apod.add(response.body()!!)
-                    onFetchAPoDBasedOnDateCompleted(apod)
+                    onFetchAPoDCompleted(apodList)
                 }
-            else
+            } else {
                 withContext(dispatcherProvider.MAIN) {
-                    onFetchAPoDBasedOnDateFailed(response.code().toString())
+                    onFetchAPoDFailed(response.code().toString())
                 }
+            }
         }
     }
 
     suspend fun fetchRandomAPoD() {
-        onFetchRandomAPoDStarted()
+        onFetchAPoDStarted()
         withContext(dispatcherProvider.BACKGROUND) {
             val response = aPoDRepository.getRandomAPoD(1)
-            if (response.isSuccessful)
+            if (response.isSuccessful) {
+                val apodList = mutableListOf<APoD>()
+                apodList.add(response.body()!!)
                 withContext(dispatcherProvider.MAIN) {
-                    val apod = mutableListOf<APoD>()
-                    apod.add(response.body()!!)
-                    onFetchRandomAPoDCompleted(apod)
+                    onFetchAPoDCompleted(apodList)
                 }
-            else
+            } else {
                 withContext(dispatcherProvider.MAIN) {
-                    onFetchRandomAPoDFailed(response.code().toString())
+                    onFetchAPoDFailed(response.code().toString())
                 }
+            }
         }
     }
 
     private fun onFetchAPoDStarted() {
-        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnStarted) }
+        listeners.forEach { it.onFetchAPoDUseCaseEvent(OperationResult.OnStarted) }
     }
 
-    private fun onFetchAPoDBasedOnDateStarted() {
-        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnStarted) }
+    private fun onFetchAPoDCompleted(apodList: List<APoD>) {
+        listeners.forEach { it.onFetchAPoDUseCaseEvent(OperationResult.OnCompleted(apodList)) }
     }
 
-    private fun onFetchRandomAPoDStarted() {
-        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnStarted) }
-    }
-
-    private fun onFetchAPoDsCompleted(apods: List<APoD>) {
-        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnCompleted(apods)) }
-    }
-
-    private fun onFetchAPoDBasedOnDateCompleted(apod: List<APoD>) {
-        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnCompleted(apod)) }
-    }
-
-    private fun onFetchRandomAPoDCompleted(apod: List<APoD>) {
-        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnCompleted(apod)) }
-    }
-
-    private fun onFetchAPoDsFailed(errorCode: String) {
-        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnError(errorCode)) }
-    }
-
-    private fun onFetchAPoDBasedOnDateFailed(errorCode: String) {
-        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnError(errorCode)) }
-    }
-
-    private fun onFetchRandomAPoDFailed(errorCode: String) {
-        listeners.forEach { it.onFetchAPodUseCaseEvent(OperationResult.OnError(errorCode)) }
+    private fun onFetchAPoDFailed(errorCode: String) {
+        listeners.forEach { it.onFetchAPoDUseCaseEvent(OperationResult.OnError(errorCode)) }
     }
 }

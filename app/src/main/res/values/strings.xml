@@ -6,9 +6,10 @@
     <string name="content_description_astronomical_picture_of_the_day">Astronomical Picture of the Day</string>
     <string name="content_description_remove_from_favorites">Remove from favorites</string>
     <string name="content_description_network_request_error">Network request error</string>
+    <string name="content_description_play_video">Play Video</string>
 
     <!-- Common -->
-    <string name="explore">Explore</string>
+    <string name="latest">Latest</string>
     <string name="favorites">Favorites</string>
     <string name="details">Details</string>
 
@@ -19,8 +20,11 @@
     <string name="toolbar_action_title_get_random_apod">Get Random APoD</string>
     <string name="toolbar_action_title_visit_apod_website">Visit APoD Website</string>
 
-    <!-- Snack Bar APoD deleted successfully -->
-    <string name="favorite_apod_deleted_successfully">Favorite APoD deleted successfully</string>
+    <!-- Messages -->
+    <string name="message_adding_to_favorites">Adding to favorites…</string>
+    <string name="message_apod_added_to_favorites_successfully">APoD added to favorites successfully</string>
+    <string name="message_favorite_apod_deleted_successfully">Favorite APoD deleted successfully</string>
+    <string name="message_invalid_apod_date">Invalid APoD date! Please select a date that is at least June 16, 1995</string>
     <string name="undo">Undo</string>
 
     <!-- Favorite APoDS List Screen -->

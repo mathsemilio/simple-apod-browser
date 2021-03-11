@@ -8,16 +8,20 @@ interface APoDDetailsVideoContract {
     interface Screen {
         fun getAPoD(): APoD
 
+        fun bindAPoD()
+
         fun onToolbarActionAddToFavoritesClicked()
 
         fun handleToolbarActionClickEvent(action: ToolbarAction)
+
+        fun onAddFavoriteAPoDStarted()
+
+        fun onAddFavoriteAPoDCompleted()
+
+        fun onAddFavoriteAPoDFailed(errorMessage: String)
     }
 
     interface View {
-        interface Listener {
-            fun onButtonPlayClicked()
-        }
-
         fun bindAPoDDetails(aPoD: APoD)
     }
 }

@@ -15,22 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.35" />
-
-        <ProgressBar
-            android:id="@+id/progress_bar_apod_detail_with_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/apod_detail_image_network_request_error"
-            layout="@layout/network_request_error"
-            android:visibility="gone" />
+            app:layout_constraintGuide_percent="0.40" />
 
         <ImageView
             android:id="@+id/image_view_apod_detail_image"

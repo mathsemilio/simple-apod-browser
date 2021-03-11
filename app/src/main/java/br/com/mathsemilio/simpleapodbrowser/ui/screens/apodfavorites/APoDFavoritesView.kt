@@ -7,11 +7,15 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-class APoDFavoritesView(layoutInflater: LayoutInflater, container: ViewGroup?) :
-    BaseObservableView<APoDFavoritesContract.View.Listener>(),
+class APoDFavoritesView(
+    private val glideProvider: GlideProvider,
+    layoutInflater: LayoutInflater,
+    container: ViewGroup?
+) : BaseObservableView<APoDFavoritesContract.View.Listener>(),
     APoDFavoritesContract.View,
     APoDFavoritesListAdapter.Listener {
 
@@ -34,7 +38,7 @@ class APoDFavoritesView(layoutInflater: LayoutInflater, container: ViewGroup?) :
     }
 
     private fun setupRecyclerView(layoutInflater: LayoutInflater) {
-        apodFavoritesListAdapter = APoDFavoritesListAdapter(layoutInflater, this)
+        apodFavoritesListAdapter = APoDFavoritesListAdapter(layoutInflater, glideProvider, this)
         recyclerViewApodListFavorites.adapter = apodFavoritesListAdapter
     }
 

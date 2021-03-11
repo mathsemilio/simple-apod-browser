@@ -16,7 +16,7 @@
             android:layout_height="?actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             tools:menu="@menu/toolbar_app_menu"
-            tools:title="@string/explore" />
+            tools:title="@string/latest" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

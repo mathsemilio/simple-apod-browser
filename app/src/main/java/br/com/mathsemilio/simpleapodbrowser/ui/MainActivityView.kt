@@ -44,7 +44,7 @@ class MainActivityView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
         bottomNavigationViewApp.setOnNavigationItemSelectedListener { menu ->
             when (menu.itemId) {
                 R.id.bottom_navigation_view_item_explore -> {
-                    onBottomNavViewItemSelected(BottomNavigationViewItem.EXPLORE)
+                    onBottomNavViewItemSelected(BottomNavigationViewItem.LATEST)
                     true
                 }
                 R.id.bottom_navigation_view_item_favorites -> {
@@ -107,8 +107,8 @@ class MainActivityView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
 
     override fun setToolbarTitleBasedOnDestination(destination: NavDestination) {
         when (destination) {
-            NavDestination.EXPLORE_SCREEN ->
-                materialToolbarApp.title = context.getString(R.string.explore)
+            NavDestination.LATEST_SCREEN ->
+                materialToolbarApp.title = context.getString(R.string.latest)
             NavDestination.FAVORITES_SCREEN ->
                 materialToolbarApp.title = context.getString(R.string.favorites)
             NavDestination.APOD_DETAILS_SCREEN ->
@@ -119,23 +119,23 @@ class MainActivityView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
     override fun setToolbarMenuBasedOnDestination(destination: NavDestination) {
         val toolbarMenu = materialToolbarApp.menu
         when (destination) {
-            NavDestination.EXPLORE_SCREEN -> {
+            NavDestination.LATEST_SCREEN -> {
                 toolbarMenu.hideGroup(
                     R.id.toolbar_menu_group_favorites,
                     R.id.toolbar_menu_group_details
                 )
-                toolbarMenu.showGroup(R.id.toolbar_menu_group_explore)
+                toolbarMenu.showGroup(R.id.toolbar_menu_group_latest)
             }
             NavDestination.FAVORITES_SCREEN -> {
                 toolbarMenu.hideGroup(
-                    R.id.toolbar_menu_group_explore,
+                    R.id.toolbar_menu_group_latest,
                     R.id.toolbar_menu_group_details
                 )
                 toolbarMenu.showGroup(R.id.toolbar_menu_group_favorites)
             }
             NavDestination.APOD_DETAILS_SCREEN -> {
                 toolbarMenu.hideGroup(
-                    R.id.toolbar_menu_group_explore,
+                    R.id.toolbar_menu_group_latest,
                     R.id.toolbar_menu_group_favorites,
                     R.id.toolbar_menu_group_visit_apod_website
                 )

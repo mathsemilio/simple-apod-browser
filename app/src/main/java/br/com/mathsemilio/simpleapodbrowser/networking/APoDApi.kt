@@ -10,15 +10,14 @@ interface APoDApi {
     @GET("/apod")
     suspend fun getAPoDsBasedOnDateRange(
         @Query("api_key") key: String,
-        @Query("start_date") startDate: String,
-        @Query("end_date") endDate: String
+        @Query("start_date") startDate: String
     ): Response<List<APoD>>
 
     @GET("/apod")
     suspend fun getAPoDBasedOnDate(
         @Query("api_key") key: String,
         @Query("date") date: String
-    ) : Response<APoD>
+    ): Response<APoD>
 
     @GET("/apod")
     suspend fun getRandomAPoD(

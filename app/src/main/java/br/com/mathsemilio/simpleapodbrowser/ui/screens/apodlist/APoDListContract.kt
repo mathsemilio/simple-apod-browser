@@ -1,5 +1,6 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 
+import br.com.mathsemilio.simpleapodbrowser.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
@@ -20,7 +21,13 @@ interface APoDListContract {
 
         fun onToolbarActionVisitApodWebsiteClicked()
 
+        fun onAPoDDatePicked(dateSet: Long)
+
+        fun onInvalidAPoDDatePicked()
+
         fun handleToolbarActionClickEvent(action: ToolbarAction)
+
+        fun handleDateSetEvent(event: DateSetEvent.Event, dateSet: Long)
     }
 
     interface View {
