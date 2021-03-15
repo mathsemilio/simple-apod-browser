@@ -1,10 +1,10 @@
 package br.com.mathsemilio.simpleapodbrowser.ui
 
 import android.os.Bundle
-import br.com.mathsemilio.simpleapodbrowser.common.event.NavigationEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarActionClickEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarSearchViewEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SearchViewEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavigationViewItem
@@ -62,45 +62,39 @@ class MainActivity : BaseActivity(),
     override fun onToolbarActionClicked(action: ToolbarAction) {
         when (action) {
             ToolbarAction.PICK_APOD_BY_DATE ->
-                eventPoster.postEvent(ToolbarActionClickEvent(ToolbarAction.PICK_APOD_BY_DATE))
+                eventPoster.postEvent(ToolbarEvent.ActionClicked(ToolbarAction.PICK_APOD_BY_DATE))
             ToolbarAction.ADD_TO_FAVORITES ->
-                eventPoster.postEvent(ToolbarActionClickEvent(ToolbarAction.ADD_TO_FAVORITES))
+                eventPoster.postEvent(ToolbarEvent.ActionClicked(ToolbarAction.ADD_TO_FAVORITES))
             ToolbarAction.GET_RANDOM_APOD ->
-                eventPoster.postEvent(ToolbarActionClickEvent(ToolbarAction.GET_RANDOM_APOD))
+                eventPoster.postEvent(ToolbarEvent.ActionClicked(ToolbarAction.GET_RANDOM_APOD))
             ToolbarAction.VISIT_APOD_WEBSITE ->
-                eventPoster.postEvent(ToolbarActionClickEvent(ToolbarAction.VISIT_APOD_WEBSITE))
+                eventPoster.postEvent(ToolbarEvent.ActionClicked(ToolbarAction.VISIT_APOD_WEBSITE))
         }
     }
 
     override fun onSearchFavoritesSearchViewTextEntered(userInput: String) {
-        eventPoster.postEvent(
-            ToolbarSearchViewEvent(
-                ToolbarSearchViewEvent.Event.TEXT_ENTERED_BY_USER,
-                userInput
-            )
-        )
+        eventPoster.postEvent(SearchViewEvent.TextEntered(userInput))
     }
 
-    override val fragmentContainer get() = view.fragmentContainer
+    override fun getFragmentContainer() = view.fragmentContainer
 
     override fun onEvent(event: Any) {
         when (event) {
-            is NavigationEvent -> handleNavigationEvent(event.navEvent, event.navDestination)
+            is NavigationEvent -> onNavigationEvent(event)
         }
     }
 
-    private fun handleNavigationEvent(event: NavigationEvent.Event?, destination: NavDestination) {
-        if (event != null) {
-            when (event) {
-                NavigationEvent.Event.UPDATE_TOP_DESTINATION -> latestTopDestination = destination
-            }
+    private fun onNavigationEvent(event: NavigationEvent) {
+        event.apply {
+            if (updateTopDestination)
+                latestTopDestination = event.destination
+
+            view.setToolbarTitleBasedOnDestination(destination)
+            view.setToolbarMenuBasedOnDestination(destination)
+
+            if (destination == NavDestination.APOD_DETAILS_SCREEN)
+                view.showToolbarNavigationIcon()
         }
-
-        view.setToolbarTitleBasedOnDestination(destination)
-        view.setToolbarMenuBasedOnDestination(destination)
-
-        if (destination == NavDestination.APOD_DETAILS_SCREEN)
-            view.showToolbarNavigationIcon()
     }
 
     override fun onStart() {

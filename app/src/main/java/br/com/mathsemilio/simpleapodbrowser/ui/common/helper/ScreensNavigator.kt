@@ -4,8 +4,8 @@ import androidx.fragment.app.FragmentManager
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_VIDEO
 import br.com.mathsemilio.simpleapodbrowser.common.INVALID_APOD_TYPE
-import br.com.mathsemilio.simpleapodbrowser.common.event.NavigationEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetailsimage.APoDDetailsImageScreen
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetailsvideo.APoDDetailsVideoScreen
@@ -21,28 +21,18 @@ class ScreensNavigator(
     fun navigateToAPoDListScreen() {
         fragmentManager.beginTransaction().apply {
             setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-            replace(fragmentContainerHelper.fragmentContainer.id, APoDListScreen())
+            replace(fragmentContainerHelper.getFragmentContainer().id, APoDListScreen())
+            eventPoster.postEvent(NavigationEvent.Navigate(true, NavDestination.LATEST_SCREEN))
             commitNow()
-            eventPoster.postEvent(
-                NavigationEvent(
-                    NavigationEvent.Event.UPDATE_TOP_DESTINATION,
-                    NavDestination.LATEST_SCREEN
-                )
-            )
         }
     }
 
     fun navigateToAPoDFavoritesScreen() {
         fragmentManager.beginTransaction().apply {
             setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-            replace(fragmentContainerHelper.fragmentContainer.id, APoDFavoritesScreen())
+            replace(fragmentContainerHelper.getFragmentContainer().id, APoDFavoritesScreen())
+            eventPoster.postEvent(NavigationEvent.Navigate(true, NavDestination.FAVORITES_SCREEN))
             commitNow()
-            eventPoster.postEvent(
-                NavigationEvent(
-                    NavigationEvent.Event.UPDATE_TOP_DESTINATION,
-                    NavDestination.FAVORITES_SCREEN
-                )
-            )
         }
     }
 
@@ -53,7 +43,7 @@ class ScreensNavigator(
                 android.R.anim.slide_in_left, android.R.anim.slide_out_right
             )
             replace(
-                fragmentContainerHelper.fragmentContainer.id,
+                fragmentContainerHelper.getFragmentContainer().id,
                 when (apodType) {
                     APOD_TYPE_IMAGE -> {
                         APoDDetailsImageScreen.newInstance(apod)
@@ -64,9 +54,9 @@ class ScreensNavigator(
                     else -> throw RuntimeException(INVALID_APOD_TYPE)
                 }
             )
+            eventPoster.postEvent(NavigationEvent.Navigate(destination = NavDestination.APOD_DETAILS_SCREEN))
             addToBackStack(null)
             commit()
-            eventPoster.postEvent(NavigationEvent(null, NavDestination.APOD_DETAILS_SCREEN))
         }
     }
 }

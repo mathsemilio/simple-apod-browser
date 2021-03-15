@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
-import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarActionClickEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.OperationResult
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.AddFavoriteAPoDUseCase
@@ -21,8 +21,8 @@ import java.io.Serializable
 
 class APoDDetailsVideoScreen : BaseFragment(),
     APoDDetailsVideoContract.Screen,
-    EventPoster.EventListener,
-    AddFavoriteAPoDUseCase.Listener {
+    AddFavoriteAPoDUseCase.Listener,
+    EventPoster.EventListener {
 
     companion object {
         fun <T : Serializable> newInstance(apod: T): APoDDetailsVideoScreen {
@@ -84,12 +84,6 @@ class APoDDetailsVideoScreen : BaseFragment(),
         }
     }
 
-    override fun onEvent(event: Any) {
-        when (event) {
-            is ToolbarActionClickEvent -> handleToolbarActionClickEvent(event.action)
-        }
-    }
-
     override fun onAddFavoriteAPodUseCaseEvent(result: OperationResult<Nothing>) {
         when (result) {
             OperationResult.OnStarted -> onAddFavoriteAPoDStarted()
@@ -108,6 +102,12 @@ class APoDDetailsVideoScreen : BaseFragment(),
 
     override fun onAddFavoriteAPoDFailed(errorMessage: String) {
         messagesManager.showUseCaseErrorMessage(errorMessage)
+    }
+
+    override fun onEvent(event: Any) {
+        when (event) {
+            is ToolbarEvent -> handleToolbarActionClickEvent(event.action)
+        }
     }
 
     override fun onStart() {

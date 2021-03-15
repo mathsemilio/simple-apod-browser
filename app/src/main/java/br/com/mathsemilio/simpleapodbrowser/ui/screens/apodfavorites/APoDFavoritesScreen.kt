@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
-import br.com.mathsemilio.simpleapodbrowser.common.event.SnackBarActionEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarActionClickEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarSearchViewEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SearchViewEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SnackBarEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.OperationResult
@@ -90,13 +90,11 @@ class APoDFavoritesScreen : BaseFragment(),
         coroutineScope.launch { addFavoriteAPoDUseCase.addFavoriteAPoD(lastDeletedFavoriteAPoD) }
     }
 
-    override fun handleToolbarSearchViewEvent(
-        event: ToolbarSearchViewEvent.Event,
-        textEnteredByUser: String
-    ) {
+    override fun handleToolbarSearchViewEvent(event: SearchViewEvent) {
         when (event) {
-            ToolbarSearchViewEvent.Event.TEXT_ENTERED_BY_USER ->
-                onToolbarSearchViewTextEntered(textEnteredByUser)
+            is SearchViewEvent.TextEntered -> coroutineScope.launch {
+                fetchFavoriteAPoDUseCase.fetchFavoriteAPoDBasedOnName(event.input)
+            }
         }
     }
 
@@ -107,9 +105,11 @@ class APoDFavoritesScreen : BaseFragment(),
         }
     }
 
-    override fun handleSnackBarActionEvent(event: SnackBarActionEvent.Event) {
+    override fun handleSnackBarActionEvent(event: SnackBarEvent) {
         when (event) {
-            SnackBarActionEvent.Event.ACTION_UNDO_CLICKED -> onSnackBarActionUndoClicked()
+            SnackBarEvent.UndoClicked -> coroutineScope.launch {
+                addFavoriteAPoDUseCase.addFavoriteAPoD(lastDeletedFavoriteAPoD)
+            }
         }
     }
 
@@ -181,12 +181,9 @@ class APoDFavoritesScreen : BaseFragment(),
 
     override fun onEvent(event: Any) {
         when (event) {
-            is ToolbarSearchViewEvent ->
-                handleToolbarSearchViewEvent(event.searchViewEvent, event.textEnteredByUser)
-            is ToolbarActionClickEvent ->
-                handleToolbarActionClickEvent(event.action)
-            is SnackBarActionEvent ->
-                handleSnackBarActionEvent(event.actionEvent)
+            is SearchViewEvent -> handleToolbarSearchViewEvent(event)
+            is ToolbarEvent -> handleToolbarActionClickEvent(event.action)
+            is SnackBarEvent -> handleSnackBarActionEvent(event)
         }
     }
 

@@ -1,7 +1,7 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavorites
 
-import br.com.mathsemilio.simpleapodbrowser.common.event.SnackBarActionEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarSearchViewEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SearchViewEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SnackBarEvent
 import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
@@ -17,13 +17,12 @@ interface APoDFavoritesContract {
         fun onSnackBarActionUndoClicked()
 
         fun handleToolbarSearchViewEvent(
-            event: ToolbarSearchViewEvent.Event,
-            textEnteredByUser: String
+            event: SearchViewEvent
         )
 
         fun handleToolbarActionClickEvent(action: ToolbarAction)
 
-        fun handleSnackBarActionEvent(event: SnackBarActionEvent.Event)
+        fun handleSnackBarActionEvent(event: SnackBarEvent)
 
         fun onAddFavoriteAPoDStarted()
 

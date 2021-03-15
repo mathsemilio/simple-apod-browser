@@ -4,8 +4,8 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.DatePicker
-import br.com.mathsemilio.simpleapodbrowser.common.event.DateSetEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
 import java.util.*
 
@@ -25,9 +25,9 @@ class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListene
         }
 
         if (dateSet < firstApodDate)
-            eventPoster.postEvent(DateSetEvent(DateSetEvent.Event.INVALID_DATE_SET))
+            eventPoster.postEvent(DateSetEvent.InvalidDateSet)
         else
-            eventPoster.postEvent(DateSetEvent(DateSetEvent.Event.DATE_SET, dateSet.timeInMillis))
+            eventPoster.postEvent(DateSetEvent.DateSet(dateSet.timeInMillis))
     }
 
     private lateinit var calendar: Calendar

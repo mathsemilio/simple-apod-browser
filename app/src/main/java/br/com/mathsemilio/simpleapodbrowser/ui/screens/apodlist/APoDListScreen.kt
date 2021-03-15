@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
-import br.com.mathsemilio.simpleapodbrowser.common.event.DateSetEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.ToolbarActionClickEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.common.formatTimeInMillis
 import br.com.mathsemilio.simpleapodbrowser.common.getLastWeekDate
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
@@ -100,17 +100,20 @@ class APoDListScreen : BaseFragment(),
         }
     }
 
-    override fun handleDateSetEvent(event: DateSetEvent.Event, dateSet: Long) {
+    override fun handleDateSetEvent(event: DateSetEvent) {
         when (event) {
-            DateSetEvent.Event.DATE_SET -> onAPoDDatePicked(dateSet)
-            DateSetEvent.Event.INVALID_DATE_SET -> onInvalidAPoDDatePicked()
+            is DateSetEvent.DateSet -> coroutineScope.launch {
+                fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateSetInMillis.formatTimeInMillis())
+            }
+            DateSetEvent.InvalidDateSet ->
+                messagesManager.showInvalidAPoDDateErrorMessage()
         }
     }
 
     override fun onEvent(event: Any) {
         when (event) {
-            is ToolbarActionClickEvent -> handleToolbarActionClickEvent(event.action)
-            is DateSetEvent -> handleDateSetEvent(event.dateSetEvent, event.dateSet!!)
+            is ToolbarEvent -> handleToolbarActionClickEvent(event.action)
+            is DateSetEvent -> handleDateSetEvent(event)
         }
     }
 

@@ -3,8 +3,8 @@ package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
 import android.content.Context
 import android.view.View
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.event.SnackBarActionEvent
-import br.com.mathsemilio.simpleapodbrowser.common.event.poster.EventPoster
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SnackBarEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.common.showLongToast
 import br.com.mathsemilio.simpleapodbrowser.common.showShortToast
 import br.com.mathsemilio.simpleapodbrowser.common.showSnackBarWithAction
@@ -21,7 +21,7 @@ class MessagesManager(private val context: Context, private val eventPoster: Eve
             context.getString(R.string.message_favorite_apod_deleted_successfully),
             context.getString(R.string.undo)
         ) {
-            eventPoster.postEvent(SnackBarActionEvent(SnackBarActionEvent.Event.ACTION_UNDO_CLICKED))
+            eventPoster.postEvent(SnackBarEvent.UndoClicked)
         }
     }
 
