@@ -1,5 +1,6 @@
 package br.com.mathsemilio.simpleapodbrowser.common.di
 
+import br.com.mathsemilio.simpleapodbrowser.common.provider.APIKeyProvider
 import br.com.mathsemilio.simpleapodbrowser.networking.RetrofitBuilder
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 
@@ -14,4 +15,6 @@ class CompositionRoot {
         EventPoster()
     }
     val eventPoster get() = _eventPoster
+
+    val apiKeyProvider get() = APIKeyProvider
 }

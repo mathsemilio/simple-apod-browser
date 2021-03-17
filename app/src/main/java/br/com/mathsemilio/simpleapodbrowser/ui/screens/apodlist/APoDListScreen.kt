@@ -6,16 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
+import br.com.mathsemilio.simpleapodbrowser.common.formatTimeInMillis
+import br.com.mathsemilio.simpleapodbrowser.common.getWeekRangeDate
+import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
+import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
-import br.com.mathsemilio.simpleapodbrowser.common.formatTimeInMillis
-import br.com.mathsemilio.simpleapodbrowser.common.getLastWeekDate
-import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
-import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
-import br.com.mathsemilio.simpleapodbrowser.domain.model.OperationResult
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
@@ -27,8 +26,8 @@ import kotlinx.coroutines.launch
 class APoDListScreen : BaseFragment(),
     APoDListContract.View.Listener,
     APoDListContract.Screen,
-    EventPoster.EventListener,
-    FetchAPoDUseCase.Listener {
+    FetchAPoDUseCase.Listener,
+    EventPoster.EventListener {
 
     private lateinit var view: APoDListScreenView
 
@@ -68,7 +67,7 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun fetchApods() {
-        coroutineScope.launch { fetchAPoDUseCase.fetchAPoDsBasedOnDateRange(getLastWeekDate()) }
+        coroutineScope.launch { fetchAPoDUseCase.fetchAPoDBasedOnDateRange(getWeekRangeDate()) }
     }
 
     override fun onToolbarActionPickApodByDateClicked() {
@@ -91,7 +90,7 @@ class APoDListScreen : BaseFragment(),
         messagesManager.showInvalidAPoDDateErrorMessage()
     }
 
-    override fun handleToolbarActionClickEvent(action: ToolbarAction) {
+    override fun onToolbarActionClickEvent(action: ToolbarAction) {
         when (action) {
             ToolbarAction.PICK_APOD_BY_DATE -> onToolbarActionPickApodByDateClicked()
             ToolbarAction.GET_RANDOM_APOD -> onToolbarActionGetRandomAPoDClicked()
@@ -100,7 +99,7 @@ class APoDListScreen : BaseFragment(),
         }
     }
 
-    override fun handleDateSetEvent(event: DateSetEvent) {
+    override fun onDateSetEvent(event: DateSetEvent) {
         when (event) {
             is DateSetEvent.DateSet -> coroutineScope.launch {
                 fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateSetInMillis.formatTimeInMillis())
@@ -110,35 +109,31 @@ class APoDListScreen : BaseFragment(),
         }
     }
 
-    override fun onEvent(event: Any) {
-        when (event) {
-            is ToolbarEvent -> handleToolbarActionClickEvent(event.action)
-            is DateSetEvent -> handleDateSetEvent(event)
-        }
-    }
-
-    override fun onFetchAPoDUseCaseEvent(result: OperationResult<List<APoD>>) {
-        when (result) {
-            OperationResult.OnStarted -> onFetchApodsStarted()
-            is OperationResult.OnCompleted -> onFetchApodsCompleted(result.data!!)
-            is OperationResult.OnError -> onFetchApodsFailed(result.errorMessage!!)
-        }
-    }
-
-    override fun onFetchApodsStarted() {
-        view.showProgressIndicator()
-    }
-
-    override fun onFetchApodsCompleted(apods: List<APoD>) {
+    override fun onFetchAPoDsCompleted(apods: List<APoD>) {
         view.hideNetworkRequestFailedState()
         view.hideProgressIndicator()
         view.onRefreshCompleted()
         view.bindApods(apods)
     }
 
-    override fun onFetchApodsFailed(errorCode: String) {
+    override fun onFetchAPoDBasedOnDateCompleted(apod: APoD) {
+        screensNavigator.navigateToAPoDDetailsScreen(apod, apod.mediaType)
+    }
+
+    override fun onFetchRandomAPoDCompleted(apod: List<APoD>) {
+        screensNavigator.navigateToAPoDDetailsScreen(apod.first(), apod.first().mediaType)
+    }
+
+    override fun onFetchAPoDFailed(errorMessage: String) {
         view.hideProgressIndicator()
-        view.showNetworkRequestErrorState(errorCode)
+        view.showNetworkRequestErrorState(errorMessage)
+    }
+
+    override fun onEvent(event: Any) {
+        when (event) {
+            is ToolbarEvent -> onToolbarActionClickEvent(event.action)
+            is DateSetEvent -> onDateSetEvent(event)
+        }
     }
 
     override fun onStart() {

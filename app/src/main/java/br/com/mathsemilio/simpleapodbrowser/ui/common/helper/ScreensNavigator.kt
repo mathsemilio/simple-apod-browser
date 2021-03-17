@@ -19,24 +19,25 @@ class ScreensNavigator(
     private val fragmentContainerHelper: FragmentContainerHelper
 ) {
     fun navigateToAPoDListScreen() {
+        eventPoster.postEvent(NavigationEvent.OnNavigate(true, NavDestination.LATEST_SCREEN))
         fragmentManager.beginTransaction().apply {
             setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             replace(fragmentContainerHelper.getFragmentContainer().id, APoDListScreen())
-            eventPoster.postEvent(NavigationEvent.Navigate(true, NavDestination.LATEST_SCREEN))
             commitNow()
         }
     }
 
     fun navigateToAPoDFavoritesScreen() {
+        eventPoster.postEvent(NavigationEvent.OnNavigate(true, NavDestination.FAVORITES_SCREEN))
         fragmentManager.beginTransaction().apply {
             setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             replace(fragmentContainerHelper.getFragmentContainer().id, APoDFavoritesScreen())
-            eventPoster.postEvent(NavigationEvent.Navigate(true, NavDestination.FAVORITES_SCREEN))
             commitNow()
         }
     }
 
     fun <T : Serializable> navigateToAPoDDetailsScreen(apod: T, apodType: String) {
+        eventPoster.postEvent(NavigationEvent.OnNavigate(destination = NavDestination.APOD_DETAILS_SCREEN))
         fragmentManager.beginTransaction().apply {
             setCustomAnimations(
                 android.R.anim.slide_in_left, android.R.anim.slide_out_right,
@@ -54,7 +55,6 @@ class ScreensNavigator(
                     else -> throw RuntimeException(INVALID_APOD_TYPE)
                 }
             )
-            eventPoster.postEvent(NavigationEvent.Navigate(destination = NavDestination.APOD_DETAILS_SCREEN))
             addToBackStack(null)
             commit()
         }

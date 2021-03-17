@@ -1,8 +1,7 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavorites
 
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SearchViewEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SnackBarEvent
 import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SnackBarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
 interface APoDFavoritesContract {
@@ -12,40 +11,15 @@ interface APoDFavoritesContract {
 
         fun onToolbarActionVisitApodWebsiteClicked()
 
-        fun onToolbarSearchViewTextEntered(userInput: String)
+        fun onToolbarActionClickEvent(action: ToolbarAction)
 
-        fun onSnackBarActionUndoClicked()
-
-        fun handleToolbarSearchViewEvent(
-            event: SearchViewEvent
-        )
-
-        fun handleToolbarActionClickEvent(action: ToolbarAction)
-
-        fun handleSnackBarActionEvent(event: SnackBarEvent)
-
-        fun onAddFavoriteAPoDStarted()
-
-        fun onAddFavoriteAPoDCompleted()
-
-        fun onAddFavoriteAPoDFailed(errorMessage: String)
-
-        fun onFetchFavoriteApodsStarted()
-
-        fun onFetchFavoriteApodsCompleted(favoriteApods: List<FavoriteAPoD>)
-
-        fun onFetchFavoriteApodsFailed(errorMessage: String)
-
-        fun onDeleteFavoriteApodStarted()
-
-        fun onDeleteFavoriteApodCompleted()
-
-        fun onDeleteFavoriteApodFailed(errorMessage: String)
+        fun onSnackBarActionEvent(event: SnackBarEvent)
     }
 
     interface View {
         interface Listener {
             fun onFavoriteAPoDClicked(favoriteApod: FavoriteAPoD)
+
             fun onRemoveFavoriteAPoDIconClicked(favoriteApod: FavoriteAPoD)
         }
 
@@ -59,6 +33,7 @@ interface APoDFavoritesContract {
     interface ListItem {
         interface Listener {
             fun onFavoriteAPoDClicked(favoriteApod: FavoriteAPoD)
+
             fun onRemoveFavoriteAPoDIconClicked(favoriteApod: FavoriteAPoD)
         }
 

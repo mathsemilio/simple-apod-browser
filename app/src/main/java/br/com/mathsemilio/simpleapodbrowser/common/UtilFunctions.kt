@@ -3,10 +3,8 @@ package br.com.mathsemilio.simpleapodbrowser.common
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.view.Menu
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
 import com.google.android.material.snackbar.Snackbar
@@ -30,28 +28,11 @@ fun showSnackBarWithAction(
     Snackbar.make(view, message, Snackbar.LENGTH_LONG).setAction(actionText) { onActionClicked() }
 }
 
-fun Menu.hideGroup(vararg groupId: Int) = groupId.forEach { this.setGroupVisible(it, false) }
-
-fun Menu.showGroup(vararg groupId: Int) = groupId.forEach { this.setGroupVisible(it, true) }
-
 fun launchWebPage(context: Context, url: String) {
     val page = Uri.parse(url)
     val intent = Intent(Intent.ACTION_VIEW, page)
     if (intent.resolveActivity(context.packageManager) != null)
         context.startActivity(intent)
-}
-
-inline fun SearchView.onQueryTextChanged(crossinline onTextChanged: (String) -> Unit) {
-    this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-        override fun onQueryTextSubmit(query: String?): Boolean {
-            return true
-        }
-
-        override fun onQueryTextChange(newText: String?): Boolean {
-            onTextChanged(newText.orEmpty())
-            return true
-        }
-    })
 }
 
 fun APoD.toFavoriteAPoD(): FavoriteAPoD {
@@ -61,10 +42,11 @@ fun APoD.toFavoriteAPoD(): FavoriteAPoD {
     val mediaType = this.mediaType
     val explanation = this.explanation
     val thumbnailUrl = this.thumbnailUrl
-    return FavoriteAPoD(title, date, url, mediaType, explanation, thumbnailUrl)
+    val copyright = this.copyright
+    return FavoriteAPoD(title, date, url, mediaType, explanation, thumbnailUrl, copyright)
 }
 
-fun getLastWeekDate(): String {
+fun getWeekRangeDate(): String {
     val calendar = Calendar.getInstance()
     val dateToday = calendar.get(Calendar.DAY_OF_WEEK)
 
@@ -76,5 +58,5 @@ fun getLastWeekDate(): String {
 }
 
 fun Long.formatTimeInMillis(): String {
-    return SimpleDateFormat("yyyy/MM/dd", Locale.US).format(this)
+    return SimpleDateFormat("yyyy-MM-dd", Locale.US).format(this)
 }

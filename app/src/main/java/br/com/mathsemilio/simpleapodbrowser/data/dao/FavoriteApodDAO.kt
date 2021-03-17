@@ -14,7 +14,4 @@ interface FavoriteApodDAO {
 
     @Query("SELECT * FROM favorite_apods_table")
     suspend fun getFavoriteAPoDs(): List<FavoriteAPoD>
-
-    @Query("SELECT * FROM favorite_apods_table WHERE title LIKE :name")
-    suspend fun getFavoriteAPoDBasedOnName(name: String): List<FavoriteAPoD>
 }

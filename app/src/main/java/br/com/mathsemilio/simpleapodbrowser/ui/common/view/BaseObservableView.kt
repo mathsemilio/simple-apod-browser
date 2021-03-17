@@ -8,7 +8,7 @@ abstract class BaseObservableView<Listener> : BaseObservable<Listener>(), IView 
 
     private lateinit var _rootView: View
 
-    override var rootView: View
+    final override var rootView: View
         get() = _rootView
         set(value) {
             _rootView = value

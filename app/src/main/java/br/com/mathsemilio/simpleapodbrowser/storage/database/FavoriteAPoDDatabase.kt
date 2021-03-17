@@ -28,7 +28,7 @@ abstract class FavoriteAPoDDatabase : RoomDatabase() {
                     context.applicationContext,
                     FavoriteAPoDDatabase::class.java,
                     FAVORITE_APoDS_DATABASE
-                ).build()
+                ).fallbackToDestructiveMigration().build()
 
                 INSTANCE = databaseInstance
                 return INSTANCE!!

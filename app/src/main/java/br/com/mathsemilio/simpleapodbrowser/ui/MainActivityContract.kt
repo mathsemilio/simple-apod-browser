@@ -10,23 +10,20 @@ interface MainActivityContract {
     interface View {
         interface Listener {
             fun onBottomNavigationViewItemClicked(item: BottomNavigationViewItem)
+
             fun onToolbarNavigationIconClicked()
+
             fun onToolbarActionClicked(action: ToolbarAction)
-            fun onSearchFavoritesSearchViewTextEntered(userInput: String)
         }
 
         val fragmentContainer: FrameLayout
 
-        fun showToolbarNavigationIcon()
-
-        fun hideToolbarNaviagtionIcon()
-
-        fun showToolbar()
-
-        fun hideToolbar()
-
         fun setToolbarTitleBasedOnDestination(destination: NavDestination)
 
         fun setToolbarMenuBasedOnDestination(destination: NavDestination)
+
+        fun setToolbarNavigationIconVisibility(isVisible: Boolean)
+
+        fun setBottomNavigationViewVisibility(isVisible: Boolean)
     }
 }

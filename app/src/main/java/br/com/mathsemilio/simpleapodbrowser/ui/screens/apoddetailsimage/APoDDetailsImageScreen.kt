@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
+import br.com.mathsemilio.simpleapodbrowser.common.UNKNOWN_TYPE
+import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
-import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
-import br.com.mathsemilio.simpleapodbrowser.domain.model.OperationResult
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.AddFavoriteAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 import kotlinx.coroutines.CoroutineScope
@@ -41,8 +41,6 @@ class APoDDetailsImageScreen : BaseFragment(),
 
     private lateinit var addFavoriteAPoDUseCase: AddFavoriteAPoDUseCase
 
-    private lateinit var currentAPoD: APoD
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         messagesManager = compositionRoot.messagesManager
@@ -60,53 +58,40 @@ class APoDDetailsImageScreen : BaseFragment(),
         return view.rootView
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        currentAPoD = getAPoD()
-    }
-
-    override fun getAPoD(): APoD {
-        return arguments?.getSerializable(ARG_APOD) as APoD
+    private inline fun <reified T : Serializable> getAPoD(): T {
+        return when (T::class) {
+            APoD::class -> arguments?.getSerializable(ARG_APOD) as T
+            else -> throw RuntimeException(UNKNOWN_TYPE)
+        }
     }
 
     override fun bindAPoD() {
-        view.bindAPoDDetails(currentAPoD)
+        view.bindAPoDDetails(getAPoD())
     }
 
     override fun onToolbarActionAddToFavoritesClicked() {
-        coroutineScope.launch { addFavoriteAPoDUseCase.addFavoriteAPoD(currentAPoD) }
+        messagesManager.showAddFavoriteAPoDUseCaseAddMessage()
+        coroutineScope.launch { addFavoriteAPoDUseCase.addFavoriteAPoD(getAPoD()) }
     }
 
-    override fun handleToolbarActionClickEvent(action: ToolbarAction) {
+    override fun onToolbarActionClickEvent(action: ToolbarAction) {
         when (action) {
             ToolbarAction.ADD_TO_FAVORITES -> onToolbarActionAddToFavoritesClicked()
             else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
         }
     }
 
-    override fun onAddFavoriteAPodUseCaseEvent(result: OperationResult<Nothing>) {
-        when (result) {
-            OperationResult.OnStarted -> onAddFavoriteAPoDStarted()
-            is OperationResult.OnCompleted -> onAddFavoriteAPoDCompleted()
-            is OperationResult.OnError -> onAddFavoriteAPoDFailed(result.errorMessage!!)
-        }
-    }
-
-    override fun onAddFavoriteAPoDStarted() {
-        messagesManager.showAddFavoriteAPoDUseCaseAddMessage()
-    }
-
-    override fun onAddFavoriteAPoDCompleted() {
+    override fun onFavoriteAPoDAddedSuccessfully() {
         messagesManager.showAddFavoriteAPoDUseCaseSuccessMessage()
     }
 
-    override fun onAddFavoriteAPoDFailed(errorMessage: String) {
+    override fun onFavoriteAPoDAddFailed(errorMessage: String) {
         messagesManager.showUseCaseErrorMessage(errorMessage)
     }
 
     override fun onEvent(event: Any) {
         when (event) {
-            is ToolbarEvent -> handleToolbarActionClickEvent(event.action)
+            is ToolbarEvent -> onToolbarActionClickEvent(event.action)
         }
     }
 

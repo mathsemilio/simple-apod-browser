@@ -4,12 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
 import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
 import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
-import br.com.mathsemilio.simpleapodbrowser.data.repository.APoDRepository
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.AddFavoriteAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.DeleteFavoriteAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteAPoDDatabase
+import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.FavoriteAPoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
@@ -26,7 +27,15 @@ class ActivityCompositionRoot(
 
     private val favoriteAPoDDAO get() = favoriteAPoDDatabase.favoriteApodDAO
 
-    private val apodRepository get() = APoDRepository(aPoDApi, favoriteAPoDDAO)
+    private val aPoDEndpoint by lazy {
+        APoDEndpoint(aPoDApi, apiKeyProvider, dispatcherProvider)
+    }
+
+    private val favoriteAPoDEndpoint by lazy {
+        FavoriteAPoDEndpoint(favoriteAPoDDAO, dispatcherProvider)
+    }
+
+    private val apiKeyProvider get() = compositionRoot.apiKeyProvider
 
     private val dispatcherProvider get() = DispatcherProvider
 
@@ -39,7 +48,9 @@ class ActivityCompositionRoot(
     }
     val dialogManager get() = _dialogManager
 
-    private val glideProvider by lazy { GlideProvider(activity) }
+    private val glideProvider by lazy {
+        GlideProvider(activity)
+    }
 
     private val _messagesManager by lazy {
         MessagesManager(activity, eventPoster)
@@ -61,22 +72,22 @@ class ActivityCompositionRoot(
     val viewFactory get() = _viewFactory
 
     private val _addFavoriteAPoDUseCase by lazy {
-        AddFavoriteAPoDUseCase(apodRepository, dispatcherProvider)
+        AddFavoriteAPoDUseCase(favoriteAPoDEndpoint)
     }
     val addFavoriteAPoDUseCase get() = _addFavoriteAPoDUseCase
 
     private val _fetchAPoDUseCase by lazy {
-        FetchAPoDUseCase(apodRepository, dispatcherProvider)
+        FetchAPoDUseCase(aPoDEndpoint)
     }
     val fetchAPoDUseCase get() = _fetchAPoDUseCase
 
     private val _fetchFavoriteAPoDUseCase by lazy {
-        FetchFavoriteAPoDUseCase(apodRepository, dispatcherProvider)
+        FetchFavoriteAPoDUseCase(favoriteAPoDEndpoint)
     }
     val fetchFavoriteAPoDUseCase get() = _fetchFavoriteAPoDUseCase
 
     private val _deleteFavoriteAPoDUseCase by lazy {
-        DeleteFavoriteAPoDUseCase(apodRepository, dispatcherProvider)
+        DeleteFavoriteAPoDUseCase(favoriteAPoDEndpoint)
     }
     val deleteFavoriteAPoDUseCase get() = _deleteFavoriteAPoDUseCase
 }

@@ -6,17 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SearchViewEvent
+import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
+import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SnackBarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
-import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
-import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
-import br.com.mathsemilio.simpleapodbrowser.domain.model.OperationResult
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.AddFavoriteAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.DeleteFavoriteAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchFavoriteAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
@@ -71,125 +69,78 @@ class APoDFavoritesScreen : BaseFragment(),
 
     override fun onRemoveFavoriteAPoDIconClicked(favoriteApod: FavoriteAPoD) {
         lastDeletedFavoriteAPoD = favoriteApod
-        coroutineScope.launch { deleteFavoriteAPoDUseCase.deleteFavoriteAPoD(favoriteApod) }
+        coroutineScope.launch {
+            view.showProgressIndicator()
+            deleteFavoriteAPoDUseCase.deleteFavoriteAPoD(favoriteApod)
+        }
     }
 
     override fun fetchFavoriteApods() {
-        coroutineScope.launch { fetchFavoriteAPoDUseCase.fetchFavoriteAPoDs() }
+        coroutineScope.launch {
+            view.showProgressIndicator()
+            fetchFavoriteAPoDUseCase.fetchFavoriteAPoDs()
+        }
     }
 
     override fun onToolbarActionVisitApodWebsiteClicked() {
         launchWebPage(requireContext(), getString(R.string.apod_website_url))
     }
 
-    override fun onToolbarSearchViewTextEntered(userInput: String) {
-        coroutineScope.launch { fetchFavoriteAPoDUseCase.fetchFavoriteAPoDBasedOnName(userInput) }
-    }
-
-    override fun onSnackBarActionUndoClicked() {
-        coroutineScope.launch { addFavoriteAPoDUseCase.addFavoriteAPoD(lastDeletedFavoriteAPoD) }
-    }
-
-    override fun handleToolbarSearchViewEvent(event: SearchViewEvent) {
-        when (event) {
-            is SearchViewEvent.TextEntered -> coroutineScope.launch {
-                fetchFavoriteAPoDUseCase.fetchFavoriteAPoDBasedOnName(event.input)
-            }
-        }
-    }
-
-    override fun handleToolbarActionClickEvent(action: ToolbarAction) {
+    override fun onToolbarActionClickEvent(action: ToolbarAction) {
         when (action) {
             ToolbarAction.VISIT_APOD_WEBSITE -> onToolbarActionVisitApodWebsiteClicked()
             else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
         }
     }
 
-    override fun handleSnackBarActionEvent(event: SnackBarEvent) {
+    override fun onSnackBarActionEvent(event: SnackBarEvent) {
         when (event) {
             SnackBarEvent.UndoClicked -> coroutineScope.launch {
-                addFavoriteAPoDUseCase.addFavoriteAPoD(lastDeletedFavoriteAPoD)
+                addFavoriteAPoDUseCase.reAddFavoriteAPoD(lastDeletedFavoriteAPoD)
             }
         }
     }
 
-    override fun onAddFavoriteAPodUseCaseEvent(result: OperationResult<Nothing>) {
-        when (result) {
-            OperationResult.OnStarted -> onAddFavoriteAPoDCompleted()
-            is OperationResult.OnCompleted -> onAddFavoriteAPoDCompleted()
-            is OperationResult.OnError -> onAddFavoriteAPoDFailed(result.errorMessage!!)
-        }
-    }
-
-    override fun onAddFavoriteAPoDStarted() {
-        view.showProgressIndicator()
-    }
-
-    override fun onAddFavoriteAPoDCompleted() {
-        view.hideProgressIndicator()
+    override fun onFavoriteAPoDAddedSuccessfully() {
         fetchFavoriteApods()
     }
 
-    override fun onAddFavoriteAPoDFailed(errorMessage: String) {
-        view.hideProgressIndicator()
+    override fun onFavoriteAPoDAddFailed(errorMessage: String) {
         messagesManager.showUseCaseErrorMessage(errorMessage)
     }
 
-    override fun onFetchFavoriteAPodUseCaseEvent(result: OperationResult<List<FavoriteAPoD>>) {
-        when (result) {
-            OperationResult.OnStarted -> onFetchFavoriteApodsStarted()
-            is OperationResult.OnCompleted -> onFetchFavoriteApodsCompleted(result.data!!)
-            is OperationResult.OnError -> onFetchFavoriteApodsFailed(result.errorMessage!!)
-        }
-    }
-
-    override fun onFetchFavoriteApodsStarted() {
-        view.showProgressIndicator()
-    }
-
-    override fun onFetchFavoriteApodsCompleted(favoriteApods: List<FavoriteAPoD>) {
+    override fun onFetchFavoriteAPoDCompleted(favoriteApods: List<FavoriteAPoD>) {
         view.hideProgressIndicator()
         view.bindFavoriteApods(favoriteApods)
     }
 
-    override fun onFetchFavoriteApodsFailed(errorMessage: String) {
+    override fun onFetchFavoriteAPoDFailed(errorMessage: String) {
         view.hideProgressIndicator()
         messagesManager.showUseCaseErrorMessage(errorMessage)
     }
 
-    override fun onDeleteFavoriteAPodUseCaseEvent(result: OperationResult<Nothing>) {
-        when (result) {
-            OperationResult.OnStarted -> onDeleteFavoriteApodStarted()
-            is OperationResult.OnCompleted -> onDeleteFavoriteApodCompleted()
-            is OperationResult.OnError -> onDeleteFavoriteApodFailed(result.errorMessage!!)
-        }
-    }
-
-    override fun onDeleteFavoriteApodStarted() {
-        view.showProgressIndicator()
-    }
-
-    override fun onDeleteFavoriteApodCompleted() {
+    override fun onFavoriteAPoDDeletedSuccessfully() {
         view.hideProgressIndicator()
         messagesManager.showDeleteFavoriteAPoDSuccessMessage(view.rootView)
+        fetchFavoriteApods()
     }
 
-    override fun onDeleteFavoriteApodFailed(errorMessage: String) {
+    override fun onFavoriteAPoDDeleteFailed(errorMessage: String) {
         view.hideProgressIndicator()
         messagesManager.showUseCaseErrorMessage(errorMessage)
     }
 
     override fun onEvent(event: Any) {
         when (event) {
-            is SearchViewEvent -> handleToolbarSearchViewEvent(event)
-            is ToolbarEvent -> handleToolbarActionClickEvent(event.action)
-            is SnackBarEvent -> handleSnackBarActionEvent(event)
+            is ToolbarEvent -> onToolbarActionClickEvent(event.action)
+            is SnackBarEvent -> onSnackBarActionEvent(event)
         }
     }
 
     override fun onStart() {
         view.addListener(this)
         eventPoster.addListener(this)
+        addFavoriteAPoDUseCase.addListener(this)
         fetchFavoriteAPoDUseCase.addListener(this)
         deleteFavoriteAPoDUseCase.addListener(this)
         fetchFavoriteApods()
@@ -199,6 +150,7 @@ class APoDFavoritesScreen : BaseFragment(),
     override fun onStop() {
         view.removeListener(this)
         eventPoster.removeListener(this)
+        addFavoriteAPoDUseCase.removeListener(this)
         fetchFavoriteAPoDUseCase.removeListener(this)
         deleteFavoriteAPoDUseCase.removeListener(this)
         super.onStop()

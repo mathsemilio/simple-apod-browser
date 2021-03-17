@@ -1,19 +1,13 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
 interface APoDListContract {
 
     interface Screen {
         fun fetchApods()
-
-        fun onFetchApodsStarted()
-
-        fun onFetchApodsCompleted(apods: List<APoD>)
-
-        fun onFetchApodsFailed(errorCode: String)
 
         fun onToolbarActionPickApodByDateClicked()
 
@@ -25,9 +19,9 @@ interface APoDListContract {
 
         fun onInvalidAPoDDatePicked()
 
-        fun handleToolbarActionClickEvent(action: ToolbarAction)
+        fun onToolbarActionClickEvent(action: ToolbarAction)
 
-        fun handleDateSetEvent(event: DateSetEvent)
+        fun onDateSetEvent(event: DateSetEvent)
     }
 
     interface View {

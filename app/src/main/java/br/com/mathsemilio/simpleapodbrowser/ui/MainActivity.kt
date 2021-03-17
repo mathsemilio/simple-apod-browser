@@ -1,8 +1,8 @@
 package br.com.mathsemilio.simpleapodbrowser.ui
 
 import android.os.Bundle
+import android.widget.FrameLayout
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.SearchViewEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
@@ -21,7 +21,7 @@ class MainActivity : BaseActivity(),
     private lateinit var eventPoster: EventPoster
     private lateinit var screensNavigator: ScreensNavigator
 
-    private lateinit var latestTopDestination: NavDestination
+    private lateinit var latestTopLevelDestination: NavDestination
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +30,8 @@ class MainActivity : BaseActivity(),
 
         eventPoster = compositionRoot.eventPoster
         screensNavigator = compositionRoot.screensNavigator
+
+        eventPoster.addListener(this)
 
         setContentView(view.rootView)
 
@@ -41,9 +43,10 @@ class MainActivity : BaseActivity(),
     private fun attachOnBackStackChangedListener() {
         supportFragmentManager.addOnBackStackChangedListener {
             if (supportFragmentManager.backStackEntryCount == 0) {
-                view.setToolbarMenuBasedOnDestination(latestTopDestination)
-                view.setToolbarTitleBasedOnDestination(latestTopDestination)
-                view.hideToolbarNaviagtionIcon()
+                view.setToolbarMenuBasedOnDestination(latestTopLevelDestination)
+                view.setToolbarTitleBasedOnDestination(latestTopLevelDestination)
+                view.setToolbarNavigationIconVisibility(isVisible = false)
+                view.setBottomNavigationViewVisibility(isVisible = true)
             }
         }
     }
@@ -72,11 +75,9 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    override fun onSearchFavoritesSearchViewTextEntered(userInput: String) {
-        eventPoster.postEvent(SearchViewEvent.TextEntered(userInput))
+    override fun getFragmentContainer(): FrameLayout {
+        return view.fragmentContainer
     }
-
-    override fun getFragmentContainer() = view.fragmentContainer
 
     override fun onEvent(event: Any) {
         when (event) {
@@ -85,21 +86,24 @@ class MainActivity : BaseActivity(),
     }
 
     private fun onNavigationEvent(event: NavigationEvent) {
-        event.apply {
-            if (updateTopDestination)
-                latestTopDestination = event.destination
+        when (event) {
+            is NavigationEvent.OnNavigate -> {
+                view.setToolbarTitleBasedOnDestination(event.destination)
+                view.setToolbarMenuBasedOnDestination(event.destination)
 
-            view.setToolbarTitleBasedOnDestination(destination)
-            view.setToolbarMenuBasedOnDestination(destination)
+                if (event.updateTopLevelDestination)
+                    latestTopLevelDestination = event.destination
 
-            if (destination == NavDestination.APOD_DETAILS_SCREEN)
-                view.showToolbarNavigationIcon()
+                if (event.destination == NavDestination.APOD_DETAILS_SCREEN) {
+                    view.setBottomNavigationViewVisibility(isVisible = false)
+                    view.setToolbarNavigationIconVisibility(isVisible = true)
+                }
+            }
         }
     }
 
     override fun onStart() {
         view.addListener(this)
-        eventPoster.addListener(this)
         super.onStart()
     }
 

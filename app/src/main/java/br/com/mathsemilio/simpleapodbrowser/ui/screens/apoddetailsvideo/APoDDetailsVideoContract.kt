@@ -6,19 +6,11 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 interface APoDDetailsVideoContract {
 
     interface Screen {
-        fun getAPoD(): APoD
-
         fun bindAPoD()
 
         fun onToolbarActionAddToFavoritesClicked()
 
-        fun handleToolbarActionClickEvent(action: ToolbarAction)
-
-        fun onAddFavoriteAPoDStarted()
-
-        fun onAddFavoriteAPoDCompleted()
-
-        fun onAddFavoriteAPoDFailed(errorMessage: String)
+        fun onToolbarActionClickEvent(action: ToolbarAction)
     }
 
     interface View {
