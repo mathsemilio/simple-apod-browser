@@ -8,6 +8,7 @@ import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.common.UNKNOWN_TYPE
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
@@ -61,6 +62,7 @@ class APoDDetailsImageScreen : BaseFragment(),
     private inline fun <reified T : Serializable> getAPoD(): T {
         return when (T::class) {
             APoD::class -> arguments?.getSerializable(ARG_APOD) as T
+            FavoriteAPoD::class -> arguments?.getSerializable(ARG_APOD) as T
             else -> throw RuntimeException(UNKNOWN_TYPE)
         }
     }

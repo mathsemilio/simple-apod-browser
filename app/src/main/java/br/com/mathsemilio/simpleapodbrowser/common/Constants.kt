@@ -10,6 +10,8 @@ const val ARG_APOD = "ARG_APOD"
 const val APOD_TYPE_IMAGE = "image"
 const val APOD_TYPE_VIDEO = "video"
 
+const val FIRST_APOD_TIME_IN_MILLIS = 805863600000L
+
 const val UNKNOWN_TYPE = "Unknown argument type"
 const val ILLEGAL_TOOLBAR_ACTION = "Illegal Toolbar action for this screen"
 const val INVALID_APOD_TYPE = "Invalid APoD type: Must be either \"image\" or \"video\""

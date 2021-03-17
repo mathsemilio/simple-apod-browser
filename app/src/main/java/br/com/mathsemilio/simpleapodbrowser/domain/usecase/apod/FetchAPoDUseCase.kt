@@ -1,5 +1,6 @@
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod
 
+import br.com.mathsemilio.simpleapodbrowser.common.formatTimeInMillis
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
 import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
@@ -26,8 +27,8 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
         }
     }
 
-    suspend fun fetchAPoDBasedOnDate(date: String) {
-        aPoDEndpoint.getAPoDsBasedOnDate(date).also { result ->
+    suspend fun fetchAPoDBasedOnDate(dateInMillis: Long) {
+        aPoDEndpoint.getAPoDsBasedOnDate(dateInMillis.formatTimeInMillis()).also { result ->
             when (result) {
                 is Result.Completed -> {
                     listeners.forEach { it.onFetchAPoDBasedOnDateCompleted(result.data!!) }
@@ -42,7 +43,7 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
         aPoDEndpoint.getRandomAPoD().also { result ->
             when (result) {
                 is Result.Completed -> {
-                    listeners.forEach { it.onFetchAPoDsCompleted(result.data!!) }
+                    listeners.forEach { it.onFetchRandomAPoDCompleted(result.data!!) }
                 }
                 is Result.Failed ->
                     listeners.forEach { it.onFetchAPoDFailed(result.errorMessage!!) }

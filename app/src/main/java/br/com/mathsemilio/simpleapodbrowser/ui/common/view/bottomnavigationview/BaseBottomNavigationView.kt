@@ -27,6 +27,7 @@ abstract class BaseBottomNavigationView<Listener>(
         frameLayoutScreenContainer = findViewById(R.id.frame_layout_screen_container)
         bottomNavigationViewApp = findViewById(R.id.bottom_navigation_view_app)
         setToolbarNavigationIconClickListener()
+        setToolbarOnMenuItemClickListener()
         setBottomNavigationViewOnNavigationItemSelectedListener()
     }
 

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
-import br.com.mathsemilio.simpleapodbrowser.common.formatTimeInMillis
 import br.com.mathsemilio.simpleapodbrowser.common.getWeekRangeDate
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
@@ -82,14 +81,6 @@ class APoDListScreen : BaseFragment(),
         launchWebPage(requireContext(), getString(R.string.apod_website_url))
     }
 
-    override fun onAPoDDatePicked(dateSet: Long) {
-        coroutineScope.launch { fetchAPoDUseCase.fetchAPoDBasedOnDate(dateSet.formatTimeInMillis()) }
-    }
-
-    override fun onInvalidAPoDDatePicked() {
-        messagesManager.showInvalidAPoDDateErrorMessage()
-    }
-
     override fun onToolbarActionClickEvent(action: ToolbarAction) {
         when (action) {
             ToolbarAction.PICK_APOD_BY_DATE -> onToolbarActionPickApodByDateClicked()
@@ -102,7 +93,7 @@ class APoDListScreen : BaseFragment(),
     override fun onDateSetEvent(event: DateSetEvent) {
         when (event) {
             is DateSetEvent.DateSet -> coroutineScope.launch {
-                fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateSetInMillis.formatTimeInMillis())
+                fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateSetInMillis)
             }
             DateSetEvent.InvalidDateSet ->
                 messagesManager.showInvalidAPoDDateErrorMessage()

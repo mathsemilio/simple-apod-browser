@@ -50,7 +50,10 @@ class MainActivityView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
         when (destination) {
             NavDestination.LATEST_SCREEN -> {
                 hideToolbarGroup(R.id.toolbar_menu_group_details)
-                showToolbarGroup(R.id.toolbar_menu_group_latest)
+                showToolbarGroup(
+                    R.id.toolbar_menu_group_latest,
+                    R.id.toolbar_menu_group_visit_apod_website
+                )
             }
             NavDestination.FAVORITES_SCREEN -> {
                 hideToolbarGroup(

@@ -14,5 +14,5 @@ data class FavoriteAPoD(
     val mediaType: String,
     val explanation: String,
     val thumbnailUrl: String?,
-    val copyright: String
+    val copyright: String?
 ) : Serializable

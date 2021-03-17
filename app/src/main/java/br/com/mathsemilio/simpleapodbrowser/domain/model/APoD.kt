@@ -15,5 +15,5 @@ data class APoD(
     val concepts: List<String>,
     @SerializedName("thumbnail_url")
     val thumbnailUrl: String?,
-    val copyright: String
+    val copyright: String?
 ) : Serializable

@@ -15,10 +15,6 @@ interface APoDListContract {
 
         fun onToolbarActionVisitApodWebsiteClicked()
 
-        fun onAPoDDatePicked(dateSet: Long)
-
-        fun onInvalidAPoDDatePicked()
-
         fun onToolbarActionClickEvent(action: ToolbarAction)
 
         fun onDateSetEvent(event: DateSetEvent)

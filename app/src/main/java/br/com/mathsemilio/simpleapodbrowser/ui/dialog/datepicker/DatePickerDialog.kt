@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.DatePicker
+import br.com.mathsemilio.simpleapodbrowser.common.FIRST_APOD_TIME_IN_MILLIS
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
@@ -18,13 +19,7 @@ class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListene
             set(Calendar.DAY_OF_MONTH, dayOfMonth)
         }
 
-        val firstApodDate = calendar.apply {
-            set(Calendar.YEAR, 1995)
-            set(Calendar.MONTH, 6)
-            set(Calendar.DAY_OF_MONTH, 16)
-        }
-
-        if (dateSet < firstApodDate)
+        if (dateSet.timeInMillis < FIRST_APOD_TIME_IN_MILLIS)
             eventPoster.postEvent(DateSetEvent.InvalidDateSet)
         else
             eventPoster.postEvent(DateSetEvent.DateSet(dateSet.timeInMillis))
