@@ -6,7 +6,6 @@ import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.ui.MainActivityView
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetailsimage.APoDDetailsImageView
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetailsvideo.APoDDetailsVideoView
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavorites.APoDFavoritesView
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.APoDListScreenView
 
 class ViewFactory(
@@ -18,9 +17,6 @@ class ViewFactory(
 
     fun getApodListScreenView(container: ViewGroup?) =
         APoDListScreenView(glideProvider, layoutInflater, container)
-
-    fun getApodFavoritesView(container: ViewGroup?) =
-        APoDFavoritesView(glideProvider, layoutInflater, container)
 
     fun getApodDetailsVideoView(container: ViewGroup?) =
         APoDDetailsVideoView(layoutInflater, container)

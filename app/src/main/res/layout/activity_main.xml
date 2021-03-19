@@ -17,9 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:menu="@menu/toolbar_app_menu"
             app:navigationIconTint="?colorControlNormal"
-            app:title="@string/latest"
-            tools:menu="@menu/toolbar_app_menu" />
+            app:title="@string/latest" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
