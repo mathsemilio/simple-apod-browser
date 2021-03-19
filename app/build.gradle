@@ -37,7 +37,6 @@ android {
 dependencies {
     def retrofit_version = "2.9.0"
     def glide_version = "4.12.0"
-    def room_version = "2.2.6"
     def coroutines_version = "1.4.1"
     def swipe_refresh_layout_version = "1.1.0"
 
@@ -55,10 +54,6 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:$glide_version"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
-
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 

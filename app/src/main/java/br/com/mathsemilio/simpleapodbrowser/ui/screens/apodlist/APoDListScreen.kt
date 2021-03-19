@@ -5,11 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.common.getWeekRangeDate
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
@@ -58,7 +57,7 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onApodClicked(apod: APoD) {
-        screensNavigator.navigateToAPoDDetailsScreen(apod, apod.mediaType)
+        screensNavigator.navigateToDetailsScreen(apod, apod.mediaType)
     }
 
     override fun onScreenSwipedToRefresh() {
@@ -66,7 +65,10 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun fetchApods() {
-        coroutineScope.launch { fetchAPoDUseCase.fetchAPoDBasedOnDateRange(getWeekRangeDate()) }
+        coroutineScope.launch {
+            view.showProgressIndicator()
+            fetchAPoDUseCase.fetchAPoDBasedOnDateRange(getWeekRangeDate())
+        }
     }
 
     override fun onToolbarActionPickApodByDateClicked() {
@@ -74,7 +76,9 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onToolbarActionGetRandomAPoDClicked() {
-        coroutineScope.launch { fetchAPoDUseCase.fetchRandomAPoD() }
+        coroutineScope.launch {
+            fetchAPoDUseCase.fetchRandomAPoD()
+        }
     }
 
     override fun onToolbarActionVisitApodWebsiteClicked() {
@@ -83,18 +87,18 @@ class APoDListScreen : BaseFragment(),
 
     override fun onToolbarActionClickEvent(action: ToolbarAction) {
         when (action) {
-            ToolbarAction.PICK_APOD_BY_DATE -> onToolbarActionPickApodByDateClicked()
+            ToolbarAction.PICK_APOD_DATE -> onToolbarActionPickApodByDateClicked()
             ToolbarAction.GET_RANDOM_APOD -> onToolbarActionGetRandomAPoDClicked()
             ToolbarAction.VISIT_APOD_WEBSITE -> onToolbarActionVisitApodWebsiteClicked()
-            else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
         }
     }
 
     override fun onDateSetEvent(event: DateSetEvent) {
         when (event) {
-            is DateSetEvent.DateSet -> coroutineScope.launch {
-                fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateSetInMillis)
-            }
+            is DateSetEvent.DateSet ->
+                coroutineScope.launch {
+                    fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateInMillis)
+                }
             DateSetEvent.InvalidDateSet ->
                 messagesManager.showInvalidAPoDDateErrorMessage()
         }
@@ -108,11 +112,11 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onFetchAPoDBasedOnDateCompleted(apod: APoD) {
-        screensNavigator.navigateToAPoDDetailsScreen(apod, apod.mediaType)
+        screensNavigator.navigateToDetailsScreen(apod, apod.mediaType)
     }
 
     override fun onFetchRandomAPoDCompleted(apod: List<APoD>) {
-        screensNavigator.navigateToAPoDDetailsScreen(apod.first(), apod.first().mediaType)
+        screensNavigator.navigateToDetailsScreen(apod.first(), apod.first().mediaType)
     }
 
     override fun onFetchAPoDFailed(errorMessage: String) {

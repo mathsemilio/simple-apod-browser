@@ -3,29 +3,22 @@ package br.com.mathsemilio.simpleapodbrowser.common
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.view.View
+import android.view.Menu
 import android.widget.Toast
-import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
-import br.com.mathsemilio.simpleapodbrowser.domain.model.FavoriteAPoD
-import com.google.android.material.snackbar.Snackbar
+import br.com.mathsemilio.simpleapodbrowser.R
 import java.text.SimpleDateFormat
 import java.util.*
-
-fun Context.showShortToast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-}
 
 fun Context.showLongToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
 
-fun showSnackBarWithAction(
-    view: View,
-    message: String,
-    actionText: String,
-    onActionClicked: () -> Unit
-) {
-    Snackbar.make(view, message, Snackbar.LENGTH_LONG).setAction(actionText) { onActionClicked() }
+fun Menu.hideGroup(vararg groupId: Int) {
+    groupId.forEach { id -> this.setGroupVisible(id, false) }
+}
+
+fun Menu.showGroup(vararg groupId: Int) {
+    groupId.forEach { id -> this.setGroupVisible(id, true) }
 }
 
 fun launchWebPage(context: Context, url: String) {
@@ -33,17 +26,6 @@ fun launchWebPage(context: Context, url: String) {
     val intent = Intent(Intent.ACTION_VIEW, page)
     if (intent.resolveActivity(context.packageManager) != null)
         context.startActivity(intent)
-}
-
-fun APoD.toFavoriteAPoD(): FavoriteAPoD {
-    val title = this.title
-    val date = this.date
-    val url = this.url
-    val mediaType = this.mediaType
-    val explanation = this.explanation
-    val thumbnailUrl = this.thumbnailUrl
-    val copyright = this.copyright
-    return FavoriteAPoD(title, date, url, mediaType, explanation, thumbnailUrl, copyright)
 }
 
 fun getWeekRangeDate(): String {
@@ -59,4 +41,31 @@ fun getWeekRangeDate(): String {
 
 fun Long.formatTimeInMillis(): String {
     return SimpleDateFormat("yyyy-MM-dd", Locale.US).format(this)
+}
+
+fun String.formatAPoDDate(context: Context): String {
+    val year = this.substring(0..3)
+    val month = this.substring(5..6)
+    val day = this.substring(8..9)
+    val formattedDate = "${convertMonthNumberToString(month)} $day, $year"
+
+    return context.getString(R.string.date, formattedDate)
+}
+
+fun convertMonthNumberToString(month: String): String {
+    return when (month) {
+        "01" -> "January"
+        "02" -> "February"
+        "03" -> "March"
+        "04" -> "April"
+        "05" -> "May"
+        "06" -> "June"
+        "07" -> "July"
+        "08" -> "August"
+        "09" -> "September"
+        "10" -> "October"
+        "11" -> "November"
+        "12" -> "December"
+        else -> throw IllegalArgumentException(INVALID_MONTH)
+    }
 }

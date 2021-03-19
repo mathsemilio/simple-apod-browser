@@ -66,10 +66,12 @@ class APoDListScreenView(
 
     override fun showProgressIndicator() {
         progressBarApodList.visibility = View.VISIBLE
+        swipeRefreshLayoutApodList.visibility = View.INVISIBLE
     }
 
     override fun hideProgressIndicator() {
         progressBarApodList.visibility = View.GONE
+        swipeRefreshLayoutApodList.visibility = View.VISIBLE
     }
 
     override fun onRefreshCompleted() {

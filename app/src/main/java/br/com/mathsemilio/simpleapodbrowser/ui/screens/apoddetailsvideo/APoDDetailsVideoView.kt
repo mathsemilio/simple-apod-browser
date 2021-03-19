@@ -12,10 +12,12 @@ import android.widget.TextView
 import android.widget.VideoView
 import androidx.core.content.res.ResourcesCompat
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.formatAPoDDate
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseView
 
-class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?) : BaseView(),
+class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?) :
+    BaseView(),
     APoDDetailsVideoContract.View {
 
     private lateinit var videoViewApodDetailVideo: VideoView
@@ -23,6 +25,7 @@ class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?
     private lateinit var textViewApodDetailWithVideoTitle: TextView
     private lateinit var textViewApodDetailWithVideoDate: TextView
     private lateinit var textViewApodDetailWithVideoExplanation: TextView
+    private lateinit var textViewApodDetailWithVideoCredit: TextView
 
     private lateinit var mediaController: MediaController
 
@@ -45,6 +48,8 @@ class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?
             findViewById(R.id.text_view_apod_detail_with_video_date)
         textViewApodDetailWithVideoExplanation =
             findViewById(R.id.text_view_apod_detail_with_video_explanation)
+        textViewApodDetailWithVideoCredit =
+            findViewById(R.id.text_view_apod_detail_with_video_credit)
     }
 
     private fun setupMediaController() {
@@ -89,7 +94,17 @@ class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?
                 setAudioAttributes(getAudioAttributes())
         }
         textViewApodDetailWithVideoTitle.text = aPoD.title
-        textViewApodDetailWithVideoDate.text = aPoD.date
+        textViewApodDetailWithVideoDate.text = aPoD.date.formatAPoDDate(context)
         textViewApodDetailWithVideoExplanation.text = aPoD.explanation
+        setImageCreditTextViewText(aPoD.copyright)
+    }
+
+    private fun setImageCreditTextViewText(imageCopyright: String?) {
+        if (imageCopyright != null)
+            textViewApodDetailWithVideoCredit.visibility = View.INVISIBLE
+        else
+            textViewApodDetailWithVideoCredit.text = context.getString(
+                R.string.image_credit, imageCopyright
+            )
     }
 }

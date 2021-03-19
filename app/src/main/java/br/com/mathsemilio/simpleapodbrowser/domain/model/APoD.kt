@@ -5,15 +5,15 @@ import java.io.Serializable
 
 data class APoD(
     @SerializedName("concept_tags")
-    val conceptTags: Boolean = true,
+    val conceptTags: Boolean,
     val title: String,
-    val date: String,
     val url: String,
+    val date: String,
     @SerializedName("media_type")
     val mediaType: String,
     val explanation: String,
-    val concepts: List<String>,
     @SerializedName("thumbnail_url")
     val thumbnailUrl: String?,
+    val concepts: List<String>,
     val copyright: String?
 ) : Serializable

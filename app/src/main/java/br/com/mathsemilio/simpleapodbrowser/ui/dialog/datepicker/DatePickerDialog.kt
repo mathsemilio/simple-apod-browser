@@ -19,10 +19,13 @@ class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListene
             set(Calendar.DAY_OF_MONTH, dayOfMonth)
         }
 
-        if (dateSet.timeInMillis < FIRST_APOD_TIME_IN_MILLIS)
-            eventPoster.postEvent(DateSetEvent.InvalidDateSet)
-        else
-            eventPoster.postEvent(DateSetEvent.DateSet(dateSet.timeInMillis))
+        when {
+            dateSet.timeInMillis > System.currentTimeMillis() ->
+                eventPoster.postEvent(DateSetEvent.InvalidDateSet)
+            dateSet.timeInMillis < FIRST_APOD_TIME_IN_MILLIS ->
+                eventPoster.postEvent(DateSetEvent.InvalidDateSet)
+            else -> eventPoster.postEvent(DateSetEvent.DateSet(dateSet.timeInMillis))
+        }
     }
 
     private lateinit var calendar: Calendar

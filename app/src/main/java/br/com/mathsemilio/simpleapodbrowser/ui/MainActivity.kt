@@ -5,56 +5,48 @@ import android.widget.FrameLayout
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavigationViewItem
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 
 class MainActivity : BaseActivity(),
     MainActivityContract.View.Listener,
-    FragmentContainerHelper,
+    FragmentContainerManager,
     EventPoster.EventListener {
 
     private lateinit var view: MainActivityView
 
-    private lateinit var eventPoster: EventPoster
     private lateinit var screensNavigator: ScreensNavigator
-
-    private lateinit var latestTopLevelDestination: NavDestination
+    private lateinit var eventPoster: EventPoster
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         view = compositionRoot.viewFactory.getMainActivityView(null)
 
-        eventPoster = compositionRoot.eventPoster
         screensNavigator = compositionRoot.screensNavigator
 
-        eventPoster.addListener(this)
+        eventPoster = compositionRoot.eventPoster.also { eventPoster ->
+            eventPoster.addListener(this)
+        }
 
         setContentView(view.rootView)
 
-        screensNavigator.navigateToAPoDListScreen()
+        screensNavigator.navigateToLatestScreen()
 
         attachOnBackStackChangedListener()
     }
 
     private fun attachOnBackStackChangedListener() {
-        supportFragmentManager.addOnBackStackChangedListener {
-            if (supportFragmentManager.backStackEntryCount == 0) {
-                view.setToolbarMenuBasedOnDestination(latestTopLevelDestination)
-                view.setToolbarTitleBasedOnDestination(latestTopLevelDestination)
-                view.setToolbarNavigationIconVisibility(isVisible = false)
-                view.setBottomNavigationViewVisibility(isVisible = true)
+        supportFragmentManager.apply {
+            addOnBackStackChangedListener {
+                if (backStackEntryCount == 0) {
+                    view.setToolbarNavigationIconVisibility(isVisible = false)
+                    view.setToolbarTitleBasedOnDestination(NavDestination.LATEST_SCREEN)
+                    view.setToolbarMenuGroupBasedOnDestination(NavDestination.LATEST_SCREEN)
+                }
             }
-        }
-    }
-
-    override fun onBottomNavigationViewItemClicked(item: BottomNavigationViewItem) {
-        when (item) {
-            BottomNavigationViewItem.LATEST -> screensNavigator.navigateToAPoDListScreen()
-            BottomNavigationViewItem.FAVORITES -> screensNavigator.navigateToAPoDFavoritesScreen()
         }
     }
 
@@ -63,41 +55,30 @@ class MainActivity : BaseActivity(),
     }
 
     override fun onToolbarActionClicked(action: ToolbarAction) {
-        when (action) {
-            ToolbarAction.PICK_APOD_BY_DATE ->
-                eventPoster.postEvent(ToolbarEvent.ActionClicked(ToolbarAction.PICK_APOD_BY_DATE))
-            ToolbarAction.ADD_TO_FAVORITES ->
-                eventPoster.postEvent(ToolbarEvent.ActionClicked(ToolbarAction.ADD_TO_FAVORITES))
-            ToolbarAction.GET_RANDOM_APOD ->
-                eventPoster.postEvent(ToolbarEvent.ActionClicked(ToolbarAction.GET_RANDOM_APOD))
-            ToolbarAction.VISIT_APOD_WEBSITE ->
-                eventPoster.postEvent(ToolbarEvent.ActionClicked(ToolbarAction.VISIT_APOD_WEBSITE))
-        }
+        eventPoster.postEvent(ToolbarEvent.ActionClicked(action))
     }
 
     override fun getFragmentContainer(): FrameLayout {
-        return view.fragmentContainer
+        return view.screenContainer
     }
 
     override fun onEvent(event: Any) {
         when (event) {
-            is NavigationEvent -> onNavigationEvent(event)
+            is NavigationEvent.OnNavigate -> onNavigationEvent(event.destination)
         }
     }
 
-    private fun onNavigationEvent(event: NavigationEvent) {
-        when (event) {
-            is NavigationEvent.OnNavigate -> {
-                view.setToolbarTitleBasedOnDestination(event.destination)
-                view.setToolbarMenuBasedOnDestination(event.destination)
-
-                if (event.updateTopLevelDestination)
-                    latestTopLevelDestination = event.destination
-
-                if (event.destination == NavDestination.APOD_DETAILS_SCREEN) {
-                    view.setBottomNavigationViewVisibility(isVisible = false)
-                    view.setToolbarNavigationIconVisibility(isVisible = true)
-                }
+    private fun onNavigationEvent(destination: NavDestination) {
+        when (destination) {
+            NavDestination.LATEST_SCREEN -> {
+                view.setToolbarNavigationIconVisibility(isVisible = false)
+                view.setToolbarTitleBasedOnDestination(NavDestination.LATEST_SCREEN)
+                view.setToolbarMenuGroupBasedOnDestination(NavDestination.LATEST_SCREEN)
+            }
+            NavDestination.DETAILS_SCREEN -> {
+                view.setToolbarNavigationIconVisibility(isVisible = true)
+                view.setToolbarTitleBasedOnDestination(NavDestination.DETAILS_SCREEN)
+                view.setToolbarMenuGroupBasedOnDestination(NavDestination.DETAILS_SCREEN)
             }
         }
     }

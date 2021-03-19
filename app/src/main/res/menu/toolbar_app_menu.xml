@@ -17,16 +17,6 @@
 
     </group>
 
-    <group android:id="@+id/toolbar_menu_group_details">
-
-        <item
-            android:id="@+id/toolbar_action_add_to_favorite"
-            android:icon="@drawable/ic_baseline_star_24"
-            android:title="@string/toolbar_action_title_add_to_favorites"
-            app:showAsAction="ifRoom" />
-
-    </group>
-
     <group android:id="@+id/toolbar_menu_group_visit_apod_website">
 
         <item

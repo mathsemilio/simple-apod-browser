@@ -23,6 +23,7 @@ interface APoDListContract {
     interface View {
         interface Listener {
             fun onApodClicked(apod: APoD)
+
             fun onScreenSwipedToRefresh()
         }
 

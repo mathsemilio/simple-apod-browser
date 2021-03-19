@@ -9,12 +9,13 @@ class CompositionRoot {
     private val _retrofitBuilder by lazy {
         RetrofitBuilder()
     }
-    val retrofitBuilder get() = _retrofitBuilder
-
     private val _eventPoster by lazy {
         EventPoster()
     }
-    val eventPoster get() = _eventPoster
 
     val apiKeyProvider get() = APIKeyProvider
+
+    val eventPoster get() = _eventPoster
+
+    val retrofitBuilder get() = _retrofitBuilder
 }

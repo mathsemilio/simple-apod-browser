@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.40" />
+            app:layout_constraintGuide_percent="0.45" />
 
         <ImageView
             android:id="@+id/image_view_apod_detail_image"
@@ -23,11 +23,11 @@
             android:layout_height="0dp"
             android:background="@android:color/black"
             android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
-            android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/guideline_apod_detail_with_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:scaleType="centerCrop"
             tools:src="@drawable/ic_example_apod" />
 
         <TextView
@@ -57,7 +57,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_apod_detail_with_image_title"
-            tools:text="2021 January 1" />
+            tools:text="Date: January 1, 2021" />
 
         <TextView
             android:id="@+id/text_view_apod_detail_with_image_explanation"
@@ -68,12 +68,27 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/text_view_apod_detail_with_image_credit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_apod_detail_with_image_date"
             app:layout_constraintVertical_bias="0.0"
             tools:text="@string/lorem_ipsum" />
+
+        <TextView
+            android:id="@+id/text_view_apod_detail_with_image_credit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
+            android:maxLines="2"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Image Credit: NASA" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

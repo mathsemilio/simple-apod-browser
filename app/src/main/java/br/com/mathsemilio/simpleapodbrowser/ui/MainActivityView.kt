@@ -3,86 +3,100 @@ package br.com.mathsemilio.simpleapodbrowser.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.content.res.ResourcesCompat
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavigationViewItem
+import br.com.mathsemilio.simpleapodbrowser.common.hideGroup
+import br.com.mathsemilio.simpleapodbrowser.common.showGroup
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.bottomnavigationview.BaseBottomNavigationView
+import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
+import com.google.android.material.appbar.MaterialToolbar
 
 class MainActivityView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
-    BaseBottomNavigationView<MainActivityContract.View.Listener>(layoutInflater, parent),
+    BaseObservableView<MainActivityContract.View.Listener>(),
     MainActivityContract.View {
 
-    private var frameLayoutFragmentContainer: FrameLayout
+    private var materialToolbarApp: MaterialToolbar
+    private var frameLayoutScreenContainer: FrameLayout
 
     init {
-        appendRootView(layoutInflater.inflate(R.layout.activity_main, parent, false))
-        frameLayoutFragmentContainer = findViewById(R.id.frame_layout_fragment_container)
+        rootView = layoutInflater.inflate(R.layout.activity_main, parent, false)
+        materialToolbarApp = findViewById(R.id.material_toolbar_app)
+        frameLayoutScreenContainer = findViewById(R.id.frame_layout_screen_container)
+        setOnToolbarNavigationIconClickListener()
+        setToolbarOnMenuItemClickListener()
     }
 
-    override fun onToolbarNavigationIconClicked() {
-        listeners.forEach { it.onToolbarNavigationIconClicked() }
+    private fun setOnToolbarNavigationIconClickListener() {
+        materialToolbarApp.setNavigationOnClickListener { onToolbarNavigationIconClicked() }
     }
 
-    override fun onToolbarActionClicked(action: ToolbarAction) {
-        listeners.forEach { it.onToolbarActionClicked(action) }
-    }
-
-    override fun onBottomNavigationViewItemSelected(item: BottomNavigationViewItem) {
-        listeners.forEach { it.onBottomNavigationViewItemClicked(item) }
-    }
-
-    override val fragmentContainer: FrameLayout
-        get() = frameLayoutFragmentContainer
-
-    override fun setToolbarTitleBasedOnDestination(destination: NavDestination) {
-        when (destination) {
-            NavDestination.LATEST_SCREEN ->
-                setToolbarTitle(context.getString(R.string.latest))
-            NavDestination.FAVORITES_SCREEN ->
-                setToolbarTitle(context.getString(R.string.favorites))
-            NavDestination.APOD_DETAILS_SCREEN ->
-                setToolbarTitle(context.getString(R.string.details))
-        }
-    }
-
-    override fun setToolbarMenuBasedOnDestination(destination: NavDestination) {
-        when (destination) {
-            NavDestination.LATEST_SCREEN -> {
-                hideToolbarGroup(R.id.toolbar_menu_group_details)
-                showToolbarGroup(
-                    R.id.toolbar_menu_group_latest,
-                    R.id.toolbar_menu_group_visit_apod_website
-                )
-            }
-            NavDestination.FAVORITES_SCREEN -> {
-                hideToolbarGroup(
-                    R.id.toolbar_menu_group_latest,
-                    R.id.toolbar_menu_group_details
-                )
-                showToolbarGroup(R.id.toolbar_menu_group_visit_apod_website)
-            }
-            NavDestination.APOD_DETAILS_SCREEN -> {
-                hideToolbarGroup(
-                    R.id.toolbar_menu_group_visit_apod_website,
-                    R.id.toolbar_menu_group_latest
-                )
-                showToolbarGroup(R.id.toolbar_menu_group_details)
+    private fun setToolbarOnMenuItemClickListener() {
+        materialToolbarApp.setOnMenuItemClickListener { menu ->
+            when (menu.itemId) {
+                R.id.toolbar_action_pick_date -> {
+                    onToolbarActionClicked(ToolbarAction.PICK_APOD_DATE)
+                    true
+                }
+                R.id.toolbar_action_get_random_apod -> {
+                    onToolbarActionClicked(ToolbarAction.GET_RANDOM_APOD)
+                    true
+                }
+                R.id.toolbar_action_visit_apod_website -> {
+                    onToolbarActionClicked(ToolbarAction.VISIT_APOD_WEBSITE)
+                    true
+                }
+                else -> false
             }
         }
     }
+
+    override val screenContainer: FrameLayout
+        get() = frameLayoutScreenContainer
 
     override fun setToolbarNavigationIconVisibility(isVisible: Boolean) {
         when (isVisible) {
             true -> showToolbarNavigationIcon()
-            false -> hideToolbarNavigationIcon()
+            else -> materialToolbarApp.navigationIcon = null
         }
     }
 
-    override fun setBottomNavigationViewVisibility(isVisible: Boolean) {
-        when (isVisible) {
-            true -> showBottomNavigationView()
-            false -> hideBottomNavigationView()
+    private fun showToolbarNavigationIcon() {
+        materialToolbarApp.navigationIcon = ResourcesCompat.getDrawable(
+            context.resources, R.drawable.ic_baseline_arrow_back_24, null
+        )
+    }
+
+    override fun setToolbarTitleBasedOnDestination(destination: NavDestination) {
+        materialToolbarApp.title = when (destination) {
+            NavDestination.LATEST_SCREEN -> context.getString(R.string.latest)
+            NavDestination.DETAILS_SCREEN -> context.getString(R.string.details)
         }
+    }
+
+    override fun setToolbarMenuGroupBasedOnDestination(destination: NavDestination) {
+        val toolbarMenu = materialToolbarApp.menu
+        when (destination) {
+            NavDestination.LATEST_SCREEN -> {
+                toolbarMenu.showGroup(
+                    R.id.toolbar_menu_group_latest,
+                    R.id.toolbar_menu_group_visit_apod_website
+                )
+            }
+            NavDestination.DETAILS_SCREEN -> {
+                toolbarMenu.hideGroup(
+                    R.id.toolbar_menu_group_latest,
+                    R.id.toolbar_menu_group_visit_apod_website
+                )
+            }
+        }
+    }
+
+    private fun onToolbarActionClicked(action: ToolbarAction) {
+        listeners.forEach { it.onToolbarActionClicked(action) }
+    }
+
+    private fun onToolbarNavigationIconClicked() {
+        listeners.forEach { it.onToolbarNavigationIconClicked() }
     }
 }

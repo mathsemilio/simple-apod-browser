@@ -13,11 +13,11 @@ class APoDListItemView(
     private val glideProvider: GlideProvider,
     layoutInflater: LayoutInflater,
     parent: ViewGroup?
-) : BaseObservableView<APoDListContract.ListItem.Listener>(), APoDListContract.ListItem {
+) : BaseObservableView<APoDListContract.ListItem.Listener>(),
+    APoDListContract.ListItem {
 
     private lateinit var imageViewApodListItemImage: ImageView
     private lateinit var textViewApodListItemTitle: TextView
-    private lateinit var textViewApodListItemShortExplanation: TextView
 
     private lateinit var currentAPoD: APoD
 
@@ -28,19 +28,14 @@ class APoDListItemView(
     }
 
     private fun initializeViews() {
-        imageViewApodListItemImage =
-            findViewById(R.id.image_view_apod_list_item_image)
-        textViewApodListItemTitle =
-            findViewById(R.id.text_view_apod_list_item_title)
-        textViewApodListItemShortExplanation =
-            findViewById(R.id.text_view_apod_list_item_short_explanation)
+        imageViewApodListItemImage = findViewById(R.id.image_view_apod_list_item_image)
+        textViewApodListItemTitle = findViewById(R.id.text_view_apod_list_item_title)
     }
 
     override fun bindAPoDDetails(apod: APoD) {
         currentAPoD = apod
         glideProvider.loadResourceFromUrl(apod.url, imageViewApodListItemImage)
         textViewApodListItemTitle.text = apod.title
-        textViewApodListItemShortExplanation.text = apod.explanation
     }
 
     private fun onAPoDClicked() {

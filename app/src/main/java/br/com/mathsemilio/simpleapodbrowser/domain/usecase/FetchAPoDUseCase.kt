@@ -1,4 +1,4 @@
-package br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod
+package br.com.mathsemilio.simpleapodbrowser.domain.usecase
 
 import br.com.mathsemilio.simpleapodbrowser.common.formatTimeInMillis
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
