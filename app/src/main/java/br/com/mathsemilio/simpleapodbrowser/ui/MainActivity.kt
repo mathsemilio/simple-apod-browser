@@ -27,9 +27,7 @@ class MainActivity : BaseActivity(),
 
         screensNavigator = compositionRoot.screensNavigator
 
-        eventPoster = compositionRoot.eventPoster.also { eventPoster ->
-            eventPoster.addListener(this)
-        }
+        eventPoster = compositionRoot.eventPoster
 
         setContentView(view.rootView)
 
@@ -85,6 +83,7 @@ class MainActivity : BaseActivity(),
 
     override fun onStart() {
         view.addListener(this)
+        eventPoster.addListener(this)
         super.onStart()
     }
 

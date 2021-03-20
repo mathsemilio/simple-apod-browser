@@ -20,12 +20,11 @@ class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?
     BaseView(),
     APoDDetailsVideoContract.View {
 
-    private lateinit var videoViewApodDetailVideo: VideoView
+    private lateinit var videoViewApodDetail: VideoView
     private lateinit var imageViewApodDetailVideoPlayIcon: ImageView
     private lateinit var textViewApodDetailWithVideoTitle: TextView
     private lateinit var textViewApodDetailWithVideoDate: TextView
     private lateinit var textViewApodDetailWithVideoExplanation: TextView
-    private lateinit var textViewApodDetailWithVideoCredit: TextView
 
     private lateinit var mediaController: MediaController
 
@@ -38,7 +37,7 @@ class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?
     }
 
     private fun initializeViews() {
-        videoViewApodDetailVideo =
+        videoViewApodDetail =
             findViewById(R.id.video_view_apod_detail_video)
         imageViewApodDetailVideoPlayIcon =
             findViewById(R.id.image_view_apod_detail_video_play_icon)
@@ -48,17 +47,15 @@ class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?
             findViewById(R.id.text_view_apod_detail_with_video_date)
         textViewApodDetailWithVideoExplanation =
             findViewById(R.id.text_view_apod_detail_with_video_explanation)
-        textViewApodDetailWithVideoCredit =
-            findViewById(R.id.text_view_apod_detail_with_video_credit)
     }
 
     private fun setupMediaController() {
         mediaController = MediaController(context, true)
-        mediaController.setAnchorView(videoViewApodDetailVideo)
+        mediaController.setAnchorView(videoViewApodDetail)
     }
 
     private fun attachVideoViewOnCompleteListener() {
-        videoViewApodDetailVideo.setOnCompletionListener {
+        videoViewApodDetail.setOnCompletionListener {
             imageViewApodDetailVideoPlayIcon.apply {
                 visibility = View.VISIBLE
                 setImageDrawable(
@@ -74,7 +71,7 @@ class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?
 
     private fun attachPlayIconOnClickListener() {
         imageViewApodDetailVideoPlayIcon.setOnClickListener { playIcon ->
-            videoViewApodDetailVideo.start()
+            videoViewApodDetail.start()
             playIcon.visibility = View.GONE
         }
     }
@@ -87,7 +84,7 @@ class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?
     }
 
     override fun bindAPoDDetails(aPoD: APoD) {
-        videoViewApodDetailVideo.apply {
+        videoViewApodDetail.apply {
             setVideoURI(Uri.parse(aPoD.url))
             setMediaController(mediaController)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -96,15 +93,5 @@ class APoDDetailsVideoView(layoutInflater: LayoutInflater, container: ViewGroup?
         textViewApodDetailWithVideoTitle.text = aPoD.title
         textViewApodDetailWithVideoDate.text = aPoD.date.formatAPoDDate(context)
         textViewApodDetailWithVideoExplanation.text = aPoD.explanation
-        setImageCreditTextViewText(aPoD.copyright)
-    }
-
-    private fun setImageCreditTextViewText(imageCopyright: String?) {
-        if (imageCopyright != null)
-            textViewApodDetailWithVideoCredit.visibility = View.INVISIBLE
-        else
-            textViewApodDetailWithVideoCredit.text = context.getString(
-                R.string.image_credit, imageCopyright
-            )
     }
 }

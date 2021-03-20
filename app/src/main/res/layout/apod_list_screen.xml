@@ -30,7 +30,7 @@
 
     <TextView
         android:id="@+id/text_view_apod_list_network_request_error"
-        style="@style/TextAppearance.AppCompat.Large"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
