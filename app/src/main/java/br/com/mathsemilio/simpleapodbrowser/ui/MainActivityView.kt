@@ -9,6 +9,7 @@ import br.com.mathsemilio.simpleapodbrowser.common.hideGroup
 import br.com.mathsemilio.simpleapodbrowser.common.showGroup
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
+import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -51,8 +52,7 @@ class MainActivityView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
         }
     }
 
-    override val screenContainer: FrameLayout
-        get() = frameLayoutScreenContainer
+    override val screenContainer get() = frameLayoutScreenContainer
 
     override fun setToolbarNavigationIconVisibility(isVisible: Boolean) {
         when (isVisible) {
@@ -67,28 +67,35 @@ class MainActivityView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
         )
     }
 
-    override fun setToolbarTitleBasedOnDestination(destination: NavDestination) {
+    override fun setToolbarTitleForDestination(destination: NavDestination) {
         materialToolbarApp.title = when (destination) {
-            NavDestination.LATEST_SCREEN -> context.getString(R.string.latest)
             NavDestination.DETAILS_SCREEN -> context.getString(R.string.details)
         }
     }
 
-    override fun setToolbarMenuGroupBasedOnDestination(destination: NavDestination) {
-        val toolbarMenu = materialToolbarApp.menu
+    override fun setToolbarTitleForTopDestination(topDestination: TopDestination) {
+        materialToolbarApp.title = when (topDestination) {
+            TopDestination.LATEST_SCREEN -> context.getString(R.string.latest)
+        }
+    }
+
+    override fun setToolbarMenuForDestination(destination: NavDestination) {
+        val menu = materialToolbarApp.menu
         when (destination) {
-            NavDestination.LATEST_SCREEN -> {
-                toolbarMenu.showGroup(
-                    R.id.toolbar_menu_group_latest,
-                    R.id.toolbar_menu_group_visit_apod_website
-                )
-            }
-            NavDestination.DETAILS_SCREEN -> {
-                toolbarMenu.hideGroup(
-                    R.id.toolbar_menu_group_latest,
-                    R.id.toolbar_menu_group_visit_apod_website
-                )
-            }
+            NavDestination.DETAILS_SCREEN -> menu.hideGroup(
+                R.id.toolbar_menu_group_latest,
+                R.id.toolbar_menu_group_visit_apod_website
+            )
+        }
+    }
+
+    override fun setToolbarMenuForTopDestination(topDestination: TopDestination) {
+        val menu = materialToolbarApp.menu
+        when (topDestination) {
+            TopDestination.LATEST_SCREEN -> menu.showGroup(
+                R.id.toolbar_menu_group_latest,
+                R.id.toolbar_menu_group_visit_apod_website
+            )
         }
     }
 

@@ -7,10 +7,11 @@ import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
+import com.ncapdevi.fragnav.FragNavController
 
 class ActivityCompositionRoot(
     private val activity: AppCompatActivity,
@@ -32,7 +33,7 @@ class ActivityCompositionRoot(
         FetchAPoDUseCase(aPoDEndpoint)
     }
 
-    private val fragmentContainerManager get() = activity as FragmentContainerManager
+    private val fragmentContainerHelper get() = activity as FragmentContainerHelper
 
     private val glideProvider by lazy {
         GlideProvider(activity)
@@ -44,8 +45,10 @@ class ActivityCompositionRoot(
 
     private val _screensNavigator by lazy {
         ScreensNavigator(
-            activity.supportFragmentManager,
-            fragmentContainerManager,
+            FragNavController(
+                activity.supportFragmentManager,
+                fragmentContainerHelper.getFragmentContainer().id
+            ),
             eventPoster
         )
     }

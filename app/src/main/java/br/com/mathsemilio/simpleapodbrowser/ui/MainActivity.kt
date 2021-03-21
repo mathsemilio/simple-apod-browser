@@ -5,14 +5,15 @@ import android.widget.FrameLayout
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
+import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
 
 class MainActivity : BaseActivity(),
     MainActivityContract.View.Listener,
-    FragmentContainerManager,
+    FragmentContainerHelper,
     EventPoster.EventListener {
 
     private lateinit var view: MainActivityView
@@ -31,25 +32,11 @@ class MainActivity : BaseActivity(),
 
         setContentView(view.rootView)
 
-        screensNavigator.navigateToLatestScreen()
-
-        attachOnBackStackChangedListener()
-    }
-
-    private fun attachOnBackStackChangedListener() {
-        supportFragmentManager.apply {
-            addOnBackStackChangedListener {
-                if (backStackEntryCount == 0) {
-                    view.setToolbarNavigationIconVisibility(isVisible = false)
-                    view.setToolbarTitleBasedOnDestination(NavDestination.LATEST_SCREEN)
-                    view.setToolbarMenuGroupBasedOnDestination(NavDestination.LATEST_SCREEN)
-                }
-            }
-        }
+        screensNavigator.initialize(savedInstanceState)
     }
 
     override fun onToolbarNavigationIconClicked() {
-        supportFragmentManager.popBackStackImmediate()
+        screensNavigator.navigateUp()
     }
 
     override fun onToolbarActionClicked(action: ToolbarAction) {
@@ -62,23 +49,39 @@ class MainActivity : BaseActivity(),
 
     override fun onEvent(event: Any) {
         when (event) {
-            is NavigationEvent.OnNavigate -> onNavigationEvent(event.destination)
+            is NavigationEvent -> onNavigationEvent(event)
         }
     }
 
-    private fun onNavigationEvent(destination: NavDestination) {
-        when (destination) {
-            NavDestination.LATEST_SCREEN -> {
-                view.setToolbarNavigationIconVisibility(isVisible = false)
-                view.setToolbarTitleBasedOnDestination(NavDestination.LATEST_SCREEN)
-                view.setToolbarMenuGroupBasedOnDestination(NavDestination.LATEST_SCREEN)
-            }
-            NavDestination.DETAILS_SCREEN -> {
-                view.setToolbarNavigationIconVisibility(isVisible = true)
-                view.setToolbarTitleBasedOnDestination(NavDestination.DETAILS_SCREEN)
-                view.setToolbarMenuGroupBasedOnDestination(NavDestination.DETAILS_SCREEN)
-            }
+    private fun onNavigationEvent(event: NavigationEvent) {
+        when (event) {
+            is NavigationEvent.ToDestination ->
+                event.destination?.let { onNavigateToDestination(it) }
+            is NavigationEvent.ToTopDestination ->
+                event.topDestination?.let { onNavigateToTopDestination(it) }
         }
+    }
+
+    private fun onNavigateToDestination(destination: NavDestination) {
+        view.setToolbarNavigationIconVisibility(isVisible = true)
+        view.setToolbarMenuForDestination(destination)
+        view.setToolbarMenuForDestination(destination)
+    }
+
+    private fun onNavigateToTopDestination(topDestination: TopDestination) {
+        view.setToolbarNavigationIconVisibility(isVisible = false)
+        view.setToolbarTitleForTopDestination(topDestination)
+        view.setToolbarMenuForTopDestination(topDestination)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        screensNavigator.onSaveInstanceState(outState)
+    }
+
+    override fun onBackPressed() {
+        if (!screensNavigator.navigateUp())
+            super.onBackPressed()
     }
 
     override fun onStart() {

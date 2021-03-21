@@ -2,6 +2,6 @@ package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
 
 import android.widget.FrameLayout
 
-interface FragmentContainerManager {
+interface FragmentContainerHelper {
     fun getFragmentContainer(): FrameLayout
 }

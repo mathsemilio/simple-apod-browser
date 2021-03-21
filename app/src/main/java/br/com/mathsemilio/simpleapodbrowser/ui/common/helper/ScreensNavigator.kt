@@ -1,37 +1,55 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
 
-import androidx.fragment.app.FragmentManager
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import br.com.mathsemilio.simpleapodbrowser.common.INVALID_ROOT_FRAGMENT
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
+import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.APoDDetailScreen
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.APoDListScreen
+import com.ncapdevi.fragnav.FragNavController
 
 class ScreensNavigator(
-    private val fragmentManager: FragmentManager,
-    private val containerManager: FragmentContainerManager,
+    private val fragNavController: FragNavController,
     private val eventPoster: EventPoster
 ) {
-    fun navigateToLatestScreen() {
-        fragmentManager.beginTransaction().apply {
-            setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-            replace(containerManager.getFragmentContainer().id, APoDListScreen())
-            commitNow()
+    private fun getRootFragmentListener(): FragNavController.RootFragmentListener {
+        return object : FragNavController.RootFragmentListener {
+            override val numberOfRootFragments get() = 1
+
+            override fun getRootFragment(index: Int): Fragment {
+                return when (index) {
+                    FragNavController.TAB1 -> APoDListScreen()
+                    else -> throw IllegalStateException(INVALID_ROOT_FRAGMENT + index)
+                }
+            }
         }
-        eventPoster.postEvent(NavigationEvent.OnNavigate(NavDestination.LATEST_SCREEN))
     }
 
-    fun navigateToDetailsScreen(apod: APoD) {
-        fragmentManager.beginTransaction().apply {
-            setCustomAnimations(
-                android.R.anim.slide_in_left, android.R.anim.slide_out_right,
-                android.R.anim.slide_in_left, android.R.anim.slide_out_right
-            )
-            replace(containerManager.getFragmentContainer().id, APoDDetailScreen.newInstance(apod))
-            addToBackStack(null)
-            commit()
+    fun initialize(savedInstanceState: Bundle?) {
+        fragNavController.rootFragmentListener = getRootFragmentListener()
+        fragNavController.initialize(FragNavController.TAB1, savedInstanceState)
+    }
+
+    fun onSaveInstanceState(outState: Bundle) {
+        fragNavController.onSaveInstanceState(outState)
+    }
+
+    fun navigateUp(): Boolean {
+        return if (fragNavController.isRootFragment) {
+            false
+        } else {
+            fragNavController.popFragment()
+            eventPoster.postEvent(NavigationEvent.ToTopDestination(TopDestination.LATEST_SCREEN))
+            true
         }
-        eventPoster.postEvent(NavigationEvent.OnNavigate(NavDestination.DETAILS_SCREEN))
+    }
+
+    fun toDetailsScreen(apod: APoD) {
+        fragNavController.pushFragment(APoDDetailScreen.newInstance(apod))
+        eventPoster.postEvent(NavigationEvent.ToDestination(NavDestination.DETAILS_SCREEN))
     }
 }

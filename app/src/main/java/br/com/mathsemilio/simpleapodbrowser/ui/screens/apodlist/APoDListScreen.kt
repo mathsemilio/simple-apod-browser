@@ -57,7 +57,7 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onApodClicked(apod: APoD) {
-        screensNavigator.navigateToDetailsScreen(apod)
+        screensNavigator.toDetailsScreen(apod)
     }
 
     override fun onScreenSwipedToRefresh() {
@@ -112,11 +112,11 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onFetchAPoDBasedOnDateCompleted(apod: APoD) {
-        screensNavigator.navigateToDetailsScreen(apod)
+        screensNavigator.toDetailsScreen(apod)
     }
 
     override fun onFetchRandomAPoDCompleted(apod: List<APoD>) {
-        screensNavigator.navigateToDetailsScreen(apod.first())
+        screensNavigator.toDetailsScreen(apod.first())
     }
 
     override fun onFetchAPoDFailed(errorMessage: String) {
