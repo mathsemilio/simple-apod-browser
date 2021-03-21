@@ -1,8 +1,8 @@
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetailsimage
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail
 
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 
-interface APoDDetailsImageContract {
+interface APoDDetailContract {
 
     interface Screen {
         fun getAPoD(): APoD
@@ -11,6 +11,10 @@ interface APoDDetailsImageContract {
     }
 
     interface View {
+        interface Listener {
+            fun onPlayIconClicked(videoUrl: String)
+        }
+
         fun bindAPoDDetails(apod: APoD)
     }
 }

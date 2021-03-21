@@ -22,8 +22,6 @@ class ActivityCompositionRoot(
         APoDEndpoint(aPoDApi, apiKeyProvider, dispatcherProvider)
     }
 
-    private val apiKeyProvider get() = compositionRoot.apiKeyProvider
-
     private val dispatcherProvider get() = DispatcherProvider
 
     private val _dialogManager by lazy {
@@ -55,6 +53,8 @@ class ActivityCompositionRoot(
     private val _viewFactory by lazy {
         ViewFactory(activity.layoutInflater, glideProvider)
     }
+
+    private val apiKeyProvider get() = compositionRoot.apiKeyProvider
 
     val coroutineScopeProvider get() = CoroutineScopeProvider
 

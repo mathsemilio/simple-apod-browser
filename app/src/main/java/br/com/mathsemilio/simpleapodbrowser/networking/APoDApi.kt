@@ -10,18 +10,21 @@ interface APoDApi {
     @GET("apod")
     suspend fun getAPoDsBasedOnDateRange(
         @Query("api_key") key: String,
-        @Query("start_date") startDate: String
+        @Query("start_date") startDate: String,
+        @Query("thumbs") includeThumbnail: Boolean = true
     ): Response<List<APoD>>
 
     @GET("apod")
     suspend fun getAPoDBasedOnDate(
         @Query("api_key") key: String,
-        @Query("date") date: String
+        @Query("date") date: String,
+        @Query("thumbs") includeThumbnail: Boolean = true
     ): Response<APoD>
 
     @GET("apod")
     suspend fun getRandomAPoD(
         @Query("api_key") key: String,
-        @Query("count") count: Int
+        @Query("count") count: Int,
+        @Query("thumbs") includeThumbnail: Boolean = true
     ): Response<List<APoD>>
 }

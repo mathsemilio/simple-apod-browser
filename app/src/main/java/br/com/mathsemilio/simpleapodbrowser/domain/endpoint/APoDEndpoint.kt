@@ -14,10 +14,10 @@ class APoDEndpoint(
 ) {
     suspend fun getAPoDsBasedOnDateRange(startDate: String): Result<List<APoD>> {
         return withContext(dispatcherProvider.BACKGROUND) {
-            val response = aPoDApi.getAPoDsBasedOnDateRange(apiKeyProvider.getKey(), startDate)
+            val response = aPoDApi.getAPoDsBasedOnDateRange(apiKeyProvider.getAPoDKey(), startDate)
             if (response.isSuccessful) {
                 return@withContext withContext(dispatcherProvider.MAIN) {
-                    Result.Completed(data = response.body()!!)
+                    Result.Completed(data = response.body()?.reversed()!!)
                 }
             } else {
                 return@withContext withContext(dispatcherProvider.MAIN) {
@@ -29,7 +29,7 @@ class APoDEndpoint(
 
     suspend fun getAPoDsBasedOnDate(date: String): Result<APoD> {
         return withContext(dispatcherProvider.BACKGROUND) {
-            val response = aPoDApi.getAPoDBasedOnDate(apiKeyProvider.getKey(), date)
+            val response = aPoDApi.getAPoDBasedOnDate(apiKeyProvider.getAPoDKey(), date)
             if (response.isSuccessful) {
                 return@withContext withContext(dispatcherProvider.MAIN) {
                     Result.Completed(data = response.body()!!)
@@ -44,7 +44,7 @@ class APoDEndpoint(
 
     suspend fun getRandomAPoD(): Result<List<APoD>> {
         return withContext(dispatcherProvider.BACKGROUND) {
-            val response = aPoDApi.getRandomAPoD(apiKeyProvider.getKey(), 1)
+            val response = aPoDApi.getRandomAPoD(apiKeyProvider.getAPoDKey(), 1)
             if (response.isSuccessful) {
                 return@withContext withContext(dispatcherProvider.MAIN) {
                     Result.Completed(data = response.body()!!)

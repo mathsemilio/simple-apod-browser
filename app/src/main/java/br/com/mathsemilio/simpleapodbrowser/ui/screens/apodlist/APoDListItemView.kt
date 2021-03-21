@@ -36,6 +36,8 @@ class APoDListItemView(
         currentAPoD = apod
         glideProvider.loadResourceFromUrl(apod.url, imageViewApodListItemImage)
         textViewApodListItemTitle.text = apod.title
+        if (apod.thumbnailUrl != null)
+            glideProvider.loadResourceFromUrl(apod.thumbnailUrl, imageViewApodListItemImage)
     }
 
     private fun onAPoDClicked() {

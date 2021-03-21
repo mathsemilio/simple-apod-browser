@@ -57,7 +57,7 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onApodClicked(apod: APoD) {
-        screensNavigator.navigateToDetailsScreen(apod, apod.mediaType)
+        screensNavigator.navigateToDetailsScreen(apod)
     }
 
     override fun onScreenSwipedToRefresh() {
@@ -82,7 +82,7 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onToolbarActionVisitApodWebsiteClicked() {
-        launchWebPage(requireContext(), getString(R.string.apod_website_url))
+        requireContext().launchWebPage(getString(R.string.apod_website_url))
     }
 
     override fun onToolbarActionClickEvent(action: ToolbarAction) {
@@ -112,11 +112,11 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onFetchAPoDBasedOnDateCompleted(apod: APoD) {
-        screensNavigator.navigateToDetailsScreen(apod, apod.mediaType)
+        screensNavigator.navigateToDetailsScreen(apod)
     }
 
     override fun onFetchRandomAPoDCompleted(apod: List<APoD>) {
-        screensNavigator.navigateToDetailsScreen(apod.first(), apod.first().mediaType)
+        screensNavigator.navigateToDetailsScreen(apod.first())
     }
 
     override fun onFetchAPoDFailed(errorMessage: String) {

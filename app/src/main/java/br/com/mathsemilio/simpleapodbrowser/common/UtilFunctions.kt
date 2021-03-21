@@ -21,11 +21,11 @@ fun Menu.showGroup(vararg groupId: Int) {
     groupId.forEach { id -> this.setGroupVisible(id, true) }
 }
 
-fun launchWebPage(context: Context, url: String) {
+fun Context.launchWebPage(url: String) {
     val page = Uri.parse(url)
     val intent = Intent(Intent.ACTION_VIEW, page)
-    if (intent.resolveActivity(context.packageManager) != null)
-        context.startActivity(intent)
+    if (intent.resolveActivity(this.packageManager) != null)
+        this.startActivity(intent)
 }
 
 fun getWeekRangeDate(): String {
