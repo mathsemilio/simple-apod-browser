@@ -2,19 +2,29 @@ package br.com.mathsemilio.simpleapodbrowser.common.provider
 
 import android.content.Context
 import android.widget.ImageView
-import br.com.mathsemilio.simpleapodbrowser.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 
 class GlideProvider(private val context: Context) {
+
+    private val baseResourceRequestOptions = RequestOptions()
+        .centerCrop()
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
 
     fun loadResourceFromUrl(url: String, targetImageView: ImageView) {
         Glide.with(context)
             .load(url)
-            .placeholder(R.drawable.ic_baseline_image_24)
-            .error(R.drawable.ic_baseline_broken_image_24)
-            .centerCrop()
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .thumbnail(0.50F)
+            .apply(baseResourceRequestOptions)
+            .into(targetImageView)
+    }
+
+    fun loadResourceAsThumbnail(url: String, targetImageView: ImageView) {
+        Glide.with(context)
+            .load(url)
+            .override(300, 150)
+            .apply(baseResourceRequestOptions)
             .into(targetImageView)
     }
 }

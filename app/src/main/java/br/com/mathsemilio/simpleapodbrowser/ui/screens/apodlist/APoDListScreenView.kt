@@ -9,15 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-class APoDListScreenView(
-    private val glideProvider: GlideProvider,
-    layoutInflater: LayoutInflater,
-    container: ViewGroup?
-) : BaseObservableView<APoDListContract.View.Listener>(),
+class APoDListScreenView(layoutInflater: LayoutInflater, container: ViewGroup?) :
+    BaseObservableView<APoDListContract.View.Listener>(),
     APoDListContract.View,
     APoDListScreenListAdapter.Listener {
 
@@ -50,10 +46,12 @@ class APoDListScreenView(
     }
 
     private fun setupRecyclerView(layoutInflater: LayoutInflater) {
-        apodListScreenListAdapter = APoDListScreenListAdapter(layoutInflater, glideProvider, this)
-        recyclerViewApodList.adapter = apodListScreenListAdapter
-        recyclerViewApodList.setHasFixedSize(true)
-        recyclerViewApodList.setItemViewCacheSize(7)
+        apodListScreenListAdapter = APoDListScreenListAdapter(layoutInflater, this)
+        recyclerViewApodList.apply {
+            adapter = apodListScreenListAdapter
+            setHasFixedSize(true)
+            setItemViewCacheSize(7)
+        }
     }
 
     private fun attachOnSwipeRefreshListener() {

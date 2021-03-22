@@ -10,7 +10,7 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
     BaseObservable<FetchAPoDUseCase.Listener>() {
 
     interface Listener {
-        fun onAPoDFetchCompleted(apods: List<APoD>)
+        fun onFetchAPoDBasedOnDateRangeCompleted(apods: List<APoD>)
         fun onFetchAPoDBasedOnDateCompleted(apod: APoD)
         fun onFetchRandomAPoDCompleted(randomAPoD: List<APoD>)
         fun onFetchAPoDError(errorCode: String)
@@ -20,7 +20,7 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
         aPoDEndpoint.getAPoDsBasedOnDateRange(startDate).also { result ->
             when (result) {
                 is Result.Completed ->
-                    listeners.forEach { it.onAPoDFetchCompleted(result.data!!) }
+                    listeners.forEach { it.onFetchAPoDBasedOnDateRangeCompleted(result.data!!) }
                 is Result.Failed ->
                     listeners.forEach { it.onFetchAPoDError(result.error!!) }
             }

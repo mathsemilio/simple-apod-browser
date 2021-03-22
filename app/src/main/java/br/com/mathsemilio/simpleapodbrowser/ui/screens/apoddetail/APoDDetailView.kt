@@ -13,11 +13,8 @@ import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-class APoDDetailView(
-    private val glideProvider: GlideProvider,
-    layoutInflater: LayoutInflater,
-    container: ViewGroup?
-) : BaseObservableView<APoDDetailContract.View.Listener>(), APoDDetailContract.View {
+class APoDDetailView(layoutInflater: LayoutInflater, container: ViewGroup?) :
+    BaseObservableView<APoDDetailContract.View.Listener>(), APoDDetailContract.View {
 
     private lateinit var imageViewApodDetailImage: ImageView
     private lateinit var imageViewPlayIcon: ImageView
@@ -25,9 +22,12 @@ class APoDDetailView(
     private lateinit var textViewApodDetailWithImageDate: TextView
     private lateinit var textViewApodDetailWithImageExplanation: TextView
 
+    private var glideProvider: GlideProvider
+
     init {
         rootView = layoutInflater.inflate(R.layout.apod_detail_screen, container, false)
         initializeViews()
+        glideProvider = GlideProvider(context)
     }
 
     private fun initializeViews() {

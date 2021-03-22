@@ -28,14 +28,8 @@ fun Context.launchWebPage(url: String) {
         this.startActivity(intent)
 }
 
-fun getWeekRangeDate(): String {
-    val calendar = Calendar.getInstance()
-    val dateToday = calendar.get(Calendar.DAY_OF_WEEK)
-
-    val dayFromMonday = (dateToday + 7 - Calendar.MONDAY) % 7
-
-    calendar.add(Calendar.DATE, -dayFromMonday - 1)
-
+fun getLastSevenDays(): String {
+    val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -6) }
     return calendar.timeInMillis.formatTimeInMillis()
 }
 

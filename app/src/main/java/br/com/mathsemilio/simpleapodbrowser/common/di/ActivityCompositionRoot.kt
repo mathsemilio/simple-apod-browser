@@ -3,7 +3,6 @@ package br.com.mathsemilio.simpleapodbrowser.common.di
 import androidx.appcompat.app.AppCompatActivity
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
 import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
-import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
@@ -35,10 +34,6 @@ class ActivityCompositionRoot(
 
     private val fragmentContainerHelper get() = activity as FragmentContainerHelper
 
-    private val glideProvider by lazy {
-        GlideProvider(activity)
-    }
-
     private val _messagesManager by lazy {
         MessagesManager(activity)
     }
@@ -54,7 +49,7 @@ class ActivityCompositionRoot(
     }
 
     private val _viewFactory by lazy {
-        ViewFactory(activity.layoutInflater, glideProvider)
+        ViewFactory(activity.layoutInflater)
     }
 
     private val apiKeyProvider get() = compositionRoot.apiKeyProvider

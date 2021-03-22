@@ -9,35 +9,36 @@ import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-class APoDListItemView(
-    private val glideProvider: GlideProvider,
-    layoutInflater: LayoutInflater,
-    parent: ViewGroup?
-) : BaseObservableView<APoDListContract.ListItem.Listener>(),
+class APoDListItemView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
+    BaseObservableView<APoDListContract.ListItem.Listener>(),
     APoDListContract.ListItem {
 
-    private lateinit var imageViewApodListItemImage: ImageView
-    private lateinit var textViewApodListItemTitle: TextView
+    private var imageViewApodListItemImage: ImageView
+    private var textViewApodListItemTitle: TextView
 
     private lateinit var currentAPoD: APoD
 
-    init {
-        rootView = layoutInflater.inflate(R.layout.apod_list_item, parent, false)
-        rootView.setOnClickListener { onAPoDClicked() }
-        initializeViews()
-    }
+    private var glideProvider: GlideProvider
 
-    private fun initializeViews() {
+    init {
+        rootView = layoutInflater.inflate(R.layout.apod_list_item, parent, false).also { view ->
+            view.setOnClickListener { onAPoDClicked() }
+        }
         imageViewApodListItemImage = findViewById(R.id.image_view_apod_list_item_image)
         textViewApodListItemTitle = findViewById(R.id.text_view_apod_list_item_title)
+        glideProvider = GlideProvider(context)
     }
 
     override fun bindAPoDDetails(apod: APoD) {
         currentAPoD = apod
-        glideProvider.loadResourceFromUrl(apod.url, imageViewApodListItemImage)
+        glideProvider.loadResourceAsThumbnail(apod.url, imageViewApodListItemImage)
+        loadAPoDVideoThumbnail(apod.thumbnailUrl)
         textViewApodListItemTitle.text = apod.title
-        if (apod.thumbnailUrl != null)
-            glideProvider.loadResourceFromUrl(apod.thumbnailUrl, imageViewApodListItemImage)
+    }
+
+    private fun loadAPoDVideoThumbnail(thumbnailUrl: String?) {
+        if (thumbnailUrl != null)
+            glideProvider.loadResourceAsThumbnail(thumbnailUrl, imageViewApodListItemImage)
     }
 
     private fun onAPoDClicked() {

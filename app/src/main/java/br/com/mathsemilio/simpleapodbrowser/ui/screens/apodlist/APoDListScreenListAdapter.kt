@@ -4,12 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 
 class APoDListScreenListAdapter(
     private val layoutInflater: LayoutInflater,
-    private val glideProvider: GlideProvider,
     private val listener: Listener
 ) : ListAdapter<APoD, APoDListScreenListAdapter.ViewHolder>(APoDListScreenDiffUtilCallback()),
     APoDListContract.ListItem.Listener {
@@ -24,7 +22,7 @@ class APoDListScreenListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val apodListItemView = APoDListItemView(glideProvider, layoutInflater, parent)
+        val apodListItemView = APoDListItemView(layoutInflater, parent)
         apodListItemView.addListener(this)
         return ViewHolder(apodListItemView)
     }
