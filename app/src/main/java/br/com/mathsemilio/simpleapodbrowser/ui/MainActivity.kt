@@ -2,9 +2,11 @@ package br.com.mathsemilio.simpleapodbrowser.ui
 
 import android.os.Bundle
 import android.widget.FrameLayout
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
@@ -14,12 +16,13 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
 class MainActivity : BaseActivity(),
     MainActivityContract.View.Listener,
     FragmentContainerHelper,
-    EventPoster.EventListener {
+    EventListener {
 
     private lateinit var view: MainActivityView
 
     private lateinit var screensNavigator: ScreensNavigator
-    private lateinit var eventPoster: EventPoster
+    private lateinit var eventSubscriber: EventSubscriber
+    private lateinit var eventPublisher: EventPublisher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +31,9 @@ class MainActivity : BaseActivity(),
 
         screensNavigator = compositionRoot.screensNavigator
 
-        eventPoster = compositionRoot.eventPoster
+        eventSubscriber = compositionRoot.eventSubscriber
+
+        eventPublisher = compositionRoot.eventPublisher
 
         setContentView(view.rootView)
 
@@ -40,7 +45,7 @@ class MainActivity : BaseActivity(),
     }
 
     override fun onToolbarActionClicked(action: ToolbarAction) {
-        eventPoster.postEvent(ToolbarEvent.ActionClicked(action))
+        eventPublisher.publishEvent(ToolbarEvent.ActionClicked(action))
     }
 
     override fun getFragmentContainer(): FrameLayout {
@@ -64,7 +69,7 @@ class MainActivity : BaseActivity(),
 
     private fun onNavigateToDestination(destination: NavDestination) {
         view.setToolbarNavigationIconVisibility(isVisible = true)
-        view.setToolbarMenuForDestination(destination)
+        view.setToolbarTitleForDestination(destination)
         view.setToolbarMenuForDestination(destination)
     }
 
@@ -86,13 +91,13 @@ class MainActivity : BaseActivity(),
 
     override fun onStart() {
         view.addListener(this)
-        eventPoster.addListener(this)
+        eventSubscriber.subscribe(this)
         super.onStart()
     }
 
     override fun onStop() {
         view.removeListener(this)
-        eventPoster.removeListener(this)
+        eventSubscriber.unsubscribe(this)
         super.onStop()
     }
 }

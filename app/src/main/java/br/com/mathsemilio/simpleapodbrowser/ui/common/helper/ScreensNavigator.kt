@@ -3,9 +3,9 @@ package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import br.com.mathsemilio.simpleapodbrowser.common.INVALID_ROOT_FRAGMENT
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.APoDDetailScreen
@@ -14,7 +14,7 @@ import com.ncapdevi.fragnav.FragNavController
 
 class ScreensNavigator(
     private val fragNavController: FragNavController,
-    private val eventPoster: EventPoster
+    private val eventPublisher: EventPublisher
 ) {
     private fun getRootFragmentListener(): FragNavController.RootFragmentListener {
         return object : FragNavController.RootFragmentListener {
@@ -43,13 +43,13 @@ class ScreensNavigator(
             false
         } else {
             fragNavController.popFragment()
-            eventPoster.postEvent(NavigationEvent.ToTopDestination(TopDestination.LATEST_SCREEN))
+            eventPublisher.publishEvent(NavigationEvent.ToTopDestination(TopDestination.LATEST_SCREEN))
             true
         }
     }
 
     fun toDetailsScreen(apod: APoD) {
         fragNavController.pushFragment(APoDDetailScreen.newInstance(apod))
-        eventPoster.postEvent(NavigationEvent.ToDestination(NavDestination.DETAILS_SCREEN))
+        eventPublisher.publishEvent(NavigationEvent.ToDestination(NavDestination.DETAILS_SCREEN))
     }
 }

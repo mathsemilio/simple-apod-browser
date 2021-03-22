@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
 import br.com.mathsemilio.simpleapodbrowser.common.getWeekRangeDate
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
@@ -12,7 +14,6 @@ import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
@@ -25,25 +26,25 @@ class APoDListScreen : BaseFragment(),
     APoDListContract.View.Listener,
     APoDListContract.Screen,
     FetchAPoDUseCase.Listener,
-    EventPoster.EventListener {
+    EventListener {
 
     private lateinit var view: APoDListScreenView
 
     private lateinit var screensNavigator: ScreensNavigator
+    private lateinit var eventSubscriber: EventSubscriber
     private lateinit var messagesManager: MessagesManager
     private lateinit var coroutineScope: CoroutineScope
     private lateinit var dialogManager: DialogManager
-    private lateinit var eventPoster: EventPoster
 
     private lateinit var fetchAPoDUseCase: FetchAPoDUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         screensNavigator = compositionRoot.screensNavigator
+        eventSubscriber = compositionRoot.eventSubscriber
         messagesManager = compositionRoot.messagesManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
         dialogManager = compositionRoot.dialogManager
-        eventPoster = compositionRoot.eventPoster
         fetchAPoDUseCase = compositionRoot.fetchAPoDUseCase
     }
 
@@ -104,7 +105,7 @@ class APoDListScreen : BaseFragment(),
         }
     }
 
-    override fun onFetchAPoDsCompleted(apods: List<APoD>) {
+    override fun onAPoDFetchCompleted(apods: List<APoD>) {
         view.hideNetworkRequestFailedState()
         view.hideProgressIndicator()
         view.onRefreshCompleted()
@@ -115,13 +116,13 @@ class APoDListScreen : BaseFragment(),
         screensNavigator.toDetailsScreen(apod)
     }
 
-    override fun onFetchRandomAPoDCompleted(apod: List<APoD>) {
-        screensNavigator.toDetailsScreen(apod.first())
+    override fun onFetchRandomAPoDCompleted(randomAPoD: List<APoD>) {
+        screensNavigator.toDetailsScreen(randomAPoD.first())
     }
 
-    override fun onFetchAPoDFailed(errorMessage: String) {
+    override fun onFetchAPoDError(errorCode: String) {
         view.hideProgressIndicator()
-        view.showNetworkRequestErrorState(errorMessage)
+        view.showNetworkRequestErrorState(errorCode)
     }
 
     override fun onEvent(event: Any) {
@@ -133,7 +134,7 @@ class APoDListScreen : BaseFragment(),
 
     override fun onStart() {
         view.addListener(this)
-        eventPoster.addListener(this)
+        eventSubscriber.subscribe(this)
         fetchAPoDUseCase.addListener(this)
         fetchApods()
         super.onStart()
@@ -141,7 +142,7 @@ class APoDListScreen : BaseFragment(),
 
     override fun onStop() {
         view.removeListener(this)
-        eventPoster.removeListener(this)
+        eventSubscriber.unsubscribe(this)
         fetchAPoDUseCase.removeListener(this)
         super.onStop()
     }

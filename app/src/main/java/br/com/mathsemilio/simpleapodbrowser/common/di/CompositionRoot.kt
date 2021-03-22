@@ -1,21 +1,34 @@
 package br.com.mathsemilio.simpleapodbrowser.common.di
 
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventBus
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
 import br.com.mathsemilio.simpleapodbrowser.common.provider.APIKeyProvider
 import br.com.mathsemilio.simpleapodbrowser.networking.RetrofitBuilder
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 
 class CompositionRoot {
 
     private val _retrofitBuilder by lazy {
         RetrofitBuilder()
     }
-    private val _eventPoster by lazy {
-        EventPoster()
+
+    private val _eventBus by lazy {
+        EventBus()
+    }
+
+    private val _eventPublisher by lazy {
+        EventPublisher(_eventBus)
+    }
+
+    private val _eventSubscriber by lazy {
+        EventSubscriber(_eventBus)
     }
 
     val apiKeyProvider get() = APIKeyProvider
 
-    val eventPoster get() = _eventPoster
+    val eventPublisher get() = _eventPublisher
+
+    val eventSubscriber get() = _eventSubscriber
 
     val retrofitBuilder get() = _retrofitBuilder
 }

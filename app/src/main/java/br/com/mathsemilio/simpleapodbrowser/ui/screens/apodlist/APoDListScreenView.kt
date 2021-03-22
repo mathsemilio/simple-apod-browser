@@ -52,6 +52,8 @@ class APoDListScreenView(
     private fun setupRecyclerView(layoutInflater: LayoutInflater) {
         apodListScreenListAdapter = APoDListScreenListAdapter(layoutInflater, glideProvider, this)
         recyclerViewApodList.adapter = apodListScreenListAdapter
+        recyclerViewApodList.setHasFixedSize(true)
+        recyclerViewApodList.setItemViewCacheSize(7)
     }
 
     private fun attachOnSwipeRefreshListener() {

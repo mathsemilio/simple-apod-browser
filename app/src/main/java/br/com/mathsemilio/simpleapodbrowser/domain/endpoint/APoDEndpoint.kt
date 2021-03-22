@@ -21,7 +21,7 @@ class APoDEndpoint(
                 }
             } else {
                 return@withContext withContext(dispatcherProvider.MAIN) {
-                    Result.Failed(errorMessage = response.code().toString())
+                    Result.Failed(error = response.code().toString())
                 }
             }
         }
@@ -36,7 +36,7 @@ class APoDEndpoint(
                 }
             } else {
                 return@withContext withContext(dispatcherProvider.MAIN) {
-                    Result.Failed(errorMessage = response.code().toString())
+                    Result.Failed(error = response.code().toString())
                 }
             }
         }
@@ -51,7 +51,7 @@ class APoDEndpoint(
                 }
             } else {
                 return@withContext withContext(dispatcherProvider.MAIN) {
-                    Result.Failed(errorMessage = response.code().toString())
+                    Result.Failed(error = response.code().toString())
                 }
             }
         }

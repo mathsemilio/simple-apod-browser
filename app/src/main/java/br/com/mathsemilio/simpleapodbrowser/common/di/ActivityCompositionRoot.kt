@@ -49,7 +49,7 @@ class ActivityCompositionRoot(
                 activity.supportFragmentManager,
                 fragmentContainerHelper.getFragmentContainer().id
             ),
-            eventPoster
+            eventPublisher
         )
     }
 
@@ -61,9 +61,11 @@ class ActivityCompositionRoot(
 
     val coroutineScopeProvider get() = CoroutineScopeProvider
 
-    val eventPoster get() = compositionRoot.eventPoster
-
     val dialogManager get() = _dialogManager
+
+    val eventPublisher get() = compositionRoot.eventPublisher
+
+    val eventSubscriber get() = compositionRoot.eventSubscriber
 
     val messagesManager get() = _messagesManager
 

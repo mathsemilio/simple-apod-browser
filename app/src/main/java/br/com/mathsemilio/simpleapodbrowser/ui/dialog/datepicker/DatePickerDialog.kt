@@ -5,8 +5,8 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.DatePicker
 import br.com.mathsemilio.simpleapodbrowser.common.FIRST_APOD_TIME_IN_MILLIS
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.poster.EventPoster
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
 import java.util.*
 
@@ -19,22 +19,16 @@ class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListene
             set(Calendar.DAY_OF_MONTH, dayOfMonth)
         }
 
-        when {
-            dateSet.timeInMillis > System.currentTimeMillis() ->
-                eventPoster.postEvent(DateSetEvent.InvalidDateSet)
-            dateSet.timeInMillis < FIRST_APOD_TIME_IN_MILLIS ->
-                eventPoster.postEvent(DateSetEvent.InvalidDateSet)
-            else -> eventPoster.postEvent(DateSetEvent.DateSet(dateSet.timeInMillis))
-        }
+        checkDateSet(dateSet.timeInMillis)
     }
 
     private lateinit var calendar: Calendar
 
-    private lateinit var eventPoster: EventPoster
+    private lateinit var eventPublisher: EventPublisher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        eventPoster = compositionRoot.eventPoster
+        eventPublisher = compositionRoot.eventPublisher
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -44,5 +38,15 @@ class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListene
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
         return DatePickerDialog(requireContext(), this, year, month, dayOfMonth)
+    }
+
+    private fun checkDateSet(dateSetInMillis: Long) {
+        when {
+            dateSetInMillis > System.currentTimeMillis() ->
+                eventPublisher.publishEvent(DateSetEvent.InvalidDateSet)
+            dateSetInMillis < FIRST_APOD_TIME_IN_MILLIS ->
+                eventPublisher.publishEvent(DateSetEvent.InvalidDateSet)
+            else -> eventPublisher.publishEvent(DateSetEvent.DateSet(dateSetInMillis))
+        }
     }
 }

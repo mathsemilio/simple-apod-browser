@@ -10,19 +10,19 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
     BaseObservable<FetchAPoDUseCase.Listener>() {
 
     interface Listener {
-        fun onFetchAPoDsCompleted(apods: List<APoD>)
+        fun onAPoDFetchCompleted(apods: List<APoD>)
         fun onFetchAPoDBasedOnDateCompleted(apod: APoD)
-        fun onFetchRandomAPoDCompleted(apod: List<APoD>)
-        fun onFetchAPoDFailed(errorMessage: String)
+        fun onFetchRandomAPoDCompleted(randomAPoD: List<APoD>)
+        fun onFetchAPoDError(errorCode: String)
     }
 
     suspend fun fetchAPoDBasedOnDateRange(startDate: String) {
         aPoDEndpoint.getAPoDsBasedOnDateRange(startDate).also { result ->
             when (result) {
                 is Result.Completed ->
-                    listeners.forEach { it.onFetchAPoDsCompleted(result.data!!) }
+                    listeners.forEach { it.onAPoDFetchCompleted(result.data!!) }
                 is Result.Failed ->
-                    listeners.forEach { it.onFetchAPoDFailed(result.errorMessage!!) }
+                    listeners.forEach { it.onFetchAPoDError(result.error!!) }
             }
         }
     }
@@ -30,11 +30,10 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
     suspend fun fetchAPoDBasedOnDate(dateInMillis: Long) {
         aPoDEndpoint.getAPoDsBasedOnDate(dateInMillis.formatTimeInMillis()).also { result ->
             when (result) {
-                is Result.Completed -> {
+                is Result.Completed ->
                     listeners.forEach { it.onFetchAPoDBasedOnDateCompleted(result.data!!) }
-                }
                 is Result.Failed ->
-                    listeners.forEach { it.onFetchAPoDFailed(result.errorMessage!!) }
+                    listeners.forEach { it.onFetchAPoDError(result.error!!) }
             }
         }
     }
@@ -42,11 +41,10 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
     suspend fun fetchRandomAPoD() {
         aPoDEndpoint.getRandomAPoD().also { result ->
             when (result) {
-                is Result.Completed -> {
+                is Result.Completed ->
                     listeners.forEach { it.onFetchRandomAPoDCompleted(result.data!!) }
-                }
                 is Result.Failed ->
-                    listeners.forEach { it.onFetchAPoDFailed(result.errorMessage!!) }
+                    listeners.forEach { it.onFetchAPoDError(result.error!!) }
             }
         }
     }
