@@ -9,9 +9,7 @@ import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 
-class APoDDetailScreen : BaseFragment(),
-    APoDDetailContract.Screen,
-    APoDDetailContract.View.Listener {
+class APoDDetailScreen : BaseFragment(), APoDDetailView.Listener {
 
     companion object {
         fun newInstance(apod: APoD): APoDDetailScreen {
@@ -22,7 +20,7 @@ class APoDDetailScreen : BaseFragment(),
         }
     }
 
-    private lateinit var view: APoDDetailView
+    private lateinit var view: APoDDetailViewImpl
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,16 +31,16 @@ class APoDDetailScreen : BaseFragment(),
         return view.rootView
     }
 
-    override fun getAPoD(): APoD {
+    override fun onPlayIconClicked(videoUrl: String) {
+        requireContext().launchWebPage(videoUrl)
+    }
+
+    private fun getAPoD(): APoD {
         return arguments?.getSerializable(ARG_APOD) as APoD
     }
 
-    override fun bindAPoD() {
+    private fun bindAPoD() {
         view.bindAPoDDetails(getAPoD())
-    }
-
-    override fun onPlayIconClicked(videoUrl: String) {
-        requireContext().launchWebPage(videoUrl)
     }
 
     override fun onStart() {

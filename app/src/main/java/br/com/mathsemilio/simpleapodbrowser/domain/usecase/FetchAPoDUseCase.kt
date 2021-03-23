@@ -20,9 +20,13 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
         aPoDEndpoint.getAPoDsBasedOnDateRange(startDate).also { result ->
             when (result) {
                 is Result.Completed ->
-                    listeners.forEach { it.onFetchAPoDBasedOnDateRangeCompleted(result.data!!) }
+                    listeners.forEach { listener ->
+                        listener.onFetchAPoDBasedOnDateRangeCompleted(result.data!!)
+                    }
                 is Result.Failed ->
-                    listeners.forEach { it.onFetchAPoDError(result.error!!) }
+                    listeners.forEach { listener ->
+                        listener.onFetchAPoDError(result.error!!)
+                    }
             }
         }
     }
@@ -31,9 +35,13 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
         aPoDEndpoint.getAPoDsBasedOnDate(dateInMillis.formatTimeInMillis()).also { result ->
             when (result) {
                 is Result.Completed ->
-                    listeners.forEach { it.onFetchAPoDBasedOnDateCompleted(result.data!!) }
+                    listeners.forEach { listener ->
+                        listener.onFetchAPoDBasedOnDateCompleted(result.data!!)
+                    }
                 is Result.Failed ->
-                    listeners.forEach { it.onFetchAPoDError(result.error!!) }
+                    listeners.forEach { listener ->
+                        listener.onFetchAPoDError(result.error!!)
+                    }
             }
         }
     }
@@ -42,9 +50,13 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
         aPoDEndpoint.getRandomAPoD().also { result ->
             when (result) {
                 is Result.Completed ->
-                    listeners.forEach { it.onFetchRandomAPoDCompleted(result.data!!) }
+                    listeners.forEach { listener ->
+                        listener.onFetchRandomAPoDCompleted(result.data!!)
+                    }
                 is Result.Failed ->
-                    listeners.forEach { it.onFetchAPoDError(result.error!!) }
+                    listeners.forEach { listener ->
+                        listener.onFetchAPoDError(result.error!!)
+                    }
             }
         }
     }

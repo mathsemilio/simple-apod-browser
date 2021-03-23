@@ -37,7 +37,7 @@ fun Long.formatTimeInMillis(): String {
     return SimpleDateFormat("yyyy-MM-dd", Locale.US).format(this)
 }
 
-fun String.formatAPoDDate(context: Context): String {
+fun String.formatDate(context: Context): String {
     val year = this.substring(0..3)
     val month = this.substring(5..6)
     val day = this.substring(8..9)

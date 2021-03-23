@@ -1,20 +1,18 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.common.view
 
-import android.content.Context
-import android.view.View
-import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
+import br.com.mathsemilio.simpleapodbrowser.common.observable.Observable
 
-abstract class BaseObservableView<Listener> : BaseObservable<Listener>(), IView {
+abstract class BaseObservableView<Listener> : Observable<Listener>, BaseView() {
 
-    private lateinit var _rootView: View
+    private val listenersSet = mutableSetOf<Listener>()
 
-    override var rootView: View
-        get() = _rootView
-        set(value) {
-            _rootView = value
-        }
+    override fun addListener(listener: Listener) {
+        listenersSet.add(listener)
+    }
 
-    protected fun <T : View> findViewById(id: Int): T = _rootView.findViewById(id)
+    override fun removeListener(listener: Listener) {
+        listenersSet.remove(listener)
+    }
 
-    protected val context: Context get() = _rootView.context
+    protected val listeners get() = listenersSet.toSet()
 }

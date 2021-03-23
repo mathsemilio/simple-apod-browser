@@ -1,4 +1,4 @@
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.APoDListScreenListAdapter
 
-class APoDListScreenView(layoutInflater: LayoutInflater, container: ViewGroup?) :
-    BaseObservableView<APoDListContract.View.Listener>(),
-    APoDListContract.View,
-    APoDListScreenListAdapter.Listener {
+class APoDListScreenViewImpl(layoutInflater: LayoutInflater, container: ViewGroup?) :
+    APoDListScreenListAdapter.Listener,
+    APoDListScreenView() {
 
     private lateinit var progressBarApodList: ProgressBar
     private lateinit var imageViewApodListNetworkRequestError: ImageView
@@ -56,7 +55,9 @@ class APoDListScreenView(layoutInflater: LayoutInflater, container: ViewGroup?) 
 
     private fun attachOnSwipeRefreshListener() {
         swipeRefreshLayoutApodList.setOnRefreshListener {
-            listeners.forEach { it.onScreenSwipedToRefresh() }
+            listeners.forEach { listener ->
+                listener.onScreenSwipedToRefresh()
+            }
         }
     }
 
@@ -94,6 +95,8 @@ class APoDListScreenView(layoutInflater: LayoutInflater, container: ViewGroup?) 
     }
 
     override fun onAPoDClicked(apod: APoD) {
-        listeners.forEach { it.onApodClicked(apod) }
+        listeners.forEach { listener ->
+            listener.onApodClicked(apod)
+        }
     }
 }

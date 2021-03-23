@@ -1,4 +1,4 @@
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,11 +7,9 @@ import android.widget.TextView
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-class APoDListItemView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
-    BaseObservableView<APoDListContract.ListItem.Listener>(),
-    APoDListContract.ListItem {
+class APoDListItemViewImpl(layoutInflater: LayoutInflater, parent: ViewGroup?) :
+    APoDListItemView() {
 
     private var imageViewApodListItemImage: ImageView
     private var textViewApodListItemTitle: TextView
@@ -21,8 +19,9 @@ class APoDListItemView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
     private var glideProvider: GlideProvider
 
     init {
-        rootView = layoutInflater.inflate(R.layout.apod_list_item, parent, false).also { view ->
-            view.setOnClickListener { onAPoDClicked() }
+        rootView = layoutInflater.inflate(R.layout.apod_list_item, parent, false)
+        rootView.setOnClickListener {
+            onAPoDClicked()
         }
         imageViewApodListItemImage = findViewById(R.id.image_view_apod_list_item_image)
         textViewApodListItemTitle = findViewById(R.id.text_view_apod_list_item_title)
@@ -42,6 +41,8 @@ class APoDListItemView(layoutInflater: LayoutInflater, parent: ViewGroup?) :
     }
 
     private fun onAPoDClicked() {
-        listeners.forEach { it.onApodListItemClicked(currentAPoD) }
+        listeners.forEach { listener ->
+            listener.onAPoDClicked(currentAPoD)
+        }
     }
 }

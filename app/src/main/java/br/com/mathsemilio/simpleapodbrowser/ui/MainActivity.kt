@@ -14,11 +14,11 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
 
 class MainActivity : BaseActivity(),
-    MainActivityContract.View.Listener,
+    MainActivityView.Listener,
     FragmentContainerHelper,
     EventListener {
 
-    private lateinit var view: MainActivityView
+    private lateinit var view: MainActivityViewImpl
 
     private lateinit var screensNavigator: ScreensNavigator
     private lateinit var eventSubscriber: EventSubscriber

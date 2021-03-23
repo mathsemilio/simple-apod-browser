@@ -5,24 +5,26 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListItemView
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListItemViewImpl
 
 class APoDListScreenListAdapter(
     private val layoutInflater: LayoutInflater,
     private val listener: Listener
 ) : ListAdapter<APoD, APoDListScreenListAdapter.ViewHolder>(APoDListScreenDiffUtilCallback()),
-    APoDListContract.ListItem.Listener {
+    APoDListItemView.Listener {
 
     interface Listener {
         fun onAPoDClicked(apod: APoD)
     }
 
-    class ViewHolder(listItemView: APoDListItemView) :
+    class ViewHolder(listItemView: APoDListItemViewImpl) :
         RecyclerView.ViewHolder(listItemView.rootView) {
         val apodListItemView = listItemView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val apodListItemView = APoDListItemView(layoutInflater, parent)
+        val apodListItemView = APoDListItemViewImpl(layoutInflater, parent)
         apodListItemView.addListener(this)
         return ViewHolder(apodListItemView)
     }
@@ -31,7 +33,7 @@ class APoDListScreenListAdapter(
         holder.apodListItemView.bindAPoDDetails(getItem(position))
     }
 
-    override fun onApodListItemClicked(apod: APoD) {
+    override fun onAPoDClicked(apod: APoD) {
         listener.onAPoDClicked(apod)
     }
 }

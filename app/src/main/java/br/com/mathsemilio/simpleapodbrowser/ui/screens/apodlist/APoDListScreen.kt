@@ -18,33 +18,35 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListScreenView
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListScreenViewImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
 class APoDListScreen : BaseFragment(),
-    APoDListContract.View.Listener,
-    APoDListContract.Screen,
+    APoDListScreenView.Listener,
     FetchAPoDUseCase.Listener,
     EventListener {
 
-    private lateinit var view: APoDListScreenView
+    private lateinit var view: APoDListScreenViewImpl
 
     private lateinit var screensNavigator: ScreensNavigator
-    private lateinit var eventSubscriber: EventSubscriber
     private lateinit var messagesManager: MessagesManager
     private lateinit var coroutineScope: CoroutineScope
     private lateinit var dialogManager: DialogManager
+
+    private lateinit var eventSubscriber: EventSubscriber
 
     private lateinit var fetchAPoDUseCase: FetchAPoDUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         screensNavigator = compositionRoot.screensNavigator
-        eventSubscriber = compositionRoot.eventSubscriber
         messagesManager = compositionRoot.messagesManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
         dialogManager = compositionRoot.dialogManager
+        eventSubscriber = compositionRoot.eventSubscriber
         fetchAPoDUseCase = compositionRoot.fetchAPoDUseCase
     }
 
@@ -68,35 +70,6 @@ class APoDListScreen : BaseFragment(),
 
     override fun onScreenSwipedToRefresh() {
         fetchApods()
-    }
-
-    override fun fetchApods() {
-        coroutineScope.launch {
-            view.showProgressIndicator()
-            fetchAPoDUseCase.fetchAPoDBasedOnDateRange(getLastSevenDays())
-        }
-    }
-
-    override fun onToolbarActionPickApodByDateClicked() {
-        dialogManager.showDatePickerDialog()
-    }
-
-    override fun onToolbarActionGetRandomAPoDClicked() {
-        coroutineScope.launch { fetchAPoDUseCase.fetchRandomAPoD() }
-    }
-
-    override fun onToolbarActionVisitApodWebsiteClicked() {
-        requireContext().launchWebPage(getString(R.string.apod_website_url))
-    }
-
-    override fun onDateSetEvent(event: DateSetEvent) {
-        when (event) {
-            is DateSetEvent.DateSet -> coroutineScope.launch {
-                fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateInMillis)
-            }
-            DateSetEvent.InvalidDateSet ->
-                messagesManager.showInvalidAPoDDateErrorMessage()
-        }
     }
 
     override fun onFetchAPoDBasedOnDateRangeCompleted(apods: List<APoD>) {
@@ -126,11 +99,32 @@ class APoDListScreen : BaseFragment(),
         }
     }
 
+    private fun fetchApods() {
+        coroutineScope.launch {
+            view.showProgressIndicator()
+            fetchAPoDUseCase.fetchAPoDBasedOnDateRange(getLastSevenDays())
+        }
+    }
+
+    private fun onDateSetEvent(event: DateSetEvent) {
+        when (event) {
+            is DateSetEvent.DateSet -> coroutineScope.launch {
+                fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateInMillis)
+            }
+            DateSetEvent.InvalidDateSet ->
+                messagesManager.showInvalidAPoDDateErrorMessage()
+        }
+    }
+
     private fun onToolbarActionClickEvent(action: ToolbarAction) {
         when (action) {
-            ToolbarAction.PICK_APOD_DATE -> onToolbarActionPickApodByDateClicked()
-            ToolbarAction.GET_RANDOM_APOD -> onToolbarActionGetRandomAPoDClicked()
-            ToolbarAction.VISIT_APOD_WEBSITE -> onToolbarActionVisitApodWebsiteClicked()
+            ToolbarAction.PICK_APOD_DATE ->
+                dialogManager.showDatePickerDialog()
+            ToolbarAction.GET_RANDOM_APOD -> coroutineScope.launch {
+                fetchAPoDUseCase.fetchRandomAPoD()
+            }
+            ToolbarAction.VISIT_APOD_WEBSITE ->
+                requireContext().launchWebPage(getString(R.string.apod_website_url))
         }
     }
 
@@ -145,11 +139,7 @@ class APoDListScreen : BaseFragment(),
         view.removeListener(this)
         eventSubscriber.unsubscribe(this)
         fetchAPoDUseCase.removeListener(this)
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
         coroutineScope.coroutineContext.cancelChildren()
-        super.onDestroyView()
+        super.onStop()
     }
 }
