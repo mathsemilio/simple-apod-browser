@@ -83,8 +83,8 @@ class APoDListScreen : BaseFragment(),
         screensNavigator.toDetailsScreen(apod)
     }
 
-    override fun onFetchRandomAPoDCompleted(randomAPoD: List<APoD>) {
-        screensNavigator.toDetailsScreen(randomAPoD.first())
+    override fun onFetchRandomAPoDCompleted(randomAPoD: APoD) {
+        screensNavigator.toDetailsScreen(randomAPoD)
     }
 
     override fun onFetchAPoDError(errorCode: String) {

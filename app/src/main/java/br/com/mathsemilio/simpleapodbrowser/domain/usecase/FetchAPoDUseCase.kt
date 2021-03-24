@@ -2,6 +2,8 @@ package br.com.mathsemilio.simpleapodbrowser.domain.usecase
 
 import br.com.mathsemilio.simpleapodbrowser.common.formatTimeInMillis
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
+import br.com.mathsemilio.simpleapodbrowser.common.toAPoD
+import br.com.mathsemilio.simpleapodbrowser.common.toAPoDList
 import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
@@ -12,7 +14,7 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
     interface Listener {
         fun onFetchAPoDBasedOnDateRangeCompleted(apods: List<APoD>)
         fun onFetchAPoDBasedOnDateCompleted(apod: APoD)
-        fun onFetchRandomAPoDCompleted(randomAPoD: List<APoD>)
+        fun onFetchRandomAPoDCompleted(randomAPoD: APoD)
         fun onFetchAPoDError(errorCode: String)
     }
 
@@ -21,7 +23,7 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
             when (result) {
                 is Result.Completed ->
                     listeners.forEach { listener ->
-                        listener.onFetchAPoDBasedOnDateRangeCompleted(result.data!!)
+                        listener.onFetchAPoDBasedOnDateRangeCompleted(result.data?.toAPoDList()!!)
                     }
                 is Result.Failed ->
                     listeners.forEach { listener ->
@@ -36,7 +38,7 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
             when (result) {
                 is Result.Completed ->
                     listeners.forEach { listener ->
-                        listener.onFetchAPoDBasedOnDateCompleted(result.data!!)
+                        listener.onFetchAPoDBasedOnDateCompleted(result.data?.toAPoD()!!)
                     }
                 is Result.Failed ->
                     listeners.forEach { listener ->
@@ -51,7 +53,7 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
             when (result) {
                 is Result.Completed ->
                     listeners.forEach { listener ->
-                        listener.onFetchRandomAPoDCompleted(result.data!!)
+                        listener.onFetchRandomAPoDCompleted(result.data?.toAPoDList()?.first()!!)
                     }
                 is Result.Failed ->
                     listeners.forEach { listener ->

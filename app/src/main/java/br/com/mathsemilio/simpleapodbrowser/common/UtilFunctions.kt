@@ -6,6 +6,8 @@ import android.net.Uri
 import android.view.Menu
 import android.widget.Toast
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.domain.model.APoDSchema
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -62,4 +64,22 @@ fun convertMonthNumberToString(month: String): String {
         "12" -> "December"
         else -> throw IllegalArgumentException(INVALID_MONTH)
     }
+}
+
+fun APoDSchema.toAPoD(): APoD {
+    val title = this.title
+    val url = this.url
+    val date = this.date
+    val mediaType = this.mediaType
+    val explanation = this.explanation
+    val thumbnailUrl = this.thumbnailUrl
+    return APoD(title, url, date, mediaType, explanation, thumbnailUrl)
+}
+
+fun List<APoDSchema>.toAPoDList(): List<APoD> {
+    val apodList = mutableListOf<APoD>()
+    this.forEach { aPoDSchema ->
+        apodList.add(aPoDSchema.toAPoD())
+    }
+    return apodList.toList()
 }

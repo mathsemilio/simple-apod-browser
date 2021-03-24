@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
+import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD_SAVED_INSTANCE
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
@@ -22,6 +23,8 @@ class APoDDetailScreen : BaseFragment(), APoDDetailView.Listener {
 
     private lateinit var view: APoDDetailViewImpl
 
+    private lateinit var currentAPoD: APoD
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,6 +32,14 @@ class APoDDetailScreen : BaseFragment(), APoDDetailView.Listener {
     ): View {
         view = compositionRoot.viewFactory.getApodDetailsImageView(container)
         return view.rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        currentAPoD = if (savedInstanceState != null)
+            savedInstanceState.getSerializable(ARG_APOD_SAVED_INSTANCE) as APoD
+        else
+            getAPoD()
     }
 
     override fun onPlayIconClicked(videoUrl: String) {
@@ -40,7 +51,12 @@ class APoDDetailScreen : BaseFragment(), APoDDetailView.Listener {
     }
 
     private fun bindAPoD() {
-        view.bindAPoDDetails(getAPoD())
+        view.bindAPoDDetails(currentAPoD)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(ARG_APOD_SAVED_INSTANCE, currentAPoD)
     }
 
     override fun onStart() {

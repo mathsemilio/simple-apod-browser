@@ -3,6 +3,7 @@ package br.com.mathsemilio.simpleapodbrowser.common
 const val BASE_URL = "https://api.nasa.gov/planetary/"
 
 const val ARG_APOD = "ARG_APOD"
+const val ARG_APOD_SAVED_INSTANCE = "ARG_APOD_SAVED_INSTANCE"
 
 const val APOD_TYPE_IMAGE = "image"
 const val APOD_TYPE_VIDEO = "video"
