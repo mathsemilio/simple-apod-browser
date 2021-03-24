@@ -19,12 +19,4 @@ class GlideProvider(private val context: Context) {
             .apply(baseResourceRequestOptions)
             .into(targetImageView)
     }
-
-    fun loadResourceAsThumbnail(url: String, targetImageView: ImageView) {
-        Glide.with(context)
-            .load(url)
-            .override(300, 150)
-            .apply(baseResourceRequestOptions)
-            .into(targetImageView)
-    }
 }

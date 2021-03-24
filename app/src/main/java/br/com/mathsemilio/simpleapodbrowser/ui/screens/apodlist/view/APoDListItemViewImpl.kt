@@ -30,14 +30,14 @@ class APoDListItemViewImpl(layoutInflater: LayoutInflater, parent: ViewGroup?) :
 
     override fun bindAPoDDetails(apod: APoD) {
         currentAPoD = apod
-        glideProvider.loadResourceAsThumbnail(apod.url, imageViewApodListItemImage)
+        glideProvider.loadResourceFromUrl(apod.url, imageViewApodListItemImage)
         loadAPoDVideoThumbnail(apod.thumbnailUrl)
         textViewApodListItemTitle.text = apod.title
     }
 
     private fun loadAPoDVideoThumbnail(thumbnailUrl: String?) {
         if (thumbnailUrl != null)
-            glideProvider.loadResourceAsThumbnail(thumbnailUrl, imageViewApodListItemImage)
+            glideProvider.loadResourceFromUrl(thumbnailUrl, imageViewApodListItemImage)
     }
 
     private fun onAPoDClicked() {

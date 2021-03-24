@@ -18,19 +18,22 @@ class APoDListScreenListAdapter(
         fun onAPoDClicked(apod: APoD)
     }
 
-    class ViewHolder(listItemView: APoDListItemViewImpl) :
-        RecyclerView.ViewHolder(listItemView.rootView) {
-        val apodListItemView = listItemView
+    class ViewHolder(private val itemViewImpl: APoDListItemViewImpl) :
+        RecyclerView.ViewHolder(itemViewImpl.rootView) {
+
+        fun bind(apod: APoD) = itemViewImpl.bindAPoDDetails(apod)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val apodListItemView = APoDListItemViewImpl(layoutInflater, parent)
-        apodListItemView.addListener(this)
-        return ViewHolder(apodListItemView)
+        return ViewHolder(APoDListItemViewImpl(layoutInflater, parent).also { listItemView ->
+            listItemView.addListener(this)
+        })
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.apodListItemView.bindAPoDDetails(getItem(position))
+        getItem(position).let { item ->
+            if (item != null) holder.bind(item)
+        }
     }
 
     override fun onAPoDClicked(apod: APoD) {
