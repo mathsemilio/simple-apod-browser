@@ -6,19 +6,26 @@
     <string name="content_description_astronomical_picture_of_the_day">Astronomical Picture of the Day</string>
     <string name="content_description_play_apod_video">Play Astronomical Picture of the Day video</string>
     <string name="content_description_network_request_error">Network request error</string>
+    <string name="content_description_remove_from_favorites">Remove from Favorites</string>
 
     <!-- Common -->
     <string name="latest">Latest</string>
     <string name="details">Details</string>
+    <string name="favorites">Favorites</string>
+    <string name="undo">Undo</string>
 
     <!-- Toolbar Actions -->
     <string name="toolbar_action_title_pick_apod_by_date">Pick APoD by Date</string>
     <string name="toolbar_action_title_get_random_apod">Get Random APoD</string>
+    <string name="toolbar_action_add_to_favorites">Add to Favorites</string>
     <string name="toolbar_action_title_visit_apod_website">Visit APoD Website</string>
 
     <!-- Messages -->
     <string name="message_invalid_apod_date">Invalid APoD date! Please select a date that is between June 16, 1995 and today</string>
-    <string name="something_went_wrong_http_error">Oops, something went wrong… \n HTTP error %s</string>
+    <string name="message_no_favorite_apods_found">No Favorite APoDs found!\n Click the on \"Add to Favorites"\ icon to add APoDs to this list.</string>
+    <string name="message_something_went_wrong_http_error">Oops, something went wrong… \n HTTP error %s</string>
+    <string name="message_apod_deleted_successfully">APoD deleted successfully</string>
+    <string name="message_unexpected_error_occurred">Unexpected error occurred. Please try again later.</string>
 
     <!-- Misc. -->
     <string name="apod_website_url">https://apod.nasa.gov/apod/astropix.html</string>

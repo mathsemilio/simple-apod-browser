@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:menu="@menu/toolbar_app_menu"
+            app:menu="@menu/toolbar_app"
             app:navigationIconTint="?colorControlNormal"
             app:title="@string/latest" />
 
@@ -28,5 +28,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_view_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_nav_app" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

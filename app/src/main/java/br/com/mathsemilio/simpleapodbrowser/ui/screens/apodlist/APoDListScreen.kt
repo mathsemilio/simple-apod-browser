@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
 import br.com.mathsemilio.simpleapodbrowser.common.getLastSevenDays
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
@@ -59,13 +60,38 @@ class APoDListScreen : BaseFragment(),
         return view.rootView
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        fetchApods()
+    private fun fetchApods() {
+        coroutineScope.launch {
+            view.showProgressIndicator()
+            fetchAPoDUseCase.fetchAPoDBasedOnDateRange(getLastSevenDays())
+        }
+    }
+
+    private fun onToolbarActionClickEvent(action: ToolbarAction) {
+        when (action) {
+            ToolbarAction.PICK_APOD_DATE ->
+                dialogManager.showDatePickerDialog()
+            ToolbarAction.GET_RANDOM_APOD -> coroutineScope.launch {
+                fetchAPoDUseCase.fetchRandomAPoD()
+            }
+            ToolbarAction.VISIT_APOD_WEBSITE ->
+                requireContext().launchWebPage(getString(R.string.apod_website_url))
+            else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
+        }
+    }
+
+    private fun onDateSetEvent(event: DateSetEvent) {
+        when (event) {
+            is DateSetEvent.DateSet -> coroutineScope.launch {
+                fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateInMillis)
+            }
+            DateSetEvent.InvalidDateSet ->
+                messagesManager.showInvalidAPoDDateErrorMessage()
+        }
     }
 
     override fun onApodClicked(apod: APoD) {
-        screensNavigator.toDetailsScreen(apod)
+        screensNavigator.toAPoDDetailsScreen(apod)
     }
 
     override fun onScreenSwipedToRefresh() {
@@ -80,11 +106,11 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onFetchAPoDBasedOnDateCompleted(apod: APoD) {
-        screensNavigator.toDetailsScreen(apod)
+        screensNavigator.toAPoDDetailsScreen(apod)
     }
 
     override fun onFetchRandomAPoDCompleted(randomAPoD: APoD) {
-        screensNavigator.toDetailsScreen(randomAPoD)
+        screensNavigator.toAPoDDetailsScreen(randomAPoD)
     }
 
     override fun onFetchAPoDError(errorCode: String) {
@@ -99,39 +125,11 @@ class APoDListScreen : BaseFragment(),
         }
     }
 
-    private fun fetchApods() {
-        coroutineScope.launch {
-            view.showProgressIndicator()
-            fetchAPoDUseCase.fetchAPoDBasedOnDateRange(getLastSevenDays())
-        }
-    }
-
-    private fun onDateSetEvent(event: DateSetEvent) {
-        when (event) {
-            is DateSetEvent.DateSet -> coroutineScope.launch {
-                fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateInMillis)
-            }
-            DateSetEvent.InvalidDateSet ->
-                messagesManager.showInvalidAPoDDateErrorMessage()
-        }
-    }
-
-    private fun onToolbarActionClickEvent(action: ToolbarAction) {
-        when (action) {
-            ToolbarAction.PICK_APOD_DATE ->
-                dialogManager.showDatePickerDialog()
-            ToolbarAction.GET_RANDOM_APOD -> coroutineScope.launch {
-                fetchAPoDUseCase.fetchRandomAPoD()
-            }
-            ToolbarAction.VISIT_APOD_WEBSITE ->
-                requireContext().launchWebPage(getString(R.string.apod_website_url))
-        }
-    }
-
     override fun onStart() {
         view.addListener(this)
         eventSubscriber.subscribe(this)
         fetchAPoDUseCase.addListener(this)
+        fetchApods()
         super.onStart()
     }
 

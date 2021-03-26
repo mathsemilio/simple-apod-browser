@@ -30,7 +30,7 @@ class APoDDetailScreen : BaseFragment(), APoDDetailView.Listener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        view = compositionRoot.viewFactory.getApodDetailsImageView(container)
+        view = compositionRoot.viewFactory.getApodDetailsView(container)
         return view.rootView
     }
 

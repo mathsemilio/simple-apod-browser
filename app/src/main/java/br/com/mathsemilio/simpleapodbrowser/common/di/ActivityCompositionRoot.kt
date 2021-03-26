@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
 import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.APoDEndpoint
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.FetchAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.FavoriteAPoDEndpoint
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.storage.database.AppDatabase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
@@ -18,8 +22,16 @@ class ActivityCompositionRoot(
 ) {
     private val aPoDApi get() = compositionRoot.retrofitBuilder.apodApi
 
+    private val appDatabase get() = AppDatabase.getDatabase(activity)
+
+    private val favoriteAPoDDAO get() = appDatabase.favoriteAPoDDAO
+
     private val aPoDEndpoint by lazy {
         APoDEndpoint(aPoDApi, apiKeyProvider, dispatcherProvider)
+    }
+
+    private val favoriteAPoDEndpoint by lazy {
+        FavoriteAPoDEndpoint(favoriteAPoDDAO, dispatcherProvider)
     }
 
     private val dispatcherProvider get() = DispatcherProvider
@@ -30,6 +42,14 @@ class ActivityCompositionRoot(
 
     private val _fetchAPoDUseCase by lazy {
         FetchAPoDUseCase(aPoDEndpoint)
+    }
+
+    private val _fetchFavoriteAPoDUseCase by lazy {
+        FetchFavoriteAPoDUseCase(favoriteAPoDEndpoint)
+    }
+
+    private val _deleteFavoriteAPoDUseCase by lazy {
+        DeleteFavoriteAPoDUseCase(favoriteAPoDEndpoint)
     }
 
     private val fragmentContainerHelper get() = activity as FragmentContainerHelper
@@ -69,4 +89,8 @@ class ActivityCompositionRoot(
     val viewFactory get() = _viewFactory
 
     val fetchAPoDUseCase get() = _fetchAPoDUseCase
+
+    val fetchFavoriteAPoDUseCase get() = _fetchFavoriteAPoDUseCase
+
+    val deleteFavoriteAPoDUseCase get() = _deleteFavoriteAPoDUseCase
 }

@@ -10,10 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.APoDListScreenListAdapter
 
-class APoDListScreenViewImpl(layoutInflater: LayoutInflater, container: ViewGroup?) :
-    APoDListScreenListAdapter.Listener,
+class APoDListScreenViewImpl(
+    layoutInflater: LayoutInflater,
+    container: ViewGroup?,
+    private val viewFactory: ViewFactory
+) : APoDListScreenListAdapter.Listener,
     APoDListScreenView() {
 
     private lateinit var progressBarApodList: ProgressBar
@@ -27,7 +31,7 @@ class APoDListScreenViewImpl(layoutInflater: LayoutInflater, container: ViewGrou
     init {
         rootView = layoutInflater.inflate(R.layout.apod_list_screen, container, false)
         initializeViews()
-        setupRecyclerView(layoutInflater)
+        setupRecyclerView()
         attachOnSwipeRefreshListener()
     }
 
@@ -44,12 +48,11 @@ class APoDListScreenViewImpl(layoutInflater: LayoutInflater, container: ViewGrou
             findViewById(R.id.recycler_view_apod_list)
     }
 
-    private fun setupRecyclerView(layoutInflater: LayoutInflater) {
-        apodListScreenListAdapter = APoDListScreenListAdapter(layoutInflater, this)
+    private fun setupRecyclerView() {
+        apodListScreenListAdapter = APoDListScreenListAdapter(viewFactory, this)
         recyclerViewApodList.apply {
             adapter = apodListScreenListAdapter
             setHasFixedSize(true)
-            setItemViewCacheSize(7)
         }
     }
 
@@ -84,7 +87,7 @@ class APoDListScreenViewImpl(layoutInflater: LayoutInflater, container: ViewGrou
         imageViewApodListNetworkRequestError.visibility = View.VISIBLE
         textViewApodListNetworkRequestError.apply {
             visibility = View.VISIBLE
-            text = context.getString(R.string.something_went_wrong_http_error, errorCode)
+            text = context.getString(R.string.message_something_went_wrong_http_error, errorCode)
         }
     }
 

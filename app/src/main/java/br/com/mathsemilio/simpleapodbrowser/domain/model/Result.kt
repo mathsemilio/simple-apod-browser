@@ -5,5 +5,5 @@ sealed class Result<out T>(
     val error: String? = null
 ) {
     class Completed<T>(data: T?) : Result<T>(data, null)
-    class Failed(error: String) : Result<Nothing>(error = error)
+    class Failed(error: String?) : Result<Nothing>(error = error)
 }

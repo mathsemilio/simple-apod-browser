@@ -4,15 +4,28 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.Menu
+import android.view.View
 import android.widget.Toast
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoDSchema
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 
 fun Context.showLongToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
+fun Context.showSnackBarWithAction(
+    view: View,
+    message: String,
+    actionMessage: String,
+    onSnackBarActionClicked: () -> Unit
+) {
+    Snackbar.make(this, view, message, Snackbar.LENGTH_LONG).setAction(actionMessage) {
+        onSnackBarActionClicked()
+    }.show()
 }
 
 fun Menu.hideGroup(vararg groupId: Int) {

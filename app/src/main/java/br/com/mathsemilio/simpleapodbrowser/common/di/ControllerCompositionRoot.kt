@@ -17,4 +17,8 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
     val viewFactory get() = activityCompositionRoot.viewFactory
 
     val fetchAPoDUseCase get() = activityCompositionRoot.fetchAPoDUseCase
+
+    val fetchFavoriteAPoDUseCase get() = activityCompositionRoot.fetchFavoriteAPoDUseCase
+
+    val deleteFavoriteAPoDUseCase get() = activityCompositionRoot.deleteFavoriteAPoDUseCase
 }

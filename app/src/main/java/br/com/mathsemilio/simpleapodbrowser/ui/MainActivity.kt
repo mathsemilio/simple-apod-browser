@@ -9,6 +9,7 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
+import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavItem
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
@@ -48,6 +49,10 @@ class MainActivity : BaseActivity(),
         eventPublisher.publishEvent(ToolbarEvent.ActionClicked(action))
     }
 
+    override fun onBottomNavigationViewItemClicked(item: BottomNavItem) {
+        screensNavigator.switchTopDestinations(item)
+    }
+
     override fun getFragmentContainer(): FrameLayout {
         return view.screenContainer
     }
@@ -60,10 +65,12 @@ class MainActivity : BaseActivity(),
 
     private fun onNavigationEvent(event: NavigationEvent) {
         when (event) {
-            is NavigationEvent.ToDestination ->
-                event.destination?.let { onNavigateToDestination(it) }
-            is NavigationEvent.ToTopDestination ->
-                event.topDestination?.let { onNavigateToTopDestination(it) }
+            is NavigationEvent.ToDestination -> event.destination?.let { destination ->
+                onNavigateToDestination(destination)
+            }
+            is NavigationEvent.ToTopDestination -> event.topDestination?.let { topDestination ->
+                onNavigateToTopDestination(topDestination)
+            }
         }
     }
 

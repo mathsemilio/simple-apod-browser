@@ -1,15 +1,16 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListItemView
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListItemViewImpl
 
-class APoDListScreenListAdapter(
-    private val layoutInflater: LayoutInflater,
+class
+APoDListScreenListAdapter(
+    private val viewFactory: ViewFactory,
     private val listener: Listener
 ) : ListAdapter<APoD, APoDListScreenListAdapter.ViewHolder>(APoDListScreenDiffUtilCallback()),
     APoDListItemView.Listener {
@@ -18,22 +19,20 @@ class APoDListScreenListAdapter(
         fun onAPoDClicked(apod: APoD)
     }
 
-    class ViewHolder(private val itemViewImpl: APoDListItemViewImpl) :
-        RecyclerView.ViewHolder(itemViewImpl.rootView) {
+    class ViewHolder(private val listItemView: APoDListItemViewImpl) :
+        RecyclerView.ViewHolder(listItemView.rootView) {
 
-        fun bind(apod: APoD) = itemViewImpl.bindAPoDDetails(apod)
+        fun bind(apod: APoD) = listItemView.bindAPoDDetails(apod)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(APoDListItemViewImpl(layoutInflater, parent).also { listItemView ->
+        return ViewHolder(viewFactory.getAPoDListItemView(parent).also { listItemView ->
             listItemView.addListener(this)
         })
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        getItem(position).let { item ->
-            if (item != null) holder.bind(item)
-        }
+        holder.bind(getItem(position))
     }
 
     override fun onAPoDClicked(apod: APoD) {
