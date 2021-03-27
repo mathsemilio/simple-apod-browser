@@ -1,14 +1,13 @@
-package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
+package br.com.mathsemilio.simpleapodbrowser.ui.common.navigation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import br.com.mathsemilio.simpleapodbrowser.common.INVALID_ROOT_FRAGMENT
+import br.com.mathsemilio.simpleapodbrowser.common.OUT_STATE_TOP_DESTINATION
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavItem
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.APoDDetailScreen
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.APoDFavoritesScreen
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.APoDListScreen
@@ -18,9 +17,11 @@ class ScreensNavigator(
     private val fragNavController: FragNavController,
     private val eventPublisher: EventPublisher
 ) {
+    private lateinit var currentTopDestination: TopDestination
+
     private fun getRootFragmentListener(): FragNavController.RootFragmentListener {
         return object : FragNavController.RootFragmentListener {
-            override val numberOfRootFragments get() = 1
+            override val numberOfRootFragments get() = 2
 
             override fun getRootFragment(index: Int): Fragment {
                 return when (index) {
@@ -35,48 +36,60 @@ class ScreensNavigator(
     fun initialize(savedInstanceState: Bundle?) {
         fragNavController.rootFragmentListener = getRootFragmentListener()
         fragNavController.initialize(FragNavController.TAB1, savedInstanceState)
-    }
-
-    fun onSaveInstanceState(outState: Bundle) {
-        fragNavController.onSaveInstanceState(outState)
-    }
-
-    fun navigateUp(): Boolean {
-        return if (fragNavController.isRootFragment) {
-            false
+        currentTopDestination = if (savedInstanceState != null) {
+            savedInstanceState.getSerializable(OUT_STATE_TOP_DESTINATION) as TopDestination
         } else {
-            toLatestScreen()
-            true
+            TopDestination.LATEST_SCREEN
         }
     }
 
-    fun switchTopDestinations(item: BottomNavItem) {
+    fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable(OUT_STATE_TOP_DESTINATION, currentTopDestination)
+        fragNavController.onSaveInstanceState(outState)
+    }
+
+    private fun publishEventToTopDestination(destination: TopDestination) {
+        eventPublisher.publishEvent(NavigationEvent.ToTopDestination(destination))
+    }
+
+    private fun publishEventToSecondaryDestination(destination: SecondaryDestination) {
+        eventPublisher.publishEvent(NavigationEvent.ToSecondaryDestination(destination))
+    }
+
+    fun switchTopDestinationsBasedOnBottomNavItem(item: BottomNavItem) {
         fragNavController.switchTab(
             when (item) {
                 BottomNavItem.LATEST -> {
-                    eventPublisher.publishEvent(
-                        NavigationEvent.ToTopDestination(TopDestination.LATEST_SCREEN)
-                    )
+                    currentTopDestination = TopDestination.LATEST_SCREEN
+                    publishEventToTopDestination(TopDestination.LATEST_SCREEN)
                     FragNavController.TAB1
                 }
                 BottomNavItem.FAVORITES -> {
-                    eventPublisher.publishEvent(
-                        NavigationEvent.ToTopDestination(TopDestination.FAVORITES_SCREEN)
-                    )
+                    currentTopDestination = TopDestination.FAVORITES_SCREEN
+                    publishEventToTopDestination(TopDestination.FAVORITES_SCREEN)
                     FragNavController.TAB2
                 }
             }
         )
     }
 
-    private fun toLatestScreen() {
-        fragNavController.clearStack()
-        fragNavController.pushFragment(APoDListScreen())
-        eventPublisher.publishEvent(NavigationEvent.ToTopDestination(TopDestination.LATEST_SCREEN))
+    fun toAPoDDetailsScreen(apod: APoD, isFavoriteAPoD: Boolean = false) {
+        fragNavController.pushFragment(APoDDetailScreen.newInstance(apod))
+        eventPublisher.publishEvent(
+            when (isFavoriteAPoD) {
+                true -> publishEventToSecondaryDestination(SecondaryDestination.FAVORITE_APOD_DETAILS)
+                false -> publishEventToSecondaryDestination(SecondaryDestination.APOD_DETAILS)
+            }
+        )
     }
 
-    fun toAPoDDetailsScreen(apod: APoD) {
-        fragNavController.pushFragment(APoDDetailScreen.newInstance(apod))
-        eventPublisher.publishEvent(NavigationEvent.ToDestination(NavDestination.DETAILS_SCREEN))
+    fun navigateUp(): Boolean {
+        return if (!fragNavController.isRootFragment) {
+            fragNavController.popFragment()
+            publishEventToTopDestination(currentTopDestination)
+            true
+        } else {
+            false
+        }
     }
 }

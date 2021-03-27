@@ -2,9 +2,9 @@ package br.com.mathsemilio.simpleapodbrowser.ui
 
 import android.widget.FrameLayout
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavItem
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.SecondaryDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.TopDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
 abstract class MainActivityView : BaseObservableView<MainActivityView.Listener>() {
@@ -17,15 +17,21 @@ abstract class MainActivityView : BaseObservableView<MainActivityView.Listener>(
         fun onBottomNavigationViewItemClicked(item: BottomNavItem)
     }
 
-    abstract val screenContainer: FrameLayout
+    abstract fun getScreenContainer(): FrameLayout
 
-    abstract fun setToolbarNavigationIconVisibility(isVisible: Boolean)
+    abstract fun showToolbarNavigationIcon()
 
-    abstract fun setToolbarTitleForDestination(destination: NavDestination)
+    abstract fun hideToolbarNavigationIcon()
 
-    abstract fun setToolbarTitleForTopDestination(topDestination: TopDestination)
+    abstract fun showBottomNavigationView()
 
-    abstract fun setToolbarMenuForDestination(destination: NavDestination)
+    abstract fun hideBottomNavigationView()
 
-    abstract fun setToolbarMenuForTopDestination(topDestination: TopDestination)
+    abstract fun setToolbarTitleForTopDestination(destination: TopDestination)
+
+    abstract fun setToolbarTitleForSecondaryDestination(destination: SecondaryDestination)
+
+    abstract fun setToolbarMenuForTopDestination(destination: TopDestination)
+
+    abstract fun setToolbarMenuForSecondaryDestination(destination: SecondaryDestination)
 }

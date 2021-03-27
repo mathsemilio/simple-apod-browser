@@ -8,11 +8,11 @@ import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.SecondaryDestination
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.TopDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavItem
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
 
 class MainActivity : BaseActivity(),
     MainActivityView.Listener,
@@ -50,40 +50,34 @@ class MainActivity : BaseActivity(),
     }
 
     override fun onBottomNavigationViewItemClicked(item: BottomNavItem) {
-        screensNavigator.switchTopDestinations(item)
+        screensNavigator.switchTopDestinationsBasedOnBottomNavItem(item)
     }
 
     override fun getFragmentContainer(): FrameLayout {
-        return view.screenContainer
+        return view.getScreenContainer()
     }
 
     override fun onEvent(event: Any) {
         when (event) {
-            is NavigationEvent -> onNavigationEvent(event)
+            is NavigationEvent.ToTopDestination ->
+                onNavigateToTopDestination(event.topDestination!!)
+            is NavigationEvent.ToSecondaryDestination ->
+                onNavigateToSecondaryDestination(event.secondaryDestination!!)
         }
     }
 
-    private fun onNavigationEvent(event: NavigationEvent) {
-        when (event) {
-            is NavigationEvent.ToDestination -> event.destination?.let { destination ->
-                onNavigateToDestination(destination)
-            }
-            is NavigationEvent.ToTopDestination -> event.topDestination?.let { topDestination ->
-                onNavigateToTopDestination(topDestination)
-            }
-        }
+    private fun onNavigateToTopDestination(destination: TopDestination) {
+        view.hideToolbarNavigationIcon()
+        view.showBottomNavigationView()
+        view.setToolbarTitleForTopDestination(destination)
+        view.setToolbarMenuForTopDestination(destination)
     }
 
-    private fun onNavigateToDestination(destination: NavDestination) {
-        view.setToolbarNavigationIconVisibility(isVisible = true)
-        view.setToolbarTitleForDestination(destination)
-        view.setToolbarMenuForDestination(destination)
-    }
-
-    private fun onNavigateToTopDestination(topDestination: TopDestination) {
-        view.setToolbarNavigationIconVisibility(isVisible = false)
-        view.setToolbarTitleForTopDestination(topDestination)
-        view.setToolbarMenuForTopDestination(topDestination)
+    private fun onNavigateToSecondaryDestination(destination: SecondaryDestination) {
+        view.showToolbarNavigationIcon()
+        view.hideBottomNavigationView()
+        view.setToolbarTitleForSecondaryDestination(destination)
+        view.setToolbarMenuForSecondaryDestination(destination)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -6,13 +6,14 @@ import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.FavoriteAPoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPodUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.storage.database.AppDatabase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 import com.ncapdevi.fragnav.FragNavController
 
@@ -46,6 +47,10 @@ class ActivityCompositionRoot(
 
     private val _fetchFavoriteAPoDUseCase by lazy {
         FetchFavoriteAPoDUseCase(favoriteAPoDEndpoint)
+    }
+
+    private val _addFavoriteAPodUseCase by lazy {
+        AddFavoriteAPodUseCase(favoriteAPoDEndpoint)
     }
 
     private val _deleteFavoriteAPoDUseCase by lazy {
@@ -91,6 +96,8 @@ class ActivityCompositionRoot(
     val fetchAPoDUseCase get() = _fetchAPoDUseCase
 
     val fetchFavoriteAPoDUseCase get() = _fetchFavoriteAPoDUseCase
+
+    val addFavoriteAPodUseCase get() = _addFavoriteAPodUseCase
 
     val deleteFavoriteAPoDUseCase get() = _deleteFavoriteAPoDUseCase
 }

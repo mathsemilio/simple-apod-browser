@@ -17,7 +17,7 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ScreensNavigator
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListScreenView
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListScreenViewImpl
@@ -106,11 +106,11 @@ class APoDListScreen : BaseFragment(),
     }
 
     override fun onFetchAPoDBasedOnDateCompleted(apod: APoD) {
-        screensNavigator.toAPoDDetailsScreen(apod)
+        screensNavigator.toAPoDDetailsScreen(apod, false)
     }
 
     override fun onFetchRandomAPoDCompleted(randomAPoD: APoD) {
-        screensNavigator.toAPoDDetailsScreen(randomAPoD)
+        screensNavigator.toAPoDDetailsScreen(randomAPoD, false)
     }
 
     override fun onFetchAPoDError(errorCode: String) {

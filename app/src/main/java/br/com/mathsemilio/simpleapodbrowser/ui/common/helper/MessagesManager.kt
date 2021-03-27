@@ -26,4 +26,8 @@ class MessagesManager(private val context: Context) {
             context.getString(R.string.undo)
         ) { onSnackBarActionClicked() }
     }
+
+    fun showAPoDAddedToFavoritesUseCaseSuccessMessage() {
+        context.showLongToast(context.getString(R.string.message_apod_added_to_favorites_completed))
+    }
 }

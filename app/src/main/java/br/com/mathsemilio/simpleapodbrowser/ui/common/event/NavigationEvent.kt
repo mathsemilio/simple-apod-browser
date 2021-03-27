@@ -1,15 +1,15 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.common.event
 
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.NavDestination
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.TopDestination
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.SecondaryDestination
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.TopDestination
 
 sealed class NavigationEvent(
-    val destination: NavDestination? = null,
-    val topDestination: TopDestination? = null
+    val topDestination: TopDestination? = null,
+    val secondaryDestination: SecondaryDestination? = null
 ) {
-    class ToTopDestination(topDestination: TopDestination) :
-        NavigationEvent(topDestination = topDestination)
+    class ToTopDestination(destination: TopDestination) :
+        NavigationEvent(topDestination = destination)
 
-    class ToDestination(destination: NavDestination) :
-        NavigationEvent(destination = destination)
+    class ToSecondaryDestination(destination: SecondaryDestination) :
+        NavigationEvent(secondaryDestination = destination)
 }

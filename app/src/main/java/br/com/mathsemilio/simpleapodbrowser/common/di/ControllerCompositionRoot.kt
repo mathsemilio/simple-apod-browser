@@ -21,4 +21,6 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
     val fetchFavoriteAPoDUseCase get() = activityCompositionRoot.fetchFavoriteAPoDUseCase
 
     val deleteFavoriteAPoDUseCase get() = activityCompositionRoot.deleteFavoriteAPoDUseCase
+
+    val addFavoriteAPodUseCase get() = activityCompositionRoot.addFavoriteAPodUseCase
 }
