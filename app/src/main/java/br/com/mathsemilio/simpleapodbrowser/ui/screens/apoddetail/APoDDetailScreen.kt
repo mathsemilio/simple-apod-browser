@@ -34,7 +34,7 @@ class APoDDetailScreen : BaseFragment(),
         }
     }
 
-    private lateinit var view: APoDDetailViewImpl
+    private lateinit var view: APoDDetailView
 
     private lateinit var messagesManager: MessagesManager
     private lateinit var coroutineScope: CoroutineScope

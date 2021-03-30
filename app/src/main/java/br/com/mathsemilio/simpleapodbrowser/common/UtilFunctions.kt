@@ -15,13 +15,15 @@ fun Context.showLongToast(message: String) {
 
 fun Context.showSnackBarWithAction(
     view: View,
+    anchorView: View,
     message: String,
     actionMessage: String,
     onSnackBarActionClicked: () -> Unit
 ) {
-    Snackbar.make(this, view, message, Snackbar.LENGTH_LONG).setAction(actionMessage) {
-        onSnackBarActionClicked()
-    }.show()
+    Snackbar.make(this, view, message, Snackbar.LENGTH_LONG)
+        .setAnchorView(anchorView)
+        .setAction(actionMessage) { onSnackBarActionClicked() }
+        .show()
 }
 
 fun Menu.hideGroup(vararg groupId: Int) {

@@ -15,10 +15,10 @@ import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFav
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.RootLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.APoDFavoritesScreenView
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.APoDFavoritesScreenViewImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
@@ -29,9 +29,10 @@ class APoDFavoritesScreen : BaseFragment(),
     FetchFavoriteAPoDUseCase.Listener,
     EventListener {
 
-    private lateinit var view: APoDFavoritesScreenViewImpl
+    private lateinit var view: APoDFavoritesScreenView
 
     private lateinit var screensNavigator: ScreensNavigator
+    private lateinit var rootLayoutHelper: RootLayoutHelper
     private lateinit var messagesManager: MessagesManager
     private lateinit var coroutineScope: CoroutineScope
 
@@ -43,6 +44,7 @@ class APoDFavoritesScreen : BaseFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         screensNavigator = compositionRoot.screensNavigator
+        rootLayoutHelper = compositionRoot.rootLayoutHelper
         messagesManager = compositionRoot.messagesManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
         eventSubscriber = compositionRoot.eventSubscriber
@@ -92,9 +94,11 @@ class APoDFavoritesScreen : BaseFragment(),
     }
 
     override fun onFavoriteAPoDDeletedSuccessfully() {
-        messagesManager.showDeleteFavoriteAPoDUseCaseSuccessMessage(view.rootView) {
-            revertFavoriteAPoDDeletion()
-        }
+        fetchFavoriteAPoDs()
+        messagesManager.showDeleteFavoriteAPoDUseCaseSuccessMessage(
+            rootLayoutHelper.fragmentContainer,
+            rootLayoutHelper.rootBottomNavigationView
+        ) { revertFavoriteAPoDDeletion() }
     }
 
     override fun onFavoriteAPoDDeleteRevertedSuccessfully() {

@@ -7,19 +7,20 @@ import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.RootLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.SecondaryDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.TopDestination
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavItem
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : BaseActivity(),
     MainActivityView.Listener,
-    FragmentContainerHelper,
+    RootLayoutHelper,
     EventListener {
 
-    private lateinit var view: MainActivityViewImpl
+    private lateinit var view: MainActivityView
 
     private lateinit var screensNavigator: ScreensNavigator
     private lateinit var eventSubscriber: EventSubscriber
@@ -53,9 +54,15 @@ class MainActivity : BaseActivity(),
         screensNavigator.switchTopDestinationsBasedOnBottomNavItem(item)
     }
 
-    override fun getFragmentContainer(): FrameLayout {
-        return view.getScreenContainer()
-    }
+    override val fragmentContainer: FrameLayout
+        get() {
+            return view.fragmentContainer
+        }
+
+    override val rootBottomNavigationView: BottomNavigationView
+        get() {
+            return view.rootBottomNavigationView
+        }
 
     override fun onEvent(event: Any) {
         when (event) {

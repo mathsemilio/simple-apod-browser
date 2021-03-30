@@ -11,8 +11,8 @@ import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.database.AppDatabase
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteAPoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.RootLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 import com.ncapdevi.fragnav.FragNavController
@@ -59,8 +59,6 @@ class ActivityCompositionRoot(
         DeleteFavoriteAPoDUseCase(favoriteAPoDEndpoint)
     }
 
-    private val fragmentContainerHelper get() = activity as FragmentContainerHelper
-
     private val _messagesManager by lazy {
         MessagesManager(activity)
     }
@@ -69,7 +67,7 @@ class ActivityCompositionRoot(
         ScreensNavigator(
             FragNavController(
                 activity.supportFragmentManager,
-                fragmentContainerHelper.getFragmentContainer().id
+                rootLayoutHelper.fragmentContainer.id
             ),
             eventPublisher
         )
@@ -92,6 +90,8 @@ class ActivityCompositionRoot(
     val messagesManager get() = _messagesManager
 
     val screensNavigator get() = _screensNavigator
+
+    val rootLayoutHelper get() = activity as RootLayoutHelper
 
     val viewFactory get() = _viewFactory
 

@@ -19,7 +19,7 @@ class MainActivityViewImpl(layoutInflater: LayoutInflater, parent: ViewGroup?) :
     MainActivityView() {
 
     private lateinit var materialToolbarApp: MaterialToolbar
-    private lateinit var frameLayoutScreenContainer: FrameLayout
+    private lateinit var frameLayoutFragmentContainer: FrameLayout
     private lateinit var bottomNavigationViewApp: BottomNavigationView
 
     init {
@@ -32,7 +32,7 @@ class MainActivityViewImpl(layoutInflater: LayoutInflater, parent: ViewGroup?) :
 
     private fun initializeViews() {
         materialToolbarApp = findViewById(R.id.material_toolbar_app)
-        frameLayoutScreenContainer = findViewById(R.id.frame_layout_screen_container)
+        frameLayoutFragmentContainer = findViewById(R.id.frame_layout_fragment_container)
         bottomNavigationViewApp = findViewById(R.id.bottom_navigation_view_app)
     }
 
@@ -82,9 +82,15 @@ class MainActivityViewImpl(layoutInflater: LayoutInflater, parent: ViewGroup?) :
         }
     }
 
-    override fun getScreenContainer(): FrameLayout {
-        return frameLayoutScreenContainer
-    }
+    override val rootBottomNavigationView: BottomNavigationView
+        get() {
+            return bottomNavigationViewApp
+        }
+
+    override val fragmentContainer: FrameLayout
+        get() {
+            return frameLayoutFragmentContainer
+        }
 
     override fun showToolbarNavigationIcon() {
         materialToolbarApp.navigationIcon = ResourcesCompat.getDrawable(

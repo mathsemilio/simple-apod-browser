@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListItemView
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListItemViewImpl
 
 class
 APoDListScreenListAdapter(
@@ -19,7 +18,7 @@ APoDListScreenListAdapter(
         fun onAPoDClicked(apod: APoD)
     }
 
-    class ViewHolder(private val listItemView: APoDListItemViewImpl) :
+    class ViewHolder(private val listItemView: APoDListItemView) :
         RecyclerView.ViewHolder(listItemView.rootView) {
 
         fun bind(apod: APoD) = listItemView.bindAPoDDetails(apod)

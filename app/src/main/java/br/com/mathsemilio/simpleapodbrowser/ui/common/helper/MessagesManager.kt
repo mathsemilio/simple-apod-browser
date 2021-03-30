@@ -18,10 +18,12 @@ class MessagesManager(private val context: Context) {
 
     fun showDeleteFavoriteAPoDUseCaseSuccessMessage(
         view: View,
+        anchorView: View,
         onSnackBarActionClicked: () -> Unit
     ) {
         context.showSnackBarWithAction(
             view,
+            anchorView,
             context.getString(R.string.message_apod_removed_from_favorites),
             context.getString(R.string.undo)
         ) { onSnackBarActionClicked() }

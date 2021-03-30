@@ -19,7 +19,6 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListScreenView
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListScreenViewImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
@@ -29,7 +28,7 @@ class APoDListScreen : BaseFragment(),
     FetchAPoDUseCase.Listener,
     EventListener {
 
-    private lateinit var view: APoDListScreenViewImpl
+    private lateinit var view: APoDListScreenView
 
     private lateinit var screensNavigator: ScreensNavigator
     private lateinit var messagesManager: MessagesManager
@@ -114,6 +113,7 @@ class APoDListScreen : BaseFragment(),
 
     override fun onFetchAPoDError(errorMessage: String) {
         view.hideProgressIndicator()
+        view.onRefreshCompleted()
         view.showNetworkRequestErrorState(errorMessage)
     }
 

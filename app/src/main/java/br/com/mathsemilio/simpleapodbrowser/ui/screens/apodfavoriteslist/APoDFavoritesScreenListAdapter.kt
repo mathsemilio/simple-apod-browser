@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.APoDFavoritesListItemView
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.APoDFavoritesListItemViewImpl
 
 class APoDFavoritesScreenListAdapter(
     private val viewFactory: ViewFactory,
@@ -19,7 +18,7 @@ class APoDFavoritesScreenListAdapter(
         fun onRemoveFromFavoritesIconClicked(apod: APoD)
     }
 
-    class ViewHolder(private val listItemView: APoDFavoritesListItemViewImpl) :
+    class ViewHolder(private val listItemView: APoDFavoritesListItemView) :
         RecyclerView.ViewHolder(listItemView.rootView) {
 
         fun bind(apod: APoD) = listItemView.bindFavoriteAPoD(apod)

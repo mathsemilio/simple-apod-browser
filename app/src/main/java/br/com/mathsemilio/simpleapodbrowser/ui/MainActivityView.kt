@@ -1,11 +1,12 @@
 package br.com.mathsemilio.simpleapodbrowser.ui
 
 import android.widget.FrameLayout
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavItem
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.SecondaryDestination
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.TopDestination
+import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavItem
+import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 abstract class MainActivityView : BaseObservableView<MainActivityView.Listener>() {
 
@@ -17,7 +18,9 @@ abstract class MainActivityView : BaseObservableView<MainActivityView.Listener>(
         fun onBottomNavigationViewItemClicked(item: BottomNavItem)
     }
 
-    abstract fun getScreenContainer(): FrameLayout
+    abstract val rootBottomNavigationView: BottomNavigationView
+
+    abstract val fragmentContainer: FrameLayout
 
     abstract fun showToolbarNavigationIcon()
 
