@@ -70,6 +70,8 @@ class APoDListScreenViewImpl(
 
     override fun showProgressIndicator() {
         progressBarApodList.visibility = View.VISIBLE
+        imageViewApodListNetworkRequestError.visibility = View.INVISIBLE
+        textViewApodListNetworkRequestError.visibility = View.INVISIBLE
         swipeRefreshLayoutApodList.visibility = View.INVISIBLE
     }
 
