@@ -1,7 +1,7 @@
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod
 
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
-import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.FavoriteAPoDEndpoint
+import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteAPoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 

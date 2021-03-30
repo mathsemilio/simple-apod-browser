@@ -8,7 +8,6 @@ import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
-import br.com.mathsemilio.simpleapodbrowser.common.getLastSevenDays
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
@@ -63,7 +62,7 @@ class APoDListScreen : BaseFragment(),
     private fun fetchApods() {
         coroutineScope.launch {
             view.showProgressIndicator()
-            fetchAPoDUseCase.fetchAPoDBasedOnDateRange(getLastSevenDays())
+            fetchAPoDUseCase.fetchAPoDBasedOnDateRange()
         }
     }
 
@@ -113,9 +112,9 @@ class APoDListScreen : BaseFragment(),
         screensNavigator.toAPoDDetailsScreen(randomAPoD, false)
     }
 
-    override fun onFetchAPoDError(errorCode: String) {
+    override fun onFetchAPoDError(errorMessage: String) {
         view.hideProgressIndicator()
-        view.showNetworkRequestErrorState(errorCode)
+        view.showNetworkRequestErrorState(errorMessage)
     }
 
     override fun onEvent(event: Any) {

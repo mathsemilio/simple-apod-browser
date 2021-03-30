@@ -19,7 +19,7 @@ abstract class APoDListScreenView : BaseObservableView<APoDListScreenView.Listen
 
     abstract fun onRefreshCompleted()
 
-    abstract fun showNetworkRequestErrorState(errorCode: String)
+    abstract fun showNetworkRequestErrorState(errorMessage: String)
 
     abstract fun hideNetworkRequestFailedState()
 }

@@ -4,7 +4,7 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.DatePicker
-import br.com.mathsemilio.simpleapodbrowser.common.FIRST_APOD_TIME_IN_MILLIS
+import br.com.mathsemilio.simpleapodbrowser.common.FIRST_APOD_DATE_IN_MILLIS
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
@@ -44,7 +44,7 @@ class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListene
         when {
             dateSetInMillis > System.currentTimeMillis() ->
                 eventPublisher.publishEvent(DateSetEvent.InvalidDateSet)
-            dateSetInMillis < FIRST_APOD_TIME_IN_MILLIS ->
+            dateSetInMillis < FIRST_APOD_DATE_IN_MILLIS ->
                 eventPublisher.publishEvent(DateSetEvent.InvalidDateSet)
             else -> eventPublisher.publishEvent(DateSetEvent.DateSet(dateSetInMillis))
         }

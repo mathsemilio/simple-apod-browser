@@ -5,13 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import br.com.mathsemilio.simpleapodbrowser.common.APP_DATABASE
+import br.com.mathsemilio.simpleapodbrowser.data.dao.APoDCacheDAO
 import br.com.mathsemilio.simpleapodbrowser.data.dao.FavoriteAPoDDAO
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.domain.model.CachedAPoD
 
-@Database(entities = [APoD::class], version = 1, exportSchema = false)
+@Database(entities = [APoD::class, CachedAPoD::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract val favoriteAPoDDAO: FavoriteAPoDDAO
+    abstract val apodCacheDAO: APoDCacheDAO
 
     companion object {
         @Volatile

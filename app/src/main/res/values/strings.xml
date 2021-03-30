@@ -23,8 +23,9 @@
     <!-- Messages -->
     <string name="message_invalid_apod_date">Invalid APoD date! Please select a date that is between June 16, 1995 and today</string>
     <string name="message_no_favorite_apods_found">No Favorite APoDs found!\n Click the on \"Add to Favorites\" icon to add APoDs to this list.</string>
-    <string name="message_something_went_wrong_http_error">Oops, something went wrong… \n HTTP error %s</string>
-    <string name="message_apod_deleted_successfully">APoD deleted successfully</string>
+    <string name="message_something_went_wrong_error">Oops, something went wrong… \n %s</string>
+    <string name="message_apod_added_to_favorites_completed">APoD added to favorites!</string>
+    <string name="message_apod_removed_from_favorites">APoD removed from favorites</string>
     <string name="message_unexpected_error_occurred">Unexpected error occurred. Please try again later.</string>
 
     <!-- Misc. -->
@@ -33,6 +34,5 @@
 
     <!-- Lorem Ipsum -->
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur interdum, magna nec sagittis consequat, sem augue placerat sapien, a feugiat velit neque eu massa. Suspendisse aliquam lobortis lacus eu pellentesque. Suspendisse potenti. Aenean convallis libero a tortor ullamcorper semper. Vestibulum ac ipsum eu elit luctus aliquam non at ipsum. Integer cursus lacus ut porttitor pellentesque. Fusce erat lacus, facilisis eu nunc ac, feugiat venenatis mauris. Mauris nec ligula vel purus mattis interdum id vel lacus. Ut a velit ut lorem semper posuere. Proin vehicula odio mattis diam mattis lobortis. Quisque hendrerit semper neque, at tempus ex posuere non. Suspendisse sed sodales ante. </string>
-    <string name="message_apod_added_to_favorites_completed">APoD added to favorites!</string>
 
 </resources>

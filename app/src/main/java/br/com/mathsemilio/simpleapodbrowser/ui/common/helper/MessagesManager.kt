@@ -22,7 +22,7 @@ class MessagesManager(private val context: Context) {
     ) {
         context.showSnackBarWithAction(
             view,
-            context.getString(R.string.message_apod_deleted_successfully),
+            context.getString(R.string.message_apod_removed_from_favorites),
             context.getString(R.string.undo)
         ) { onSnackBarActionClicked() }
     }

@@ -82,17 +82,17 @@ class APoDListScreenViewImpl(
         swipeRefreshLayoutApodList.isRefreshing = false
     }
 
-    override fun showNetworkRequestErrorState(errorCode: String) {
-        swipeRefreshLayoutApodList.visibility = View.GONE
+    override fun showNetworkRequestErrorState(errorMessage: String) {
+        recyclerViewApodList.visibility = View.INVISIBLE
         imageViewApodListNetworkRequestError.visibility = View.VISIBLE
         textViewApodListNetworkRequestError.apply {
             visibility = View.VISIBLE
-            text = context.getString(R.string.message_something_went_wrong_http_error, errorCode)
+            text = context.getString(R.string.message_something_went_wrong_error, errorMessage)
         }
     }
 
     override fun hideNetworkRequestFailedState() {
-        swipeRefreshLayoutApodList.visibility = View.VISIBLE
+        recyclerViewApodList.visibility = View.VISIBLE
         imageViewApodListNetworkRequestError.visibility = View.GONE
         textViewApodListNetworkRequestError.visibility = View.GONE
     }

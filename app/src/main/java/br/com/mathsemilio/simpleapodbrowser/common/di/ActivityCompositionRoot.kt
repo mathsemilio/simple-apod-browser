@@ -3,13 +3,13 @@ package br.com.mathsemilio.simpleapodbrowser.common.di
 import androidx.appcompat.app.AppCompatActivity
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
 import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
-import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.APoDEndpoint
-import br.com.mathsemilio.simpleapodbrowser.domain.endpoint.FavoriteAPoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPodUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.database.AppDatabase
+import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteAPoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.FragmentContainerHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
@@ -26,6 +26,8 @@ class ActivityCompositionRoot(
     private val appDatabase get() = AppDatabase.getDatabase(activity)
 
     private val favoriteAPoDDAO get() = appDatabase.favoriteAPoDDAO
+
+    private val aPoDCacheDAO get() = appDatabase.apodCacheDAO
 
     private val aPoDEndpoint by lazy {
         APoDEndpoint(aPoDApi, apiKeyProvider, dispatcherProvider)

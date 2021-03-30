@@ -1,4 +1,4 @@
-package br.com.mathsemilio.simpleapodbrowser.domain.endpoint
+package br.com.mathsemilio.simpleapodbrowser.storage.endpoint
 
 import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
 import br.com.mathsemilio.simpleapodbrowser.data.dao.FavoriteAPoDDAO

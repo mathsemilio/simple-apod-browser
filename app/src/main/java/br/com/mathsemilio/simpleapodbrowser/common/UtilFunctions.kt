@@ -7,8 +7,6 @@ import android.net.Uri
 import android.view.Menu
 import android.view.View
 import android.widget.Toast
-import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
-import br.com.mathsemilio.simpleapodbrowser.domain.model.APoDSchema
 import com.google.android.material.snackbar.Snackbar
 
 fun Context.showLongToast(message: String) {
@@ -40,22 +38,4 @@ fun Context.launchWebPage(url: String) {
     val intent = Intent(Intent.ACTION_VIEW, page)
     if (intent.resolveActivity(this.packageManager) != null)
         this.startActivity(intent)
-}
-
-fun APoDSchema.toAPoD(): APoD {
-    val title = this.title
-    val url = this.url
-    val date = this.date
-    val mediaType = this.mediaType
-    val explanation = this.explanation
-    val thumbnailUrl = this.thumbnailUrl
-    return APoD(title, url, date, mediaType, explanation, thumbnailUrl)
-}
-
-fun List<APoDSchema>.toAPoDList(): List<APoD> {
-    val apodList = mutableListOf<APoD>()
-    this.forEach { aPoDSchema ->
-        apodList.add(aPoDSchema.toAPoD())
-    }
-    return apodList.toList()
 }

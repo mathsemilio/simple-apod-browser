@@ -1,15 +1,12 @@
 package br.com.mathsemilio.simpleapodbrowser.data.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 
 @Dao
 interface FavoriteAPoDDAO {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addFavoriteAPoD(apod: APoD)
 
     @Delete
