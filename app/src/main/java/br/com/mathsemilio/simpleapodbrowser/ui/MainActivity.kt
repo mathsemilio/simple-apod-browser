@@ -1,111 +1,121 @@
 package br.com.mathsemilio.simpleapodbrowser.ui
 
+import android.graphics.Color
 import android.os.Bundle
-import android.widget.FrameLayout
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.NavigationEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.RootLayoutHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
-import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.SecondaryDestination
-import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.TopDestination
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavItem
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.view.Menu
+import android.view.MenuItem
+import android.view.WindowManager
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.StatusBarManager
 
 class MainActivity : BaseActivity(),
-    MainActivityView.Listener,
-    RootLayoutHelper,
-    EventListener {
+    HostLayoutHelper,
+    StatusBarManager {
 
     private lateinit var view: MainActivityView
 
-    private lateinit var screensNavigator: ScreensNavigator
-    private lateinit var eventSubscriber: EventSubscriber
-    private lateinit var eventPublisher: EventPublisher
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         view = compositionRoot.viewFactory.getMainActivityView(null)
 
-        screensNavigator = compositionRoot.screensNavigator
-
-        eventSubscriber = compositionRoot.eventSubscriber
-
-        eventPublisher = compositionRoot.eventPublisher
-
         setContentView(view.rootView)
 
-        screensNavigator.initialize(savedInstanceState)
+        setupNavController()
+
+        setupUIComponentsWithNavController()
+
+        setOnDestinationChangedListener()
     }
 
-    override fun onToolbarNavigationIconClicked() {
-        screensNavigator.navigateUp()
+    private fun setupNavController() {
+        val navHostFragment = supportFragmentManager.findFragmentById(
+            R.id.fragment_container_view_app
+        ) as NavHostFragment
+
+        navController = navHostFragment.findNavController()
     }
 
-    override fun onToolbarActionClicked(action: ToolbarAction) {
-        eventPublisher.publishEvent(ToolbarEvent.ActionClicked(action))
+    private fun setupUIComponentsWithNavController() {
+        setSupportActionBar(view.appToolbar)
+
+        setupActionBarWithNavController(
+            navController,
+            AppBarConfiguration(
+                topLevelDestinationIds = setOf(R.id.APoDListScreen, R.id.APoDFavoritesScreen)
+            )
+        )
+
+        view.bottomNavigationView.setupWithNavController(navController)
     }
 
-    override fun onBottomNavigationViewItemClicked(item: BottomNavItem) {
-        screensNavigator.switchTopDestinationsBasedOnBottomNavItem(item)
+    private fun setOnDestinationChangedListener() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.APoDDetailScreen -> {
+                    view.showToolbar()
+                    view.hideBottomNavigationView()
+                }
+                R.id.APoDImageDetailScreen ->
+                    view.hideToolbar()
+                else -> {
+                    view.showToolbar()
+                    view.showBottomNavigationView()
+                }
+            }
+        }
     }
 
-    override val fragmentContainer: FrameLayout
+    override val navHostFragment: NavHostFragment
         get() {
-            return view.fragmentContainer
+            return supportFragmentManager.findFragmentById(
+                R.id.fragment_container_view_app
+            ) as NavHostFragment
         }
 
-    override val rootBottomNavigationView: BottomNavigationView
-        get() {
-            return view.rootBottomNavigationView
+    override val fragmentContainer get() = view.fragmentContainer
+
+    override val bottomNavigationView get() = view.bottomNavigationView
+
+    override fun setStatusBarColor(color: Int) {
+        window.apply {
+            view.setPreviousStatusBarColor(statusBarColor)
+            statusBarColor = Color.TRANSPARENT
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = color
         }
+    }
 
-    override fun onEvent(event: Any) {
-        when (event) {
-            is NavigationEvent.ToTopDestination ->
-                onNavigateToTopDestination(event.topDestination!!)
-            is NavigationEvent.ToSecondaryDestination ->
-                onNavigateToSecondaryDestination(event.secondaryDestination!!)
+    override fun revertStatusBarColor() {
+        window.statusBarColor = view.previousStatusBarColor
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_app, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.toolbar_global_action_visit_apod_website -> {
+                launchWebPage(getString(R.string.apod_website_url))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun onNavigateToTopDestination(destination: TopDestination) {
-        view.hideToolbarNavigationIcon()
-        view.showBottomNavigationView()
-        view.setToolbarTitleForTopDestination(destination)
-        view.setToolbarMenuForTopDestination(destination)
-    }
-
-    private fun onNavigateToSecondaryDestination(destination: SecondaryDestination) {
-        view.showToolbarNavigationIcon()
-        view.hideBottomNavigationView()
-        view.setToolbarTitleForSecondaryDestination(destination)
-        view.setToolbarMenuForSecondaryDestination(destination)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        screensNavigator.onSaveInstanceState(outState)
-    }
-
-    override fun onBackPressed() {
-        if (!screensNavigator.navigateUp())
-            super.onBackPressed()
-    }
-
-    override fun onStart() {
-        view.addListener(this)
-        eventSubscriber.subscribe(this)
-        super.onStart()
-    }
-
-    override fun onStop() {
-        view.removeListener(this)
-        eventSubscriber.unsubscribe(this)
-        super.onStop()
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

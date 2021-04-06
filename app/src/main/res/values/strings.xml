@@ -7,6 +7,7 @@
     <string name="content_description_play_apod_video">Play Astronomical Picture of the Day video</string>
     <string name="content_description_network_request_error">Network request error</string>
     <string name="content_description_remove_from_favorites">Remove from Favorites</string>
+    <string name="content_description_go_back_to_previous_screen">Go back to previous screen</string>
 
     <!-- Common -->
     <string name="latest">Latest</string>

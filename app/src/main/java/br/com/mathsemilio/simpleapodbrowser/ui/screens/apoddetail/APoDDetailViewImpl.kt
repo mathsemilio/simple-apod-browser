@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.drawable.toBitmap
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_VIDEO
@@ -25,6 +26,7 @@ class APoDDetailViewImpl(layoutInflater: LayoutInflater, container: ViewGroup?) 
     init {
         rootView = layoutInflater.inflate(R.layout.apod_detail_screen, container, false)
         initializeViews()
+        attachAPoDImageViewOnClickListener()
         glideProvider = GlideProvider(context)
     }
 
@@ -39,6 +41,14 @@ class APoDDetailViewImpl(layoutInflater: LayoutInflater, container: ViewGroup?) 
             findViewById(R.id.text_view_apod_detail_date)
         textViewApodDetailWithImageExplanation =
             findViewById(R.id.text_view_apod_detail_explanation)
+    }
+
+    private fun attachAPoDImageViewOnClickListener() {
+        imageViewApodDetailImage.setOnClickListener {
+            listeners.forEach { listener ->
+                listener.onAPoDImageClicked(imageViewApodDetailImage.drawable.toBitmap())
+            }
+        }
     }
 
     override fun bindAPoDDetails(apod: APoD) {

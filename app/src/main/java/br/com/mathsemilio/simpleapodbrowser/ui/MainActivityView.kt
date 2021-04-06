@@ -1,40 +1,27 @@
 package br.com.mathsemilio.simpleapodbrowser.ui
 
-import android.widget.FrameLayout
-import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.SecondaryDestination
-import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.TopDestination
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.BottomNavItem
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
+import androidx.fragment.app.FragmentContainerView
+import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseView
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-abstract class MainActivityView : BaseObservableView<MainActivityView.Listener>() {
+abstract class MainActivityView : BaseView() {
 
-    interface Listener {
-        fun onToolbarNavigationIconClicked()
+    abstract val appToolbar: MaterialToolbar
 
-        fun onToolbarActionClicked(action: ToolbarAction)
+    abstract val fragmentContainer: FragmentContainerView
 
-        fun onBottomNavigationViewItemClicked(item: BottomNavItem)
-    }
+    abstract val bottomNavigationView: BottomNavigationView
 
-    abstract val rootBottomNavigationView: BottomNavigationView
+    abstract val previousStatusBarColor: Int
 
-    abstract val fragmentContainer: FrameLayout
+    abstract fun showToolbar()
 
-    abstract fun showToolbarNavigationIcon()
-
-    abstract fun hideToolbarNavigationIcon()
+    abstract fun hideToolbar()
 
     abstract fun showBottomNavigationView()
 
     abstract fun hideBottomNavigationView()
 
-    abstract fun setToolbarTitleForTopDestination(destination: TopDestination)
-
-    abstract fun setToolbarTitleForSecondaryDestination(destination: SecondaryDestination)
-
-    abstract fun setToolbarMenuForTopDestination(destination: TopDestination)
-
-    abstract fun setToolbarMenuForSecondaryDestination(destination: SecondaryDestination)
+    abstract fun setPreviousStatusBarColor(color: Int)
 }

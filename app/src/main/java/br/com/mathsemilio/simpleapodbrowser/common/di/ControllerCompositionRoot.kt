@@ -14,7 +14,9 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
 
     val screensNavigator get() = activityCompositionRoot.screensNavigator
 
-    val rootLayoutHelper get() = activityCompositionRoot.rootLayoutHelper
+    val statusBarManager get() = activityCompositionRoot.statusBarManager
+
+    val rootLayoutHelper get() = activityCompositionRoot.hostLayoutHelper
 
     val viewFactory get() = activityCompositionRoot.viewFactory
 

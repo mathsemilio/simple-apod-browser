@@ -53,6 +53,7 @@ class APoDListScreenViewImpl(
         recyclerViewApodList.apply {
             adapter = apodListScreenListAdapter
             setHasFixedSize(true)
+            setItemViewCacheSize(7)
         }
     }
 

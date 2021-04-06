@@ -15,8 +15,7 @@
         android:theme="@style/Theme.SimpleAPoDBrowser">
         <activity
             android:name=".ui.MainActivity"
-            android:configChanges="orientation|screenLayout|screenSize|keyboardHidden"
-            android:screenOrientation="portrait">
+            android:configChanges="orientation|screenLayout|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

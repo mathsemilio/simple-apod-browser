@@ -1,45 +1,31 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail
 
+import android.graphics.Bitmap
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
-import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.common.OUT_STATE_APOD
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
+import br.com.mathsemilio.simpleapodbrowser.common.toByteArray
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPodUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
-class APoDDetailScreen : BaseFragment(),
+class APoDDetailFragment : BaseFragment(),
     APoDDetailView.Listener,
-    AddFavoriteAPodUseCase.Listener,
-    EventListener {
-
-    companion object {
-        fun newInstance(apod: APoD): APoDDetailScreen {
-            val args = Bundle(1).apply { putSerializable(ARG_APOD, apod) }
-            val aPoDDetailsImageScreen = APoDDetailScreen()
-            aPoDDetailsImageScreen.arguments = args
-            return aPoDDetailsImageScreen
-        }
-    }
+    AddFavoriteAPodUseCase.Listener {
 
     private lateinit var view: APoDDetailView
 
+    private lateinit var screensNavigator: ScreensNavigator
     private lateinit var messagesManager: MessagesManager
     private lateinit var coroutineScope: CoroutineScope
-
-    private lateinit var eventSubscriber: EventSubscriber
 
     private lateinit var addFavoriteAPodUseCase: AddFavoriteAPodUseCase
 
@@ -47,9 +33,10 @@ class APoDDetailScreen : BaseFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+        screensNavigator = compositionRoot.screensNavigator
         messagesManager = compositionRoot.messagesManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
-        eventSubscriber = compositionRoot.eventSubscriber
         addFavoriteAPodUseCase = compositionRoot.addFavoriteAPodUseCase
     }
 
@@ -58,7 +45,7 @@ class APoDDetailScreen : BaseFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        view = compositionRoot.viewFactory.getApodDetailsView(container)
+        view = compositionRoot.viewFactory.getAPoDDetailsView(container)
         return view.rootView
     }
 
@@ -70,25 +57,24 @@ class APoDDetailScreen : BaseFragment(),
             getAPoD()
     }
 
+    override fun onAPoDImageClicked(currentAPoDImage: Bitmap) {
+        screensNavigator.toAPoDImageDetail(currentAPoDImage.toByteArray())
+    }
+
     override fun onPlayIconClicked(videoUrl: String) {
         requireContext().launchWebPage(videoUrl)
     }
 
     private fun getAPoD(): APoD {
-        return arguments?.getSerializable(ARG_APOD) as APoD
+        return requireArguments().getSerializable(ARG_APOD) as APoD
     }
 
     private fun bindAPoD() {
         view.bindAPoDDetails(currentAPoD)
     }
 
-    private fun onToolbarActionClicked(action: ToolbarAction) {
-        when (action) {
-            ToolbarAction.ADD_TO_FAVORITES -> coroutineScope.launch {
-                addFavoriteAPodUseCase.addAPoDToFavorites(currentAPoD)
-            }
-            else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
-        }
+    private fun addCurrentAPoDToFavorites() {
+        coroutineScope.launch { addFavoriteAPodUseCase.addAPoDToFavorites(currentAPoD) }
     }
 
     override fun onApoDAddedToFavoritesCompleted() {
@@ -99,9 +85,17 @@ class APoDDetailScreen : BaseFragment(),
         messagesManager.showUnexpectedErrorOccurredMessage()
     }
 
-    override fun onEvent(event: Any) {
-        when (event) {
-            is ToolbarEvent.ActionClicked -> onToolbarActionClicked(event.action)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.toolbar_apod_detail, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.toolbar_action_add_to_favorites -> {
+                addCurrentAPoDToFavorites()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -112,7 +106,6 @@ class APoDDetailScreen : BaseFragment(),
 
     override fun onStart() {
         view.addListener(this)
-        eventSubscriber.subscribe(this)
         addFavoriteAPodUseCase.addListener(this)
         bindAPoD()
         super.onStart()
@@ -120,7 +113,6 @@ class APoDDetailScreen : BaseFragment(),
 
     override fun onStop() {
         view.removeListener(this)
-        eventSubscriber.unsubscribe(this)
         addFavoriteAPodUseCase.removeListener(this)
         coroutineScope.coroutineContext.cancelChildren()
         super.onStop()

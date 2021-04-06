@@ -1,6 +1,7 @@
 package br.com.mathsemilio.simpleapodbrowser.common.di
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
 import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
@@ -11,11 +12,11 @@ import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.database.AppDatabase
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteAPoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.RootLayoutHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.StatusBarManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
-import com.ncapdevi.fragnav.FragNavController
 
 class ActivityCompositionRoot(
     private val activity: AppCompatActivity,
@@ -26,8 +27,6 @@ class ActivityCompositionRoot(
     private val appDatabase get() = AppDatabase.getDatabase(activity)
 
     private val favoriteAPoDDAO get() = appDatabase.favoriteAPoDDAO
-
-    private val aPoDCacheDAO get() = appDatabase.apodCacheDAO
 
     private val aPoDEndpoint by lazy {
         APoDEndpoint(aPoDApi, apiKeyProvider, dispatcherProvider)
@@ -64,13 +63,7 @@ class ActivityCompositionRoot(
     }
 
     private val _screensNavigator by lazy {
-        ScreensNavigator(
-            FragNavController(
-                activity.supportFragmentManager,
-                rootLayoutHelper.fragmentContainer.id
-            ),
-            eventPublisher
-        )
+        ScreensNavigator(hostLayoutHelper.navHostFragment.findNavController())
     }
 
     private val _viewFactory by lazy {
@@ -87,11 +80,13 @@ class ActivityCompositionRoot(
 
     val eventSubscriber get() = compositionRoot.eventSubscriber
 
+    val hostLayoutHelper get() = activity as HostLayoutHelper
+
     val messagesManager get() = _messagesManager
 
     val screensNavigator get() = _screensNavigator
 
-    val rootLayoutHelper get() = activity as RootLayoutHelper
+    val statusBarManager get() = activity as StatusBarManager
 
     val viewFactory get() = _viewFactory
 

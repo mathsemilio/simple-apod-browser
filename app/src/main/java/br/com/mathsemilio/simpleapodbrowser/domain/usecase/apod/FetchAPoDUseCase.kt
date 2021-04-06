@@ -3,7 +3,7 @@ package br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod
 import br.com.mathsemilio.simpleapodbrowser.common.formatTimeInMillis
 import br.com.mathsemilio.simpleapodbrowser.common.getLastSevenDays
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
-import br.com.mathsemilio.simpleapodbrowser.common.schemaToAPoDList
+import br.com.mathsemilio.simpleapodbrowser.common.toAPoDList
 import br.com.mathsemilio.simpleapodbrowser.common.toAPoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
@@ -23,7 +23,7 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
         aPoDEndpoint.getAPoDsBasedOnDateRange(getLastSevenDays()).also { result ->
             when (result) {
                 is Result.Completed -> listeners.forEach { listener ->
-                    listener.onFetchAPoDBasedOnDateRangeCompleted(result.data?.schemaToAPoDList()!!)
+                    listener.onFetchAPoDBasedOnDateRangeCompleted(result.data?.toAPoDList()!!)
                 }
                 is Result.Failed -> listeners.forEach { listener ->
                     listener.onFetchAPoDError(result.error!!)
@@ -50,7 +50,7 @@ class FetchAPoDUseCase(private val aPoDEndpoint: APoDEndpoint) :
             when (result) {
                 is Result.Completed -> listeners.forEach { listener ->
                     listener.onFetchRandomAPoDCompleted(
-                        result.data?.schemaToAPoDList()?.first()!!
+                        result.data?.toAPoDList()?.first()!!
                     )
                 }
                 is Result.Failed -> listeners.forEach { listener ->

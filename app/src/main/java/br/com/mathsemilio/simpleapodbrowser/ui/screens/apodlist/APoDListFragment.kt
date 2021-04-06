@@ -1,29 +1,23 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_TOOLBAR_ACTION
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
-import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.ToolbarEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
-import br.com.mathsemilio.simpleapodbrowser.ui.common.others.ToolbarAction
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListScreenView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
-class APoDListScreen : BaseFragment(),
+class APoDListFragment : BaseFragment(),
     APoDListScreenView.Listener,
     FetchAPoDUseCase.Listener,
     EventListener {
@@ -41,6 +35,7 @@ class APoDListScreen : BaseFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         screensNavigator = compositionRoot.screensNavigator
         messagesManager = compositionRoot.messagesManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
@@ -54,8 +49,16 @@ class APoDListScreen : BaseFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        view = compositionRoot.viewFactory.getApodListScreenView(container)
+        view = compositionRoot.viewFactory.getAPoDListScreenView(container)
         return view.rootView
+    }
+
+    override fun onApodClicked(apod: APoD) {
+        screensNavigator.toAPoDDetailsScreen(apod)
+    }
+
+    override fun onScreenSwipedToRefresh() {
+        fetchApods()
     }
 
     private fun fetchApods() {
@@ -65,16 +68,30 @@ class APoDListScreen : BaseFragment(),
         }
     }
 
-    private fun onToolbarActionClickEvent(action: ToolbarAction) {
-        when (action) {
-            ToolbarAction.PICK_APOD_DATE ->
-                dialogManager.showDatePickerDialog()
-            ToolbarAction.GET_RANDOM_APOD -> coroutineScope.launch {
-                fetchAPoDUseCase.fetchRandomAPoD()
-            }
-            ToolbarAction.VISIT_APOD_WEBSITE ->
-                requireContext().launchWebPage(getString(R.string.apod_website_url))
-            else -> throw IllegalArgumentException(ILLEGAL_TOOLBAR_ACTION)
+    override fun onFetchAPoDBasedOnDateRangeCompleted(apods: List<APoD>) {
+        view.hideNetworkRequestFailedState()
+        view.hideProgressIndicator()
+        view.onRefreshCompleted()
+        view.bindApods(apods)
+    }
+
+    override fun onFetchAPoDBasedOnDateCompleted(apod: APoD) {
+        screensNavigator.toAPoDDetailsScreen(apod)
+    }
+
+    override fun onFetchRandomAPoDCompleted(randomAPoD: APoD) {
+        screensNavigator.toAPoDDetailsScreen(randomAPoD)
+    }
+
+    override fun onFetchAPoDError(errorMessage: String) {
+        view.hideProgressIndicator()
+        view.onRefreshCompleted()
+        view.showNetworkRequestErrorState(errorMessage)
+    }
+
+    override fun onEvent(event: Any) {
+        when (event) {
+            is DateSetEvent -> onDateSetEvent(event)
         }
     }
 
@@ -88,40 +105,26 @@ class APoDListScreen : BaseFragment(),
         }
     }
 
-    override fun onApodClicked(apod: APoD) {
-        screensNavigator.toAPoDDetailsScreen(apod)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.toolbar_apod_list, menu)
     }
 
-    override fun onScreenSwipedToRefresh() {
-        fetchApods()
-    }
-
-    override fun onFetchAPoDBasedOnDateRangeCompleted(apods: List<APoD>) {
-        view.hideNetworkRequestFailedState()
-        view.hideProgressIndicator()
-        view.onRefreshCompleted()
-        view.bindApods(apods)
-    }
-
-    override fun onFetchAPoDBasedOnDateCompleted(apod: APoD) {
-        screensNavigator.toAPoDDetailsScreen(apod, false)
-    }
-
-    override fun onFetchRandomAPoDCompleted(randomAPoD: APoD) {
-        screensNavigator.toAPoDDetailsScreen(randomAPoD, false)
-    }
-
-    override fun onFetchAPoDError(errorMessage: String) {
-        view.hideProgressIndicator()
-        view.onRefreshCompleted()
-        view.showNetworkRequestErrorState(errorMessage)
-    }
-
-    override fun onEvent(event: Any) {
-        when (event) {
-            is ToolbarEvent -> onToolbarActionClickEvent(event.action)
-            is DateSetEvent -> onDateSetEvent(event)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.toolbar_action_pick_date -> {
+                dialogManager.showDatePickerDialog()
+                true
+            }
+            R.id.toolbar_action_get_random_apod -> {
+                getRandomAPoD()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun getRandomAPoD() {
+        coroutineScope.launch { fetchAPoDUseCase.fetchRandomAPoD() }
     }
 
     override fun onStart() {
