@@ -9,13 +9,14 @@
         android:id="@+id/image_view_apod_favorites_list_item_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:adjustViewBounds="true"
         android:background="@android:color/black"
         android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:scaleType="centerCrop"
         tools:src="@drawable/ic_example_apod" />
 
     <View
@@ -42,7 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/image_view_remove_from_favorites"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="APoD Title" />
+        tools:text="Favorite APoD Title" />
 
     <ImageView
         android:id="@+id/image_view_remove_from_favorites"

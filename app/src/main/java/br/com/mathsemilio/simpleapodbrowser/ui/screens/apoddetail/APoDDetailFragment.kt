@@ -11,7 +11,7 @@ import br.com.mathsemilio.simpleapodbrowser.common.toByteArray
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPodUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren

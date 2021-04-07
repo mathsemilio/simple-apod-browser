@@ -20,7 +20,7 @@ fun List<APoDSchema>.toAPoDList(): List<APoD> {
 
 fun Bitmap.toByteArray(): ByteArray {
     val byteArrayOutputStream = ByteArrayOutputStream()
-    this.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+    this.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
     return byteArrayOutputStream.toByteArray()
 }
 

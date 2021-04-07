@@ -16,6 +16,10 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
 
     val statusBarManager get() = activityCompositionRoot.statusBarManager
 
+    val systemUIManager get() = activityCompositionRoot.systemUIManager
+
+    val tapGestureHelper get() = activityCompositionRoot.tapGestureHelper
+
     val rootLayoutHelper get() = activityCompositionRoot.hostLayoutHelper
 
     val viewFactory get() = activityCompositionRoot.viewFactory

@@ -42,39 +42,11 @@
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
 
-        <action
-            android:id="@+id/action_apod_detail_to_apod_list_screen"
-            app:destination="@id/APoDListScreen"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:launchSingleTop="true"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popUpTo="@id/APoDListScreen" />
-
-        <action
-            android:id="@+id/action_apod_detail_to_apod_favorites_screen"
-            app:destination="@id/APoDFavoritesScreen"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:launchSingleTop="true"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popUpTo="@id/APoDFavoritesScreen" />
-
     </fragment>
 
     <fragment
         android:id="@+id/APoDImageDetailScreen"
         android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.APoDImageDetailFragment"
-        tools:layout="@layout/apod_image_detail_screen">
-
-        <action
-            android:id="@+id/action_apod_image_detail_to_apod_detail_screen"
-            app:destination="@id/APoDDetailScreen"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/APoDDetailScreen" />
-
-    </fragment>
+        tools:layout="@layout/apod_image_detail_screen" />
 
 </navigation>

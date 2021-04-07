@@ -9,8 +9,8 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListScreenView
 import kotlinx.coroutines.CoroutineScope

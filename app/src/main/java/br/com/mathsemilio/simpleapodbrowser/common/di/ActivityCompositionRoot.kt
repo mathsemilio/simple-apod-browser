@@ -11,10 +11,12 @@ import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFav
 import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.database.AppDatabase
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteAPoDEndpoint
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.StatusBarManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.StatusBarManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SystemUIManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 
@@ -66,6 +68,10 @@ class ActivityCompositionRoot(
         ScreensNavigator(hostLayoutHelper.navHostFragment.findNavController())
     }
 
+    private val _tapGestureHelper by lazy {
+        TapGestureHelper()
+    }
+
     private val _viewFactory by lazy {
         ViewFactory(activity.layoutInflater)
     }
@@ -87,6 +93,10 @@ class ActivityCompositionRoot(
     val screensNavigator get() = _screensNavigator
 
     val statusBarManager get() = activity as StatusBarManager
+
+    val systemUIManager get() = activity as SystemUIManager
+
+    val tapGestureHelper get() = _tapGestureHelper
 
     val viewFactory get() = _viewFactory
 

@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import br.com.mathsemilio.simpleapodbrowser.R
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -26,6 +27,14 @@ class APoDImageDetailViewImpl(layoutInflater: LayoutInflater, container: ViewGro
                 listener.onToolbarNavigationIconClicked()
             }
         }
+    }
+
+    override fun showToolbar() {
+        toolbarAPoDImageDetail.isVisible = true
+    }
+
+    override fun hideToolbar() {
+        toolbarAPoDImageDetail.isVisible = false
     }
 
     override fun bindAPoDImage(apodImage: Bitmap) {

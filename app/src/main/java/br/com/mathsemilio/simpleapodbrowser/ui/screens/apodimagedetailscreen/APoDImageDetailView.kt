@@ -9,5 +9,9 @@ abstract class APoDImageDetailView : BaseObservableView<APoDImageDetailView.List
         fun onToolbarNavigationIconClicked()
     }
 
+    abstract fun showToolbar()
+
+    abstract fun hideToolbar()
+
     abstract fun bindAPoDImage(apodImage: Bitmap)
 }

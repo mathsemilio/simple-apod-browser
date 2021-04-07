@@ -1,10 +1,10 @@
 package br.com.mathsemilio.simpleapodbrowser.ui
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowManager
+import android.view.MotionEvent
+import androidx.core.view.GestureDetectorCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -14,20 +14,29 @@ import androidx.navigation.ui.setupWithNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.StatusBarManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.StatusBarManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SystemUIManager
 
 class MainActivity : BaseActivity(),
     HostLayoutHelper,
-    StatusBarManager {
+    StatusBarManager,
+    SystemUIManager {
 
     private lateinit var view: MainActivityView
 
     private lateinit var navController: NavController
 
+    private lateinit var tapGestureHelper: TapGestureHelper
+
+    private lateinit var gestureDetector: GestureDetectorCompat
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         view = compositionRoot.viewFactory.getMainActivityView(null)
+
+        tapGestureHelper = compositionRoot.tapGestureHelper
 
         setContentView(view.rootView)
 
@@ -36,6 +45,8 @@ class MainActivity : BaseActivity(),
         setupUIComponentsWithNavController()
 
         setOnDestinationChangedListener()
+
+        gestureDetector = GestureDetectorCompat(this, tapGestureHelper)
     }
 
     private fun setupNavController() {
@@ -87,17 +98,25 @@ class MainActivity : BaseActivity(),
 
     override val bottomNavigationView get() = view.bottomNavigationView
 
-    override fun setStatusBarColor(color: Int) {
-        window.apply {
-            view.setPreviousStatusBarColor(statusBarColor)
-            statusBarColor = Color.TRANSPARENT
-            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            statusBarColor = color
-        }
+    override fun onSetStatusBarColor(color: Int) {
+        view.setStatusBarColor(window, color)
     }
 
-    override fun revertStatusBarColor() {
-        window.statusBarColor = view.previousStatusBarColor
+    override fun onRevertStatusBarColor() {
+        view.revertStatusBarColor(window)
+    }
+
+    override fun onHideSystemUI() {
+        view.hideSystemUI(window)
+    }
+
+    override fun onShowSystemUI() {
+        view.showSystemUI(window)
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        gestureDetector.onTouchEvent(event)
+        return super.onTouchEvent(event)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

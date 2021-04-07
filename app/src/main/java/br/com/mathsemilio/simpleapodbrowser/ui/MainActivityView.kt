@@ -1,5 +1,6 @@
 package br.com.mathsemilio.simpleapodbrowser.ui
 
+import android.view.Window
 import androidx.fragment.app.FragmentContainerView
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseView
 import com.google.android.material.appbar.MaterialToolbar
@@ -13,8 +14,6 @@ abstract class MainActivityView : BaseView() {
 
     abstract val bottomNavigationView: BottomNavigationView
 
-    abstract val previousStatusBarColor: Int
-
     abstract fun showToolbar()
 
     abstract fun hideToolbar()
@@ -23,5 +22,11 @@ abstract class MainActivityView : BaseView() {
 
     abstract fun hideBottomNavigationView()
 
-    abstract fun setPreviousStatusBarColor(color: Int)
+    abstract fun setStatusBarColor(window: Window, color: Int)
+
+    abstract fun revertStatusBarColor(window: Window)
+
+    abstract fun hideSystemUI(window: Window)
+
+    abstract fun showSystemUI(window: Window)
 }

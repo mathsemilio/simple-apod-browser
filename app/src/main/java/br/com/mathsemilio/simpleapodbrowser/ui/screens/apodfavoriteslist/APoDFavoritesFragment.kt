@@ -9,7 +9,7 @@ import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFa
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.APoDFavoritesScreenView
 import kotlinx.coroutines.CoroutineScope

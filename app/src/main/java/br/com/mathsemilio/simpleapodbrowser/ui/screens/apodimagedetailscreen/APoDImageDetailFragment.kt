@@ -11,22 +11,32 @@ import br.com.mathsemilio.simpleapodbrowser.common.OUT_STATE_APOD_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.toBitmap
 import br.com.mathsemilio.simpleapodbrowser.common.toByteArray
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.StatusBarManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.StatusBarManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SystemUIManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 
-class APoDImageDetailFragment : BaseFragment(), APoDImageDetailView.Listener {
+class APoDImageDetailFragment : BaseFragment(),
+    APoDImageDetailView.Listener,
+    TapGestureHelper.Listener {
 
     private lateinit var view: APoDImageDetailView
 
+    private lateinit var tapGestureHelper: TapGestureHelper
     private lateinit var screensNavigator: ScreensNavigator
     private lateinit var statusBarManager: StatusBarManager
+    private lateinit var systemUIManager: SystemUIManager
 
     private lateinit var currentAPoDImage: Bitmap
 
+    private var screenTapped = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        tapGestureHelper = compositionRoot.tapGestureHelper
         screensNavigator = compositionRoot.screensNavigator
         statusBarManager = compositionRoot.statusBarManager
+        systemUIManager = compositionRoot.systemUIManager
     }
 
     override fun onCreateView(
@@ -50,6 +60,21 @@ class APoDImageDetailFragment : BaseFragment(), APoDImageDetailView.Listener {
         screensNavigator.navigateUp()
     }
 
+    override fun onScreenTapped() {
+        screenTapped = when (screenTapped) {
+            true -> {
+                systemUIManager.onShowSystemUI()
+                view.showToolbar()
+                false
+            }
+            false -> {
+                systemUIManager.onHideSystemUI()
+                view.hideToolbar()
+                true
+            }
+        }
+    }
+
     private fun getAPoDImage(): Bitmap {
         return requireArguments().getByteArray(ARG_APOD_IMAGE)?.toBitmap()!!
     }
@@ -65,14 +90,17 @@ class APoDImageDetailFragment : BaseFragment(), APoDImageDetailView.Listener {
 
     override fun onStart() {
         view.addListener(this)
-        statusBarManager.setStatusBarColor(Color.BLACK)
+        tapGestureHelper.addListener(this)
+        statusBarManager.onSetStatusBarColor(Color.BLACK)
         bindAPoDImage()
         super.onStart()
     }
 
     override fun onStop() {
         view.removeListener(this)
-        statusBarManager.revertStatusBarColor()
+        tapGestureHelper.removeListener(this)
+        statusBarManager.onRevertStatusBarColor()
+        systemUIManager.onShowSystemUI()
         super.onStop()
     }
 }

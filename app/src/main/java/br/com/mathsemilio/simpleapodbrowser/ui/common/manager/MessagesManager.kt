@@ -1,4 +1,4 @@
-package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
+package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 
 import android.content.Context
 import android.view.View

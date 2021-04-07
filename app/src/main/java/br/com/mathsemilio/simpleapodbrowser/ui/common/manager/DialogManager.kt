@@ -1,4 +1,4 @@
-package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
+package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 
 import androidx.fragment.app.FragmentManager
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.datepicker.DatePickerDialog

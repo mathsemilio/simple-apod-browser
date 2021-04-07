@@ -19,8 +19,9 @@
 
     <ImageView
         android:id="@+id/image_view_apod_image_detail"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
