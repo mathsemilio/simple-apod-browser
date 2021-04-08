@@ -1,9 +1,10 @@
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
+import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.onQueryTextChangedListener
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteAPoDUseCase
@@ -33,6 +34,7 @@ class APoDFavoritesFragment : BaseFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         screensNavigator = compositionRoot.screensNavigator
         hostLayoutHelper = compositionRoot.rootLayoutHelper
         messagesManager = compositionRoot.messagesManager
@@ -89,14 +91,36 @@ class APoDFavoritesFragment : BaseFragment(),
         messagesManager.showUnexpectedErrorOccurredMessage()
     }
 
-    override fun onFetchFavoriteAPoDCompleted(favoriteApods: List<APoD>) {
+    override fun onFetchFavoriteAPoDsCompleted(favoriteApods: List<APoD>) {
         view.hideProgressIndicator()
         view.bindFavoriteApods(favoriteApods)
+    }
+
+    override fun onFetchFavoriteAPoDsBasedOnTitleCompleted(matchingApods: List<APoD>) {
+        view.hideProgressIndicator()
+        view.bindFavoriteApods(matchingApods)
     }
 
     override fun onFetchFavoriteAPoDFailed() {
         view.hideProgressIndicator()
         messagesManager.showUnexpectedErrorOccurredMessage()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.toolbar_apod_favorites, menu)
+
+        val searchViewMenuItem = menu.findItem(R.id.toolbar_action_search_favorites)
+        val searchView = searchViewMenuItem.actionView as SearchView
+
+        searchView.onQueryTextChangedListener { queryText ->
+            fetchFavoriteAPoDsBasedOnTitle(queryText)
+        }
+    }
+
+    private fun fetchFavoriteAPoDsBasedOnTitle(searchQuery: String) {
+        coroutineScope.launch {
+            fetchFavoriteAPoDUseCase.fetchFavoriteAPoDsBasedOnTitle(searchQuery)
+        }
     }
 
     override fun onStart() {

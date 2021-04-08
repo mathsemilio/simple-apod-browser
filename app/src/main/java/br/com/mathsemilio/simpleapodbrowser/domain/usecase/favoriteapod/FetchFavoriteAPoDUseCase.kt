@@ -9,7 +9,8 @@ class FetchFavoriteAPoDUseCase(private val favoriteAPoDEndpoint: FavoriteAPoDEnd
     BaseObservable<FetchFavoriteAPoDUseCase.Listener>() {
 
     interface Listener {
-        fun onFetchFavoriteAPoDCompleted(favoriteApods: List<APoD>)
+        fun onFetchFavoriteAPoDsCompleted(favoriteApods: List<APoD>)
+        fun onFetchFavoriteAPoDsBasedOnTitleCompleted(matchingApods: List<APoD>)
         fun onFetchFavoriteAPoDFailed()
     }
 
@@ -17,7 +18,20 @@ class FetchFavoriteAPoDUseCase(private val favoriteAPoDEndpoint: FavoriteAPoDEnd
         favoriteAPoDEndpoint.getFavoriteAPods().also { result ->
             when (result) {
                 is Result.Completed -> listeners.forEach { listener ->
-                    listener.onFetchFavoriteAPoDCompleted(result.data!!)
+                    listener.onFetchFavoriteAPoDsCompleted(result.data!!)
+                }
+                is Result.Failed -> listeners.forEach { listener ->
+                    listener.onFetchFavoriteAPoDFailed()
+                }
+            }
+        }
+    }
+
+    suspend fun fetchFavoriteAPoDsBasedOnTitle(searchQuery: String) {
+        favoriteAPoDEndpoint.getFavoriteAPoDsBasedOnSearchQuery(searchQuery).also { result ->
+            when (result) {
+                is Result.Completed -> listeners.forEach { listener ->
+                    listener.onFetchFavoriteAPoDsBasedOnTitleCompleted(result.data!!)
                 }
                 is Result.Failed -> listeners.forEach { listener ->
                     listener.onFetchFavoriteAPoDFailed()

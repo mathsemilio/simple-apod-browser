@@ -41,4 +41,16 @@ class FavoriteAPoDEndpoint(
             }
         }
     }
+
+    suspend fun getFavoriteAPoDsBasedOnSearchQuery(searchQuery: String): Result<List<APoD>> {
+        return withContext(dispatcherProvider.BACKGROUND) {
+            try {
+                return@withContext Result.Completed(
+                    data = favoriteAPoDDAO.getFavoriteAPoDsBasedOnSearchQuery(searchQuery)
+                )
+            } catch (e: Exception) {
+                return@withContext Result.Failed(error = null)
+            }
+        }
+    }
 }

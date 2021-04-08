@@ -14,4 +14,7 @@ interface FavoriteAPoDDAO {
 
     @Query("SELECT * FROM favorite_apod_table")
     fun getFavoriteAPoDs(): List<APoD>
+
+    @Query("SELECT * FROM favorite_apod_table WHERE title LIKE '%' || :searchQuery || '%'")
+    fun getFavoriteAPoDsBasedOnSearchQuery(searchQuery: String): List<APoD>
 }

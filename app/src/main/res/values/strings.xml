@@ -18,7 +18,8 @@
     <!-- Toolbar Actions -->
     <string name="toolbar_action_title_pick_apod_by_date">Pick APoD by Date</string>
     <string name="toolbar_action_title_get_random_apod">Get Random APoD</string>
-    <string name="toolbar_action_add_to_favorites">Add to Favorites</string>
+    <string name="toolbar_action_title_add_to_favorites">Add to Favorites</string>
+    <string name="toolbar_action_title_search">Search</string>
     <string name="toolbar_action_title_visit_apod_website">Visit APoD Website</string>
 
     <!-- Messages -->

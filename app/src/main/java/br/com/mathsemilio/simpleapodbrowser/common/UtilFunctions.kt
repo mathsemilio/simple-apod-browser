@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import com.google.android.material.snackbar.Snackbar
 
 fun Context.showLongToast(message: String) {
@@ -31,4 +32,17 @@ fun Context.launchWebPage(url: String) {
     val intent = Intent(Intent.ACTION_VIEW, page)
     if (intent.resolveActivity(this.packageManager) != null)
         this.startActivity(intent)
+}
+
+inline fun SearchView.onQueryTextChangedListener(crossinline onQueryTextChanged: (String) -> Unit) {
+    this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return false
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            onQueryTextChanged(newText.orEmpty())
+            return true
+        }
+    })
 }
