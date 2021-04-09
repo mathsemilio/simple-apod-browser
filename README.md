@@ -16,6 +16,10 @@ This application makes it easy to found and see the latest APoDs. It also enable
 bookmark their favorite ones for easy future access. The app also features other interesting 
 features, like "Pick APoD by Date" and "Get Random APoD".
 
+**Important:** 
+This application makes use of the APoD API, which is part of the open APIs provided by NASA.
+For more info, please refer to this <a href="https://api.nasa.gov/">link.</a>
+
 ## Functionalities to be added
 1. Settings screen;
 2. Ability to download pictures.
