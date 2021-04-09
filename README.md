@@ -3,11 +3,11 @@ Astronomical Picture of the Day client application for Android.
 
 ## What is APoD?
 APoD is short for Astronomical Picture of the Day, which is a website provided by NASA and 
-Michigan Technological University. According to the website, "Each day a different image or
+the Michigan Technological University. According to the website, "Each day a different image or
 photograph of our universe is featured, along with a brief explanation written by a professional
 astronomer."
 
-*For more info, refer to this link:*
+*For more info, refer to these links:*
 <p><a href="https://en.wikipedia.org/wiki/Astronomy_Picture_of_the_Day">Astronomical Picture of the Day - Wikipedia</a></p>
 <p><a href="https://apod.nasa.gov/apod/astropix.html">Astronomical Picture of the Day - Official Website</a></p>
 
@@ -16,22 +16,32 @@ This application makes it easy to found and see the latest APoDs. It also enable
 bookmark their favorite ones for easy future access. The app also features other interesting 
 features, like "Pick APoD by Date" and "Get Random APoD".
 
+**Important:** 
+This application makes use of the APoD API, which is part of the open APIs provided by NASA.
+For more info, please refer to this <a href="https://api.nasa.gov/">link.</a>
+
 ## Functionalities to be added
-1.Settings screen;
-2.Ability to download pictures.
+1. Settings screen;
+2. Ability to download pictures.
 
 ## Points to be fixed
-1.Display of images on the detail screen;
-2.Undo operation on excluded favorite APoDs.
+1. Display of images on the detail screen;
+2. Undo operation on excluded favorite APoDs.
+
+## Build instructions
+Before building the project, you either need to provide your API key or use the "DEMO_KEY".
+Open the APoDEndpoint.kt file and replace all occurrences of ```apiKeyProvider.getAPoDKey()``` with your key or with "DEMO_KEY".
+
+**Note:** You can generate a API key at the <a href="https://api.nasa.gov/">NASA Open APIs website.</a>
 
 ## External Libraries used
-1.Room;
-2.Retrofit;
-3.Glide;
-4.Kotlin Coroutines for Android;
-5.Swipe-Refresh Layout;
-6.PhotoView;
-7.Jetpack Navigation Component.
+1. Room;
+2. Retrofit;
+3. Glide;
+4. Kotlin Coroutines for Android;
+5. Swipe-Refresh Layout;
+6. PhotoView;
+7. Jetpack Navigation Component.
 
 *For more info on the libraries used, refer to these links:*
 <p><a href="https://developer.android.com/training/data-storage/room/">Room</a></p>
