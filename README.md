@@ -3,7 +3,7 @@ Astronomical Picture of the Day client application for Android.
 
 ## What is APoD?
 APoD is short for Astronomical Picture of the Day, which is a website provided by NASA and 
-Michigan Technological University. According to the website, "Each day a different image or
+the Michigan Technological University. According to the website, "Each day a different image or
 photograph of our universe is featured, along with a brief explanation written by a professional
 astronomer."
 
@@ -17,21 +17,21 @@ bookmark their favorite ones for easy future access. The app also features other
 features, like "Pick APoD by Date" and "Get Random APoD".
 
 ## Functionalities to be added
-1.Settings screen;
-2.Ability to download pictures.
+1. Settings screen;
+2. Ability to download pictures.
 
 ## Points to be fixed
-1.Display of images on the detail screen;
-2.Undo operation on excluded favorite APoDs.
+1. Display of images on the detail screen;
+2. Undo operation on excluded favorite APoDs.
 
 ## External Libraries used
-1.Room;
-2.Retrofit;
-3.Glide;
-4.Kotlin Coroutines for Android;
-5.Swipe-Refresh Layout;
-6.PhotoView;
-7.Jetpack Navigation Component.
+1. Room;
+2. Retrofit;
+3. Glide;
+4. Kotlin Coroutines for Android;
+5. Swipe-Refresh Layout;
+6. PhotoView;
+7. Jetpack Navigation Component.
 
 *For more info on the libraries used, refer to these links:*
 <p><a href="https://developer.android.com/training/data-storage/room/">Room</a></p>
