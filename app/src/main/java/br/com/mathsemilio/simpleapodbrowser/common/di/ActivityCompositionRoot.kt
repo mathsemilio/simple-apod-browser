@@ -12,6 +12,7 @@ import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.APoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.database.AppDatabase
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteAPoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.APoDImageExporter
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
@@ -41,7 +42,7 @@ class ActivityCompositionRoot(
     private val dispatcherProvider get() = DispatcherProvider
 
     private val _dialogManager by lazy {
-        DialogManager(activity.supportFragmentManager)
+        DialogManager(activity.supportFragmentManager, activity)
     }
 
     private val _fetchAPoDUseCase by lazy {
@@ -58,6 +59,10 @@ class ActivityCompositionRoot(
 
     private val _deleteFavoriteAPoDUseCase by lazy {
         DeleteFavoriteAPoDUseCase(favoriteAPoDEndpoint)
+    }
+
+    private val _aPoDImageExporter by lazy {
+        APoDImageExporter(activity)
     }
 
     private val _messagesManager by lazy {
@@ -87,6 +92,8 @@ class ActivityCompositionRoot(
     val eventSubscriber get() = compositionRoot.eventSubscriber
 
     val hostLayoutHelper get() = activity as HostLayoutHelper
+
+    val aPoDImageExporter get() = _aPoDImageExporter
 
     val messagesManager get() = _messagesManager
 

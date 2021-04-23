@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.showLongToast
+import br.com.mathsemilio.simpleapodbrowser.common.showShortToast
 import br.com.mathsemilio.simpleapodbrowser.common.showSnackBarWithAction
 
 class MessagesManager(private val context: Context) {
@@ -31,5 +32,9 @@ class MessagesManager(private val context: Context) {
 
     fun showAPoDAddedToFavoritesUseCaseSuccessMessage() {
         context.showLongToast(context.getString(R.string.message_apod_added_to_favorites_completed))
+    }
+
+    fun showAPoDImageExportedSuccessfully() {
+        context.showShortToast(context.getString(R.string.message_apod_image_exported_successfully))
     }
 }

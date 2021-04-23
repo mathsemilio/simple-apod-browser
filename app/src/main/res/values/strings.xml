@@ -21,6 +21,7 @@
     <string name="toolbar_action_title_add_to_favorites">Add to Favorites</string>
     <string name="toolbar_action_title_search">Search</string>
     <string name="toolbar_action_title_visit_apod_website">Visit APoD Website</string>
+    <string name="toolbar_action_title_download_apod">Download APoD</string>
 
     <!-- Messages -->
     <string name="message_invalid_apod_date">Invalid APoD date! Please select a date that is between June 16, 1995 and today</string>
@@ -29,6 +30,17 @@
     <string name="message_apod_added_to_favorites_completed">APoD added to favorites!</string>
     <string name="message_apod_removed_from_favorites">APoD removed from favorites</string>
     <string name="message_unexpected_error_occurred">Unexpected error occurred. Please try again later.</string>
+    <string name="message_apod_image_exported_successfully">APoD image exported to device\'s gallery</string>
+
+    <!-- Dialog messages -->
+    <string name="dialog_message_grant_external_storage_permission">In order to download APoD images, we need access to the device\'s external storage.</string>
+    <string name="dialog_message_enable_permission_manually">To use this feature, you need to provide the permission to access the external storage in the app\'s info section on your device\'s settings</string>
+
+    <!-- Dialog title -->
+    <string name="dialog_title_grant_permission">Grant permission</string>
+
+    <!-- Dialog button text -->
+    <string name="dialog_button_text_ok">OK</string>
 
     <!-- Misc. -->
     <string name="apod_website_url">https://apod.nasa.gov/apod/astropix.html</string>

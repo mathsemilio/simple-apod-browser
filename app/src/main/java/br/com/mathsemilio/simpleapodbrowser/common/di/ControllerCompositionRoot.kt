@@ -10,6 +10,8 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
 
     val dialogManager get() = activityCompositionRoot.dialogManager
 
+    val aPoDImageExporter get() = activityCompositionRoot.aPoDImageExporter
+
     val messagesManager get() = activityCompositionRoot.messagesManager
 
     val screensNavigator get() = activityCompositionRoot.screensNavigator

@@ -19,12 +19,27 @@ class APoDImageDetailViewImpl(layoutInflater: LayoutInflater, container: ViewGro
         imageViewAPoDImageDetail = findViewById(R.id.photo_view_apod_image_detail)
         toolbarAPoDImageDetail = findViewById(R.id.material_toolbar_apod_image_detail)
         setToolbarNavigationIconOnClickListener()
+        setToolbarOnMenuItemSelectedListener()
     }
 
     private fun setToolbarNavigationIconOnClickListener() {
         toolbarAPoDImageDetail.setNavigationOnClickListener {
             listeners.forEach { listener ->
                 listener.onToolbarNavigationIconClicked()
+            }
+        }
+    }
+
+    private fun setToolbarOnMenuItemSelectedListener() {
+        toolbarAPoDImageDetail.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.toolbar_action_download_apod -> {
+                    listeners.forEach { listener ->
+                        listener.onToolbarActionDownloadAPoDClicked()
+                    }
+                    true
+                }
+                else -> false
             }
         }
     }

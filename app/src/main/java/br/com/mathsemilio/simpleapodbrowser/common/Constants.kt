@@ -5,6 +5,8 @@ const val BASE_URL = "https://api.nasa.gov/planetary/"
 const val FAVORITE_APOD_TABLE = "favorite_apod_table"
 const val APP_DATABASE = "app_database"
 
+const val APOD_IMAGES_DIR = "APoD Downloaded Images"
+
 const val ARG_APOD = "ARG_APOD"
 const val ARG_APOD_IMAGE = "ARG_APOD_IMAGE"
 const val OUT_STATE_APOD = "OUT_STATE_APOD"
@@ -12,6 +14,9 @@ const val OUT_STATE_APOD_IMAGE = "OUT_STATE_APOD_IMAGE"
 
 const val APOD_TYPE_IMAGE = "image"
 const val APOD_TYPE_VIDEO = "video"
+
+const val WRITE_EXTERNAL_STORAGE_REQ_CODE = 1000
+const val EMPTY_PERMISSION_REQUEST = "Empty permission request"
 
 const val FIRST_APOD_DATE_IN_MILLIS = 803271600000L
 

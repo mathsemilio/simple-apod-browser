@@ -7,6 +7,8 @@ abstract class APoDImageDetailView : BaseObservableView<APoDImageDetailView.List
 
     interface Listener {
         fun onToolbarNavigationIconClicked()
+
+        fun onToolbarActionDownloadAPoDClicked()
     }
 
     abstract fun showToolbar()
