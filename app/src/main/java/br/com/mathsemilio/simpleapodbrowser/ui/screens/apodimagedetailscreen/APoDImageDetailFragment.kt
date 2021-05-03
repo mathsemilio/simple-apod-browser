@@ -16,18 +16,16 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import br.com.mathsemilio.simpleapodbrowser.common.*
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.APoDImageExporter
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
@@ -37,11 +35,13 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigato
 
 class APoDImageDetailFragment : BaseFragment(),
     APoDImageDetailView.Listener,
-    TapGestureHelper.Listener,
-    APoDImageExporter.Listener {
+    PermissionsHelper.Listener,
+    APoDImageExporter.Listener,
+    TapGestureHelper.Listener {
 
     private lateinit var view: APoDImageDetailView
 
+    private lateinit var permissionsHelper: PermissionsHelper
     private lateinit var apodImageExporter: APoDImageExporter
     private lateinit var tapGestureHelper: TapGestureHelper
     private lateinit var screensNavigator: ScreensNavigator
@@ -56,6 +56,7 @@ class APoDImageDetailFragment : BaseFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        permissionsHelper = compositionRoot.permissionsHelper
         apodImageExporter = compositionRoot.aPoDImageExporter
         tapGestureHelper = compositionRoot.tapGestureHelper
         screensNavigator = compositionRoot.screensNavigator
@@ -87,18 +88,32 @@ class APoDImageDetailFragment : BaseFragment(),
     }
 
     override fun onToolbarActionDownloadAPoDClicked() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (permissionsHelper.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             apodImageExporter.export(currentAPoDImage)
-        } else {
-            requestPermissions(
+        else
+            permissionsHelper.requestPermission(
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                WRITE_EXTERNAL_STORAGE_REQ_CODE
+                RC_WRITE_EXTERNAL_STORAGE
             )
+    }
+
+    override fun onPermissionRequestResult(result: PermissionsHelper.PermissionResult) {
+        when (result) {
+            PermissionsHelper.PermissionResult.Granted ->
+                apodImageExporter.export(currentAPoDImage)
+            PermissionsHelper.PermissionResult.Denied ->
+                dialogManager.showGrantExternalStoragePermissionDialog()
+            PermissionsHelper.PermissionResult.DeniedPermanently ->
+                dialogManager.showEnablePermissionsManuallyDialog()
         }
+    }
+
+    override fun onAPoDImageExportedSuccessfully() {
+        messagesManager.showAPoDImageExportedSuccessfully()
+    }
+
+    override fun onErrorExportingAPoDImage() {
+        messagesManager.showUnexpectedErrorOccurredMessage()
     }
 
     override fun onScreenTapped() {
@@ -116,49 +131,12 @@ class APoDImageDetailFragment : BaseFragment(),
         }
     }
 
-    override fun onAPoDImageExportedSuccessfully() {
-        messagesManager.showAPoDImageExportedSuccessfully()
-    }
-
-    override fun onErrorExportingAPoDImage() {
-        messagesManager.showUnexpectedErrorOccurredMessage()
-    }
-
     private fun getAPoDImage(): Bitmap {
         return requireArguments().getByteArray(ARG_APOD_IMAGE)?.toBitmap()!!
     }
 
     private fun bindAPoDImage() {
         view.bindAPoDImage(currentAPoDImage)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (permissions.isEmpty() || grantResults.isEmpty())
-            throw RuntimeException(EMPTY_PERMISSION_REQUEST)
-
-        when (requestCode) {
-            WRITE_EXTERNAL_STORAGE_REQ_CODE -> {
-                when {
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
-                        apodImageExporter.export(currentAPoDImage)
-                    }
-                    ActivityCompat.shouldShowRequestPermissionRationale(
-                        requireActivity(), permissions[0]
-                    ) -> {
-                        dialogManager.showGrantExternalStoragePermissionDialog()
-                    }
-                    else -> {
-                        dialogManager.showEnablePermissionsManuallyDialog()
-                    }
-                }
-            }
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -168,6 +146,7 @@ class APoDImageDetailFragment : BaseFragment(),
 
     override fun onStart() {
         view.addListener(this)
+        permissionsHelper.addListener(this)
         tapGestureHelper.addListener(this)
         statusBarManager.onSetStatusBarColor(Color.BLACK)
         apodImageExporter.addListener(this)
@@ -177,6 +156,7 @@ class APoDImageDetailFragment : BaseFragment(),
 
     override fun onStop() {
         view.removeListener(this)
+        permissionsHelper.addListener(this)
         tapGestureHelper.removeListener(this)
         apodImageExporter.removeListener(this)
         statusBarManager.onRevertStatusBarColor()

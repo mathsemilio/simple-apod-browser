@@ -29,6 +29,7 @@ import androidx.navigation.ui.setupWithNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.StatusBarManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SystemUIManager
@@ -43,6 +44,7 @@ class MainActivity : BaseActivity(),
     private lateinit var navController: NavController
 
     private lateinit var tapGestureHelper: TapGestureHelper
+    private lateinit var permissionsHelper: PermissionsHelper
 
     private lateinit var gestureDetector: GestureDetectorCompat
 
@@ -52,6 +54,7 @@ class MainActivity : BaseActivity(),
         view = compositionRoot.viewFactory.getMainActivityView(null)
 
         tapGestureHelper = compositionRoot.tapGestureHelper
+        permissionsHelper = compositionRoot.permissionsHelper
 
         setContentView(view.rootView)
 
@@ -127,6 +130,15 @@ class MainActivity : BaseActivity(),
 
     override fun onShowSystemUI() {
         view.showSystemUI(window)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
