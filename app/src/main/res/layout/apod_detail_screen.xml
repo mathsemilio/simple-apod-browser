@@ -9,49 +9,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_apod_detail_with_image"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/image_view_apod_detail_image"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.45" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_layout_image_container"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/guideline_apod_detail_with_image"
+            android:adjustViewBounds="true"
+            android:background="@android:color/black"
+            android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_example_apod" />
 
-            <ImageView
-                android:id="@+id/image_view_apod_detail_image"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:background="@android:color/black"
-                android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/ic_example_apod" />
-
-            <ImageView
-                android:id="@+id/image_view_play_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:contentDescription="@string/content_description_play_apod_video"
-                android:src="@drawable/ic_baseline_play_circle_24"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/image_view_apod_detail_image" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/image_view_play_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/content_description_play_apod_video"
+            android:src="@drawable/ic_baseline_play_circle_24"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_apod_detail_image"
+            app:layout_constraintEnd_toEndOf="@id/image_view_apod_detail_image"
+            app:layout_constraintStart_toStartOf="@id/image_view_apod_detail_image"
+            app:layout_constraintTop_toTopOf="@+id/image_view_apod_detail_image" />
 
         <TextView
             android:id="@+id/text_view_apod_detail_title"
@@ -66,7 +46,7 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline_apod_detail_with_image"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_apod_detail_image"
             tools:text="APoD Title" />
 
         <TextView
