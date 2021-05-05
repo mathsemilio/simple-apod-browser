@@ -89,11 +89,17 @@ class APoDDetailFragment : BaseFragment(),
     }
 
     private fun addCurrentAPoDToFavorites() {
-        coroutineScope.launch { addFavoriteAPodUseCase.addAPoDToFavorites(currentAPoD) }
+        coroutineScope.launch {
+            addFavoriteAPodUseCase.addAPoDToFavorites(currentAPoD)
+        }
     }
 
-    override fun onApoDAddedToFavoritesCompleted() {
-        messagesManager.showAPoDAddedToFavoritesUseCaseSuccessMessage()
+    override fun onApoDAddedToFavoritesSuccessfully() {
+        messagesManager.showAPoDAddedToFavoritesSuccessfullyMessage()
+    }
+
+    override fun onAPoDIsAlreadyOnFavorites() {
+        messagesManager.showAPoDAlreadyOnFavoritesMessage()
     }
 
     override fun onAddAPoDToFavoritesFailed() {

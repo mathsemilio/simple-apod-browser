@@ -15,13 +15,16 @@ limitations under the License.
  */
 package br.com.mathsemilio.simpleapodbrowser.data.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 
 @Dao
 interface FavoriteAPoDDAO {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun addFavoriteAPoD(apod: APoD)
 
     @Delete
@@ -29,6 +32,9 @@ interface FavoriteAPoDDAO {
 
     @Query("SELECT * FROM favorite_apod_table")
     fun getFavoriteAPoDs(): List<APoD>
+
+    @Query("SELECT * FROM favorite_apod_table WHERE date = :date")
+    fun getFavoriteAPoDByDate(date: String): APoD
 
     @Query("SELECT * FROM favorite_apod_table WHERE title LIKE '%' || :searchQuery || '%'")
     fun getFavoriteAPoDsBasedOnSearchQuery(searchQuery: String): List<APoD>

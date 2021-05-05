@@ -32,7 +32,7 @@ class MessagesManager(private val context: Context) {
         context.showLongToast(context.getString(R.string.message_invalid_apod_date))
     }
 
-    fun showDeleteFavoriteAPoDUseCaseSuccessMessage(
+    fun showFavoriteAPoDDeletedSuccessfullyMessage(
         view: View,
         anchorView: View,
         onSnackBarActionClicked: () -> Unit
@@ -45,8 +45,12 @@ class MessagesManager(private val context: Context) {
         ) { onSnackBarActionClicked() }
     }
 
-    fun showAPoDAddedToFavoritesUseCaseSuccessMessage() {
+    fun showAPoDAddedToFavoritesSuccessfullyMessage() {
         context.showLongToast(context.getString(R.string.message_apod_added_to_favorites_completed))
+    }
+
+    fun showAPoDAlreadyOnFavoritesMessage() {
+        context.showShortToast(context.getString(R.string.message_apod_already_on_favorites))
     }
 
     fun showAPoDImageExportedSuccessfully() {

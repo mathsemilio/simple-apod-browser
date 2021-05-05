@@ -16,28 +16,55 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod
 
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
-import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteAPoDEndpoint
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
+import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteAPoDEndpoint
 
 class AddFavoriteAPodUseCase(private val favoriteAPoDEndpoint: FavoriteAPoDEndpoint) :
     BaseObservable<AddFavoriteAPodUseCase.Listener>() {
 
     interface Listener {
-        fun onApoDAddedToFavoritesCompleted()
+        fun onApoDAddedToFavoritesSuccessfully()
+
+        fun onAPoDIsAlreadyOnFavorites()
+
         fun onAddAPoDToFavoritesFailed()
     }
 
+    private lateinit var currentAPoD: APoD
+
     suspend fun addAPoDToFavorites(apod: APoD) {
+        currentAPoD = apod
+
         favoriteAPoDEndpoint.addFavoriteAPoD(apod).also { result ->
             when (result) {
-                is Result.Completed -> listeners.forEach { listener ->
-                    listener.onApoDAddedToFavoritesCompleted()
+                is Result.Completed -> {
+                    if (isAPoDAlreadyOnFavorites())
+                        listeners.forEach { listener -> listener.onAPoDIsAlreadyOnFavorites() }
+                    else
+                        listeners.forEach { listener -> listener.onApoDAddedToFavoritesSuccessfully() }
                 }
                 is Result.Failed -> listeners.forEach { listener ->
                     listener.onAddAPoDToFavoritesFailed()
                 }
             }
         }
+    }
+
+    private suspend fun isAPoDAlreadyOnFavorites(): Boolean {
+        var isAlreadyOnFavorites = false
+
+        favoriteAPoDEndpoint.getFavoriteAPoDByDate(currentAPoD.date).also { result ->
+            when (result) {
+                is Result.Completed -> {
+                    val favoriteApoD = result.data!!
+                    if (favoriteApoD.date == currentAPoD.date)
+                        isAlreadyOnFavorites = true
+                }
+                is Result.Failed -> throw RuntimeException(result.error)
+            }
+        }
+
+        return isAlreadyOnFavorites
     }
 }

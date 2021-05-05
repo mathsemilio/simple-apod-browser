@@ -88,7 +88,7 @@ class APoDFavoritesFragment : BaseFragment(),
 
     override fun onFavoriteAPoDDeletedSuccessfully() {
         fetchFavoriteAPoDs()
-        messagesManager.showDeleteFavoriteAPoDUseCaseSuccessMessage(
+        messagesManager.showFavoriteAPoDDeletedSuccessfullyMessage(
             hostLayoutHelper.fragmentContainer,
             hostLayoutHelper.bottomNavigationView
         ) { revertFavoriteAPoDDeletion() }

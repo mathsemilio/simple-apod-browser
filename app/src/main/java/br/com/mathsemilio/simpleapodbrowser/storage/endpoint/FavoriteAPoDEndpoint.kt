@@ -15,56 +15,66 @@ limitations under the License.
  */
 package br.com.mathsemilio.simpleapodbrowser.storage.endpoint
 
-import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
 import br.com.mathsemilio.simpleapodbrowser.data.dao.FavoriteAPoDDAO
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class FavoriteAPoDEndpoint(
-    private val favoriteAPoDDAO: FavoriteAPoDDAO,
-    private val dispatcherProvider: DispatcherProvider
-) {
+class FavoriteAPoDEndpoint(private val favoriteAPoDDAO: FavoriteAPoDDAO) {
+
     suspend fun addFavoriteAPoD(apod: APoD): Result<Nothing> {
-        return withContext(dispatcherProvider.BACKGROUND) {
+        return withContext(Dispatchers.IO) {
             try {
                 favoriteAPoDDAO.addFavoriteAPoD(apod)
-                return@withContext Result.Completed(data = null)
+                Result.Completed(data = null)
             } catch (e: Exception) {
-                return@withContext Result.Failed(error = null)
+                Result.Failed(error = null)
             }
         }
     }
 
     suspend fun deleteFavoriteApoD(apod: APoD): Result<Nothing> {
-        return withContext(dispatcherProvider.BACKGROUND) {
+        return withContext(Dispatchers.IO) {
             try {
                 favoriteAPoDDAO.deleteFavoriteAPoD(apod)
-                return@withContext Result.Completed(data = null)
+                Result.Completed(data = null)
             } catch (e: Exception) {
-                return@withContext Result.Failed(error = null)
+                Result.Failed(error = null)
             }
         }
     }
 
     suspend fun getFavoriteAPods(): Result<List<APoD>> {
-        return withContext(dispatcherProvider.BACKGROUND) {
+        return withContext(Dispatchers.IO) {
             try {
-                return@withContext Result.Completed(data = favoriteAPoDDAO.getFavoriteAPoDs())
+                Result.Completed(data = favoriteAPoDDAO.getFavoriteAPoDs())
             } catch (e: Exception) {
-                return@withContext Result.Failed(error = null)
+                Result.Failed(error = null)
+            }
+        }
+    }
+
+    suspend fun getFavoriteAPoDByDate(date: String): Result<APoD> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Completed(data = favoriteAPoDDAO.getFavoriteAPoDByDate(date))
+            } catch (e: Exception) {
+                Result.Failed(error = e.message)
             }
         }
     }
 
     suspend fun getFavoriteAPoDsBasedOnSearchQuery(searchQuery: String): Result<List<APoD>> {
-        return withContext(dispatcherProvider.BACKGROUND) {
+        return withContext(Dispatchers.IO) {
             try {
-                return@withContext Result.Completed(
-                    data = favoriteAPoDDAO.getFavoriteAPoDsBasedOnSearchQuery(searchQuery)
+                Result.Completed(
+                    data = favoriteAPoDDAO.getFavoriteAPoDsBasedOnSearchQuery(
+                        searchQuery
+                    ).reversed()
                 )
             } catch (e: Exception) {
-                return@withContext Result.Failed(error = null)
+                Result.Failed(error = null)
             }
         }
     }

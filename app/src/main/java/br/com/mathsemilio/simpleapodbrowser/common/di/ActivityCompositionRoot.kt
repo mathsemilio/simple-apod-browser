@@ -18,7 +18,6 @@ package br.com.mathsemilio.simpleapodbrowser.common.di
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
-import br.com.mathsemilio.simpleapodbrowser.common.provider.DispatcherProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPodUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteAPoDUseCase
@@ -48,14 +47,12 @@ class ActivityCompositionRoot(
     private val favoriteAPoDDAO get() = appDatabase.favoriteAPoDDAO
 
     private val aPoDEndpoint by lazy {
-        APoDEndpoint(aPoDApi, apiKeyProvider, dispatcherProvider)
+        APoDEndpoint(aPoDApi, apiKeyProvider)
     }
 
     private val favoriteAPoDEndpoint by lazy {
-        FavoriteAPoDEndpoint(favoriteAPoDDAO, dispatcherProvider)
+        FavoriteAPoDEndpoint(favoriteAPoDDAO)
     }
-
-    private val dispatcherProvider get() = DispatcherProvider
 
     private val _dialogManager by lazy {
         DialogManager(activity.supportFragmentManager, activity)
