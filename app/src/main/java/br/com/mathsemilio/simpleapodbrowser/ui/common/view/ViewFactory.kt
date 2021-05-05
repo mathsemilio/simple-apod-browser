@@ -22,7 +22,7 @@ import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.APoDDetailView
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.listitem.APoDFavoritesListItemViewImpl
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.APoDFavoritesScreenViewImpl
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.APoDImageDetailViewImpl
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListItemViewImpl
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem.APoDListItemViewImpl
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListScreenViewImpl
 
 class ViewFactory(private val layoutInflater: LayoutInflater) {

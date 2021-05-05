@@ -36,13 +36,10 @@ class APoDDetailViewImpl(layoutInflater: LayoutInflater, container: ViewGroup?) 
     private lateinit var textViewApodDetailWithImageDate: TextView
     private lateinit var textViewApodDetailWithImageExplanation: TextView
 
-    private var glideProvider: GlideProvider
-
     init {
         rootView = layoutInflater.inflate(R.layout.apod_detail_screen, container, false)
         initializeViews()
         attachAPoDImageViewOnClickListener()
-        glideProvider = GlideProvider(context)
     }
 
     private fun initializeViews() {
@@ -81,7 +78,7 @@ class APoDDetailViewImpl(layoutInflater: LayoutInflater, container: ViewGroup?) 
     }
 
     private fun loadAPoDImage(url: String) {
-        glideProvider.loadResourceFromUrl(url, imageViewApodDetailImage)
+        GlideProvider.loadResourceFromUrl(url, imageViewApodDetailImage)
     }
 
     private fun loadAPoDVideoThumbnail(videoUrl: String, thumbnailUrl: String?) {
@@ -92,7 +89,7 @@ class APoDDetailViewImpl(layoutInflater: LayoutInflater, container: ViewGroup?) 
             }
         }
         thumbnailUrl?.let { url ->
-            glideProvider.loadResourceFromUrl(url, imageViewApodDetailImage)
+            GlideProvider.loadResourceFromUrl(url, imageViewApodDetailImage)
         }
     }
 

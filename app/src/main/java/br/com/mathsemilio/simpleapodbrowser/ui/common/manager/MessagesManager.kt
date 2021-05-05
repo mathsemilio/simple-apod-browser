@@ -24,6 +24,10 @@ import br.com.mathsemilio.simpleapodbrowser.common.showSnackBarWithAction
 
 class MessagesManager(private val context: Context) {
 
+    fun showUseCaseErrorMessage(errorMessage: String) {
+        context.showLongToast(errorMessage)
+    }
+
     fun showUnexpectedErrorOccurredMessage() {
         context.showLongToast(context.getString(R.string.message_unexpected_error_occurred))
     }

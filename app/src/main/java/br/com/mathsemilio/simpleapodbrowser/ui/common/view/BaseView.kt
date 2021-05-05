@@ -19,7 +19,8 @@ import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
 
-abstract class BaseView : IView {
+abstract class BaseView :
+    br.com.mathsemilio.simpleapodbrowser.ui.common.view.View {
 
     private lateinit var _rootView: View
 

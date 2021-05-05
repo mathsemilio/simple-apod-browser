@@ -1,14 +1,13 @@
 package br.com.mathsemilio.simpleapodbrowser.common.provider
 
-import android.content.Context
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 
-class GlideProvider(private val context: Context) {
+object GlideProvider {
 
     fun loadResourceFromUrl(url: String, targetImageView: ImageView) {
-        Glide.with(context)
+        Glide.with(targetImageView)
             .load(url)
             .thumbnail(0.50F)
             .diskCacheStrategy(DiskCacheStrategy.ALL)

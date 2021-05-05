@@ -45,6 +45,10 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
 
     val fetchAPoDUseCase get() = activityCompositionRoot.fetchAPoDUseCase
 
+    val fetchRandomAPoDUseCase get() = activityCompositionRoot.fetchRandomAPoDUseCase
+
+    val fetchAPoDBasedOnDateUseCase get() = activityCompositionRoot.fetchAPoDBasedOnDateUseCase
+
     val fetchFavoriteAPoDUseCase get() = activityCompositionRoot.fetchFavoriteAPoDUseCase
 
     val deleteFavoriteAPoDUseCase get() = activityCompositionRoot.deleteFavoriteAPoDUseCase

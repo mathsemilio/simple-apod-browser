@@ -25,8 +25,11 @@ class DeleteFavoriteAPoDUseCase(private val favoriteAPoDEndpoint: FavoriteAPoDEn
 
     interface Listener {
         fun onFavoriteAPoDDeletedSuccessfully()
+
         fun onFavoriteAPoDDeleteRevertedSuccessfully()
+
         fun onDeleteFavoriteAPoDFailed()
+
         fun onRevertFavoriteAPoDDeletionFailed()
     }
 

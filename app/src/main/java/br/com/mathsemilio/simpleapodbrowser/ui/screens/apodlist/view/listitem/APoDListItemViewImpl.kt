@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -31,8 +31,6 @@ class APoDListItemViewImpl(layoutInflater: LayoutInflater, parent: ViewGroup?) :
 
     private lateinit var currentAPoD: APoD
 
-    private var glideProvider: GlideProvider
-
     init {
         rootView = layoutInflater.inflate(R.layout.apod_list_item, parent, false)
         rootView.setOnClickListener {
@@ -40,19 +38,18 @@ class APoDListItemViewImpl(layoutInflater: LayoutInflater, parent: ViewGroup?) :
         }
         imageViewApodListItemImage = findViewById(R.id.image_view_apod_list_item_image)
         textViewApodListItemTitle = findViewById(R.id.text_view_apod_list_item_title)
-        glideProvider = GlideProvider(context)
     }
 
     override fun bindAPoDDetails(apod: APoD) {
         currentAPoD = apod
-        glideProvider.loadResourceFromUrl(apod.url, imageViewApodListItemImage)
+        GlideProvider.loadResourceFromUrl(apod.url, imageViewApodListItemImage)
         loadAPoDVideoThumbnail(apod.thumbnailUrl)
         textViewApodListItemTitle.text = apod.title
     }
 
     private fun loadAPoDVideoThumbnail(thumbnailUrl: String?) {
         if (thumbnailUrl != null)
-            glideProvider.loadResourceFromUrl(thumbnailUrl, imageViewApodListItemImage)
+            GlideProvider.loadResourceFromUrl(thumbnailUrl, imageViewApodListItemImage)
     }
 
     private fun onAPoDClicked() {

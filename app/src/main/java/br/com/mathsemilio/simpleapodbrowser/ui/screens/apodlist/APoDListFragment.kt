@@ -21,7 +21,9 @@ import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDBasedOnDateUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDsUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
@@ -34,7 +36,9 @@ import kotlinx.coroutines.launch
 
 class APoDListFragment : BaseFragment(),
     APoDListScreenView.Listener,
-    FetchAPoDUseCase.Listener,
+    FetchAPoDsUseCase.Listener,
+    FetchRandomAPoDUseCase.Listener,
+    FetchAPoDBasedOnDateUseCase.Listener,
     EventListener {
 
     private lateinit var view: APoDListScreenView
@@ -46,7 +50,9 @@ class APoDListFragment : BaseFragment(),
 
     private lateinit var eventSubscriber: EventSubscriber
 
-    private lateinit var fetchAPoDUseCase: FetchAPoDUseCase
+    private lateinit var fetchAPoDsUseCase: FetchAPoDsUseCase
+    private lateinit var fetchRandomAPoDUseCase: FetchRandomAPoDUseCase
+    private lateinit var fetchAPoDBasedOnDateUseCase: FetchAPoDBasedOnDateUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +62,9 @@ class APoDListFragment : BaseFragment(),
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
         dialogManager = compositionRoot.dialogManager
         eventSubscriber = compositionRoot.eventSubscriber
-        fetchAPoDUseCase = compositionRoot.fetchAPoDUseCase
+        fetchAPoDsUseCase = compositionRoot.fetchAPoDUseCase
+        fetchRandomAPoDUseCase = compositionRoot.fetchRandomAPoDUseCase
+        fetchAPoDBasedOnDateUseCase = compositionRoot.fetchAPoDBasedOnDateUseCase
     }
 
     override fun onCreateView(
@@ -79,7 +87,7 @@ class APoDListFragment : BaseFragment(),
     private fun fetchApods() {
         coroutineScope.launch {
             view.showProgressIndicator()
-            fetchAPoDUseCase.fetchAPoDBasedOnDateRange()
+            fetchAPoDsUseCase.fetchAPoDBasedOnDateRange()
         }
     }
 
@@ -90,18 +98,26 @@ class APoDListFragment : BaseFragment(),
         view.bindApods(apods)
     }
 
-    override fun onFetchAPoDBasedOnDateCompleted(apod: APoD) {
-        screensNavigator.toAPoDDetailsScreen(apod)
-    }
-
-    override fun onFetchRandomAPoDCompleted(randomAPoD: APoD) {
-        screensNavigator.toAPoDDetailsScreen(randomAPoD)
-    }
-
     override fun onFetchAPoDError(errorMessage: String) {
         view.hideProgressIndicator()
         view.onRefreshCompleted()
         view.showNetworkRequestErrorState(errorMessage)
+    }
+
+    override fun onRandomAPoDFetchedSuccessfully(randomAPoD: APoD) {
+        screensNavigator.toAPoDDetailsScreen(randomAPoD)
+    }
+
+    override fun onFetchRandomAPoDFailed(errorMessage: String) {
+        messagesManager.showUseCaseErrorMessage(errorMessage)
+    }
+
+    override fun onAPoDBasedOnDateFetchedSuccessfully(apod: APoD) {
+        screensNavigator.toAPoDDetailsScreen(apod)
+    }
+
+    override fun onFetchAPoDBasedOnDateFailed(errorMessage: String) {
+        messagesManager.showUseCaseErrorMessage(errorMessage)
     }
 
     override fun onEvent(event: Any) {
@@ -113,7 +129,7 @@ class APoDListFragment : BaseFragment(),
     private fun onDateSetEvent(event: DateSetEvent) {
         when (event) {
             is DateSetEvent.DateSet -> coroutineScope.launch {
-                fetchAPoDUseCase.fetchAPoDBasedOnDate(event.dateInMillis)
+                fetchAPoDBasedOnDateUseCase.fetchAPoDBasedOnDate(event.dateInMillis)
             }
             DateSetEvent.InvalidDateSet ->
                 messagesManager.showInvalidAPoDDateErrorMessage()
@@ -139,13 +155,17 @@ class APoDListFragment : BaseFragment(),
     }
 
     private fun getRandomAPoD() {
-        coroutineScope.launch { fetchAPoDUseCase.fetchRandomAPoD() }
+        coroutineScope.launch {
+            fetchRandomAPoDUseCase.fetchRandomAPoD()
+        }
     }
 
     override fun onStart() {
         view.addListener(this)
         eventSubscriber.subscribe(this)
-        fetchAPoDUseCase.addListener(this)
+        fetchAPoDsUseCase.addListener(this)
+        fetchRandomAPoDUseCase.addListener(this)
+        fetchAPoDBasedOnDateUseCase.addListener(this)
         fetchApods()
         super.onStart()
     }
@@ -153,7 +173,9 @@ class APoDListFragment : BaseFragment(),
     override fun onStop() {
         view.removeListener(this)
         eventSubscriber.unsubscribe(this)
-        fetchAPoDUseCase.removeListener(this)
+        fetchAPoDsUseCase.removeListener(this)
+        fetchRandomAPoDUseCase.removeListener(this)
+        fetchAPoDBasedOnDateUseCase.removeListener(this)
         coroutineScope.coroutineContext.cancelChildren()
         super.onStop()
     }

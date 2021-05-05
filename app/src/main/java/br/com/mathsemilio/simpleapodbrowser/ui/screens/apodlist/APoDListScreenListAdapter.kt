@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListItemView
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem.APoDListItemView
 
 class APoDListScreenListAdapter(
     private val viewFactory: ViewFactory,

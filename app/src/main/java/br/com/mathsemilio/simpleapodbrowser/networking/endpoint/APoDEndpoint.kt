@@ -26,7 +26,7 @@ class APoDEndpoint(
     private val aPoDApi: APoDApi,
     private val apiKeyProvider: APIKeyProvider
 ) {
-    suspend fun getAPoDsBasedOnDateRange(startDate: String): Result<List<APoDSchema>> {
+    suspend fun fetchAPoDsBasedOnDateRange(startDate: String): Result<List<APoDSchema>> {
         return performAPICall(Dispatchers.IO) {
             aPoDApi.getAPoDsBasedOnDateRange(
                 apiKeyProvider.getAPoDKey(),
@@ -35,13 +35,13 @@ class APoDEndpoint(
         }
     }
 
-    suspend fun getAPoDsBasedOnDate(date: String): Result<APoDSchema> {
+    suspend fun fetchAPoDsBasedOnDate(date: String): Result<APoDSchema> {
         return performAPICall(Dispatchers.IO) {
             aPoDApi.getAPoDBasedOnDate(apiKeyProvider.getAPoDKey(), date).body()!!
         }
     }
 
-    suspend fun getRandomAPoD(): Result<List<APoDSchema>> {
+    suspend fun fetchRandomAPoD(): Result<List<APoDSchema>> {
         return performAPICall(Dispatchers.IO) {
             aPoDApi.getRandomAPoD(apiKeyProvider.getAPoDKey(), 1).body()!!
         }

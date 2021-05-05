@@ -32,8 +32,6 @@ class APoDFavoritesListItemViewImpl(layoutInflater: LayoutInflater, parent: View
 
     private lateinit var currentFavoriteAPoD: APoD
 
-    private var glideProvider: GlideProvider
-
     init {
         rootView = layoutInflater.inflate(R.layout.apod_favorites_list_item, parent, false)
         rootView.setOnClickListener {
@@ -41,7 +39,6 @@ class APoDFavoritesListItemViewImpl(layoutInflater: LayoutInflater, parent: View
         }
         initializeViews()
         setRemoveFromFavoritesIconOnClickListener()
-        glideProvider = GlideProvider(context)
     }
 
     private fun initializeViews() {
@@ -61,14 +58,14 @@ class APoDFavoritesListItemViewImpl(layoutInflater: LayoutInflater, parent: View
 
     override fun bindFavoriteAPoD(apod: APoD) {
         currentFavoriteAPoD = apod
-        glideProvider.loadResourceFromUrl(apod.url, imageViewAPoDFavoritesListItemImage)
+        GlideProvider.loadResourceFromUrl(apod.url, imageViewAPoDFavoritesListItemImage)
         loadAPoDVideoThumbnail(apod.thumbnailUrl)
         textViewAPoDFavoritesListItemTitle.text = apod.title
     }
 
     private fun loadAPoDVideoThumbnail(thumbnailUrl: String?) {
         if (thumbnailUrl != null)
-            glideProvider.loadResourceFromUrl(thumbnailUrl, imageViewAPoDFavoritesListItemImage)
+            GlideProvider.loadResourceFromUrl(thumbnailUrl, imageViewAPoDFavoritesListItemImage)
     }
 
     private fun onFavoriteAPoDClicked() {

@@ -87,7 +87,7 @@ class APoDImageDetailFragment : BaseFragment(),
         screensNavigator.navigateUp()
     }
 
-    override fun onToolbarActionDownloadAPoDClicked() {
+    override fun onToolbarActionExportAPoDImageClicked() {
         if (permissionsHelper.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             apodImageExporter.export(currentAPoDImage)
         else

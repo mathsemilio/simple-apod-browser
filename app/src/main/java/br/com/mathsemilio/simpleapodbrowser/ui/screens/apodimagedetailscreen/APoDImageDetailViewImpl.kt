@@ -50,7 +50,7 @@ class APoDImageDetailViewImpl(layoutInflater: LayoutInflater, container: ViewGro
             when (item.itemId) {
                 R.id.toolbar_action_download_apod -> {
                     listeners.forEach { listener ->
-                        listener.onToolbarActionDownloadAPoDClicked()
+                        listener.onToolbarActionExportAPoDImageClicked()
                     }
                     true
                 }

@@ -18,7 +18,9 @@ package br.com.mathsemilio.simpleapodbrowser.common.di
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDBasedOnDateUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDsUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPodUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteAPoDUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteAPoDUseCase
@@ -59,7 +61,15 @@ class ActivityCompositionRoot(
     }
 
     private val _fetchAPoDUseCase by lazy {
-        FetchAPoDUseCase(aPoDEndpoint)
+        FetchAPoDsUseCase(aPoDEndpoint)
+    }
+
+    private val _fetchRandomAPoDUseCase by lazy {
+        FetchRandomAPoDUseCase(aPoDEndpoint)
+    }
+
+    private val _fetchAPoDBasedOnDateUseCase by lazy {
+        FetchAPoDBasedOnDateUseCase(aPoDEndpoint)
     }
 
     private val _fetchFavoriteAPoDUseCase by lazy {
@@ -127,6 +137,10 @@ class ActivityCompositionRoot(
     val viewFactory get() = _viewFactory
 
     val fetchAPoDUseCase get() = _fetchAPoDUseCase
+
+    val fetchRandomAPoDUseCase get() = _fetchRandomAPoDUseCase
+
+    val fetchAPoDBasedOnDateUseCase get() = _fetchAPoDBasedOnDateUseCase
 
     val fetchFavoriteAPoDUseCase get() = _fetchFavoriteAPoDUseCase
 

@@ -25,7 +25,9 @@ class FetchFavoriteAPoDUseCase(private val favoriteAPoDEndpoint: FavoriteAPoDEnd
 
     interface Listener {
         fun onFetchFavoriteAPoDsCompleted(favoriteApods: List<APoD>)
+
         fun onFetchFavoriteAPoDsBasedOnTitleCompleted(matchingApods: List<APoD>)
+
         fun onFetchFavoriteAPoDFailed()
     }
 
