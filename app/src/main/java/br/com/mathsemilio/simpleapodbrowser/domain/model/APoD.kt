@@ -29,4 +29,5 @@ data class APoD(
     val mediaType: String,
     val explanation: String,
     val thumbnailUrl: String?,
+    val isAPoDFavorite: Boolean = false
 ) : Serializable

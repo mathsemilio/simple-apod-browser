@@ -36,13 +36,14 @@ class AddFavoriteAPodUseCase(private val favoriteAPoDEndpoint: FavoriteAPoDEndpo
     suspend fun addAPoDToFavorites(apod: APoD) {
         currentAPoD = apod
 
-        favoriteAPoDEndpoint.addFavoriteAPoD(apod).also { result ->
+        isAPoDAlreadyOnFavorites()
+
+        val favoriteAPoD = apod.copy(isAPoDFavorite = true)
+
+        favoriteAPoDEndpoint.addFavoriteAPoD(favoriteAPoD).also { result ->
             when (result) {
-                is Result.Completed -> {
-                    if (isAPoDAlreadyOnFavorites())
-                        listeners.forEach { listener -> listener.onAPoDIsAlreadyOnFavorites() }
-                    else
-                        listeners.forEach { listener -> listener.onApoDAddedToFavoritesSuccessfully() }
+                is Result.Completed -> listeners.forEach { listener ->
+                    listener.onApoDAddedToFavoritesSuccessfully()
                 }
                 is Result.Failed -> listeners.forEach { listener ->
                     listener.onAddAPoDToFavoritesFailed()
@@ -51,20 +52,19 @@ class AddFavoriteAPodUseCase(private val favoriteAPoDEndpoint: FavoriteAPoDEndpo
         }
     }
 
-    private suspend fun isAPoDAlreadyOnFavorites(): Boolean {
-        var isAlreadyOnFavorites = false
-
+    private suspend fun isAPoDAlreadyOnFavorites() {
         favoriteAPoDEndpoint.getFavoriteAPoDByDate(currentAPoD.date).also { result ->
             when (result) {
                 is Result.Completed -> {
                     val favoriteApoD = result.data!!
-                    if (favoriteApoD.date == currentAPoD.date)
-                        isAlreadyOnFavorites = true
+                    if (favoriteApoD.date == currentAPoD.date) {
+                        listeners.forEach { listener ->
+                            listener.onAPoDIsAlreadyOnFavorites()
+                        }
+                    }
                 }
                 is Result.Failed -> throw RuntimeException(result.error)
             }
         }
-
-        return isAlreadyOnFavorites
     }
 }

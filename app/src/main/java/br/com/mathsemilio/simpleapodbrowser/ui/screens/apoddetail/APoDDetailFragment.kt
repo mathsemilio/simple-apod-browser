@@ -110,6 +110,12 @@ class APoDDetailFragment : BaseFragment(),
         inflater.inflate(R.menu.toolbar_apod_detail, menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        if (!currentAPoD.isAPoDFavorite) {
+            menu.findItem(R.id.toolbar_action_add_to_favorites).isVisible = false
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.toolbar_action_add_to_favorites -> {

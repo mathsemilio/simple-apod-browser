@@ -19,7 +19,7 @@ import android.content.Context
 import androidx.fragment.app.FragmentManager
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.datepicker.DatePickerDialog
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.infodialog.InfoDialog
 
 class DialogManager(private val fragmentManager: FragmentManager, private val context: Context) {
 
@@ -29,22 +29,20 @@ class DialogManager(private val fragmentManager: FragmentManager, private val co
     }
 
     fun showGrantExternalStoragePermissionDialog() {
-        MaterialAlertDialogBuilder(context).apply {
-            setTitle(context.getString(R.string.dialog_title_grant_permission))
-            setMessage(context.getString(R.string.dialog_message_grant_external_storage_permission))
-            setPositiveButton(context.getString(R.string.dialog_button_text_ok), null)
-            setCancelable(false)
-            show()
-        }
+        val infoDialog = InfoDialog.newInstance(
+            context.getString(R.string.dialog_title_grant_permission),
+            context.getString(R.string.dialog_message_grant_external_storage_permission),
+            context.getString(R.string.dialog_button_text_ok)
+        )
+        infoDialog.show(fragmentManager, null)
     }
 
     fun showEnablePermissionsManuallyDialog() {
-        MaterialAlertDialogBuilder(context).apply {
-            setTitle(context.getString(R.string.dialog_title_grant_permission))
-            setMessage(context.getString(R.string.dialog_message_enable_permission_manually))
-            setPositiveButton(context.getString(R.string.dialog_button_text_ok), null)
-            setCancelable(false)
-            show()
-        }
+        val infoDialog = InfoDialog.newInstance(
+            context.getString(R.string.dialog_title_grant_permission),
+            context.getString(R.string.dialog_message_enable_permission_manually),
+            context.getString(R.string.dialog_button_text_ok)
+        )
+        infoDialog.show(fragmentManager, null)
     }
 }
