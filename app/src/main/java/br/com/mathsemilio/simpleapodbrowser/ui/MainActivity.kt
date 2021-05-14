@@ -27,7 +27,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.launchWebPage
+import br.com.mathsemilio.simpleapodbrowser.common.util.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
@@ -81,7 +81,7 @@ class MainActivity : BaseActivity(),
         setupActionBarWithNavController(
             navController,
             AppBarConfiguration(
-                topLevelDestinationIds = setOf(R.id.APoDListScreen, R.id.APoDFavoritesScreen)
+                topLevelDestinationIds = setOf(R.id.ApodListScreen, R.id.ApodFavoritesScreen)
             )
         )
 
@@ -91,11 +91,11 @@ class MainActivity : BaseActivity(),
     private fun setOnDestinationChangedListener() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.APoDDetailScreen -> {
+                R.id.ApodDetailScreen -> {
                     view.showToolbar()
                     view.hideBottomNavigationView()
                 }
-                R.id.APoDImageDetailScreen ->
+                R.id.ApodImageDetailScreen ->
                     view.hideToolbar()
                 else -> {
                     view.showToolbar()
@@ -105,16 +105,15 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    override val navHostFragment: NavHostFragment
-        get() {
-            return supportFragmentManager.findFragmentById(
-                R.id.fragment_container_view_app
-            ) as NavHostFragment
-        }
+    override fun getNavHostFragment(): NavHostFragment {
+        return supportFragmentManager.findFragmentById(
+            R.id.fragment_container_view_app
+        ) as NavHostFragment
+    }
 
-    override val fragmentContainer get() = view.fragmentContainer
+    override fun getFragmentContainer() = view.fragmentContainer
 
-    override val bottomNavigationView get() = view.bottomNavigationView
+    override fun getBottomNavigationView() = view.bottomNavigationView
 
     override fun onSetStatusBarColor(color: Int) {
         view.setStatusBarColor(window, color)

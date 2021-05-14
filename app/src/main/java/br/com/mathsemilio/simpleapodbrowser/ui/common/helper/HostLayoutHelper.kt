@@ -20,7 +20,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 interface HostLayoutHelper {
-    val navHostFragment: NavHostFragment
-    val fragmentContainer: FragmentContainerView
-    val bottomNavigationView: BottomNavigationView
+    fun getNavHostFragment(): NavHostFragment
+
+    fun getFragmentContainer(): FragmentContainerView
+
+    fun getBottomNavigationView(): BottomNavigationView
 }

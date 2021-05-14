@@ -18,23 +18,20 @@ package br.com.mathsemilio.simpleapodbrowser.common.di
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDBasedOnDateUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchAPoDsUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteAPodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteAPoDUseCase
-import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.APoDEndpoint
-import br.com.mathsemilio.simpleapodbrowser.storage.database.AppDatabase
-import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteAPoDEndpoint
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.APoDImageExporter
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodBasedOnDateUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodsUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodUseCase
+import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.ApodEndpoint
+import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteApodDatabase
+import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ApodImageExporter
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.StatusBarManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SystemUIManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 
@@ -42,50 +39,50 @@ class ActivityCompositionRoot(
     private val activity: AppCompatActivity,
     private val compositionRoot: CompositionRoot
 ) {
-    private val aPoDApi get() = compositionRoot.retrofitBuilder.apodApi
+    private val apodApi get() = compositionRoot.retrofitBuilder.apodApi
 
-    private val appDatabase get() = AppDatabase.getDatabase(activity)
+    private val appDatabase get() = FavoriteApodDatabase.getDatabase(activity)
 
-    private val favoriteAPoDDAO get() = appDatabase.favoriteAPoDDAO
+    private val favoriteApodDao get() = appDatabase.favoriteApodDao
 
-    private val aPoDEndpoint by lazy {
-        APoDEndpoint(aPoDApi, apiKeyProvider)
+    private val apodEndpoint by lazy {
+        ApodEndpoint(apodApi, apiKeyProvider)
     }
 
-    private val favoriteAPoDEndpoint by lazy {
-        FavoriteAPoDEndpoint(favoriteAPoDDAO)
+    private val favoriteApodEndpoint by lazy {
+        FavoriteApodEndpoint(favoriteApodDao)
     }
 
     private val _dialogManager by lazy {
         DialogManager(activity.supportFragmentManager, activity)
     }
 
-    private val _fetchAPoDUseCase by lazy {
-        FetchAPoDsUseCase(aPoDEndpoint)
+    private val _fetchApodUseCase by lazy {
+        FetchApodsUseCase(apodEndpoint)
     }
 
-    private val _fetchRandomAPoDUseCase by lazy {
-        FetchRandomAPoDUseCase(aPoDEndpoint)
+    private val _fetchRandomApodUseCase by lazy {
+        FetchRandomApodUseCase(apodEndpoint)
     }
 
-    private val _fetchAPoDBasedOnDateUseCase by lazy {
-        FetchAPoDBasedOnDateUseCase(aPoDEndpoint)
+    private val _fetchApodBasedOnDateUseCase by lazy {
+        FetchApodBasedOnDateUseCase(apodEndpoint)
     }
 
-    private val _fetchFavoriteAPoDUseCase by lazy {
-        FetchFavoriteAPoDUseCase(favoriteAPoDEndpoint)
+    private val _fetchFavoriteApodUseCase by lazy {
+        FetchFavoriteApodUseCase(favoriteApodEndpoint)
     }
 
-    private val _addFavoriteAPodUseCase by lazy {
-        AddFavoriteAPodUseCase(favoriteAPoDEndpoint)
+    private val _addFavoriteApodUseCase by lazy {
+        AddFavoriteApodUseCase(favoriteApodEndpoint)
     }
 
-    private val _deleteFavoriteAPoDUseCase by lazy {
-        DeleteFavoriteAPoDUseCase(favoriteAPoDEndpoint)
+    private val _deleteFavoriteApodUseCase by lazy {
+        DeleteFavoriteApodUseCase(favoriteApodEndpoint)
     }
 
-    private val _aPoDImageExporter by lazy {
-        APoDImageExporter(activity)
+    private val _apodImageExporter by lazy {
+        ApodImageExporter(activity)
     }
 
     private val _messagesManager by lazy {
@@ -93,7 +90,11 @@ class ActivityCompositionRoot(
     }
 
     private val _screensNavigator by lazy {
-        ScreensNavigator(hostLayoutHelper.navHostFragment.findNavController())
+        ScreensNavigator(hostLayoutHelper.getNavHostFragment().findNavController())
+    }
+
+    private val _snackBarManager by lazy {
+        SnackBarManager(activity)
     }
 
     private val _tapGestureHelper by lazy {
@@ -120,11 +121,13 @@ class ActivityCompositionRoot(
 
     val hostLayoutHelper get() = activity as HostLayoutHelper
 
-    val aPoDImageExporter get() = _aPoDImageExporter
+    val apodImageExporter get() = _apodImageExporter
 
     val messagesManager get() = _messagesManager
 
     val screensNavigator get() = _screensNavigator
+
+    val snackBarManager get() = _snackBarManager
 
     val statusBarManager get() = activity as StatusBarManager
 
@@ -136,15 +139,15 @@ class ActivityCompositionRoot(
 
     val viewFactory get() = _viewFactory
 
-    val fetchAPoDUseCase get() = _fetchAPoDUseCase
+    val fetchApodUseCase get() = _fetchApodUseCase
 
-    val fetchRandomAPoDUseCase get() = _fetchRandomAPoDUseCase
+    val fetchRandomApodUseCase get() = _fetchRandomApodUseCase
 
-    val fetchAPoDBasedOnDateUseCase get() = _fetchAPoDBasedOnDateUseCase
+    val fetchApodBasedOnDateUseCase get() = _fetchApodBasedOnDateUseCase
 
-    val fetchFavoriteAPoDUseCase get() = _fetchFavoriteAPoDUseCase
+    val fetchFavoriteApodUseCase get() = _fetchFavoriteApodUseCase
 
-    val addFavoriteAPodUseCase get() = _addFavoriteAPodUseCase
+    val addFavoriteApodUseCase get() = _addFavoriteApodUseCase
 
-    val deleteFavoriteAPoDUseCase get() = _deleteFavoriteAPoDUseCase
+    val deleteFavoriteApodUseCase get() = _deleteFavoriteApodUseCase
 }

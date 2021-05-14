@@ -13,23 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package br.com.mathsemilio.simpleapodbrowser.networking
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist
 
-import br.com.mathsemilio.simpleapodbrowser.common.BASE_URL
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import androidx.recyclerview.widget.DiffUtil
+import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
-class RetrofitBuilder {
+class ApodFavoritesDiffUtilCallback : DiffUtil.ItemCallback<Apod>() {
 
-    private val retroFit by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    override fun areItemsTheSame(oldItem: Apod, newItem: Apod): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    private val _apodApi by lazy {
-        retroFit.create(ApodApi::class.java)
+    override fun areContentsTheSame(oldItem: Apod, newItem: Apod): Boolean {
+        return oldItem == newItem
     }
-    val apodApi: ApodApi get() = _apodApi
 }

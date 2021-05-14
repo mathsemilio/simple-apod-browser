@@ -18,9 +18,9 @@ package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 import android.content.Context
 import android.view.View
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.showLongToast
-import br.com.mathsemilio.simpleapodbrowser.common.showShortToast
-import br.com.mathsemilio.simpleapodbrowser.common.showSnackBarWithAction
+import br.com.mathsemilio.simpleapodbrowser.common.util.showLongToast
+import br.com.mathsemilio.simpleapodbrowser.common.util.showShortToast
+import br.com.mathsemilio.simpleapodbrowser.common.util.showSnackBarWithAction
 
 class MessagesManager(private val context: Context) {
 
@@ -32,32 +32,19 @@ class MessagesManager(private val context: Context) {
         context.showLongToast(context.getString(R.string.message_unexpected_error_occurred))
     }
 
-    fun showInvalidAPoDDateErrorMessage() {
+    fun showInvalidApodDateErrorMessage() {
         context.showLongToast(context.getString(R.string.message_invalid_apod_date))
     }
 
-    fun showFavoriteAPoDDeletedSuccessfullyMessage(
-        view: View,
-        anchorView: View,
-        onSnackBarActionClicked: () -> Unit
-    ) {
-        context.showSnackBarWithAction(
-            view,
-            anchorView,
-            context.getString(R.string.message_apod_removed_from_favorites),
-            context.getString(R.string.undo)
-        ) { onSnackBarActionClicked() }
-    }
-
-    fun showAPoDAddedToFavoritesSuccessfullyMessage() {
+    fun showApodAddedToFavoritesSuccessfullyMessage() {
         context.showLongToast(context.getString(R.string.message_apod_added_to_favorites_completed))
     }
 
-    fun showAPoDAlreadyOnFavoritesMessage() {
+    fun showApodAlreadyOnFavoritesMessage() {
         context.showShortToast(context.getString(R.string.message_apod_already_on_favorites))
     }
 
-    fun showAPoDImageExportedSuccessfully() {
+    fun showApodImageExportedSuccessfully() {
         context.showShortToast(context.getString(R.string.message_apod_image_exported_successfully))
     }
 }

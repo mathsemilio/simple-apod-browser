@@ -18,33 +18,33 @@ package br.com.mathsemilio.simpleapodbrowser.ui.common.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.ui.MainActivityViewImpl
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.APoDDetailViewImpl
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.listitem.APoDFavoritesListItemViewImpl
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.APoDFavoritesScreenViewImpl
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.APoDImageDetailViewImpl
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem.APoDListItemViewImpl
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.APoDListScreenViewImpl
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.ApodDetailViewImpl
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.listitem.ApodFavoritesListItemViewImpl
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.ApodFavoritesScreenViewImpl
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.ApodImageDetailViewImpl
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem.ApodListItemViewImpl
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.ApodListScreenViewImpl
 
 class ViewFactory(private val layoutInflater: LayoutInflater) {
 
     fun getMainActivityView(parent: ViewGroup?) =
         MainActivityViewImpl(layoutInflater, parent)
 
-    fun getAPoDListScreenView(container: ViewGroup?) =
-        APoDListScreenViewImpl(layoutInflater, container, this)
+    fun getApodListScreenView(container: ViewGroup?) =
+        ApodListScreenViewImpl(layoutInflater, container, this)
 
-    fun getAPoDListItemView(parent: ViewGroup?) =
-        APoDListItemViewImpl(layoutInflater, parent)
+    fun getApodListItemView(parent: ViewGroup?) =
+        ApodListItemViewImpl(layoutInflater, parent)
 
-    fun getAPoDDetailsView(container: ViewGroup?) =
-        APoDDetailViewImpl(layoutInflater, container)
+    fun getApodDetailsView(container: ViewGroup?) =
+        ApodDetailViewImpl(layoutInflater, container)
 
-    fun getAPoDFavoritesScreenView(container: ViewGroup?) =
-        APoDFavoritesScreenViewImpl(layoutInflater, container, this)
+    fun getApodFavoritesScreenView(container: ViewGroup?) =
+        ApodFavoritesScreenViewImpl(layoutInflater, container, this)
 
-    fun getAPoDFavoritesListItemView(parent: ViewGroup?) =
-        APoDFavoritesListItemViewImpl(layoutInflater, parent)
+    fun getApodFavoritesListItemView(parent: ViewGroup?) =
+        ApodFavoritesListItemViewImpl(layoutInflater, parent)
 
-    fun getAPoDImageDetailView(container: ViewGroup?) =
-        APoDImageDetailViewImpl(layoutInflater, container)
+    fun getApodImageDetailView(container: ViewGroup?) =
+        ApodImageDetailViewImpl(layoutInflater, container)
 }

@@ -13,23 +13,22 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package br.com.mathsemilio.simpleapodbrowser.networking
+package br.com.mathsemilio.simpleapodbrowser.domain.model
 
-import br.com.mathsemilio.simpleapodbrowser.common.BASE_URL
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import br.com.mathsemilio.simpleapodbrowser.common.FAVORITE_APOD_TABLE
+import java.io.Serializable
 
-class RetrofitBuilder {
-
-    private val retroFit by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    private val _apodApi by lazy {
-        retroFit.create(ApodApi::class.java)
-    }
-    val apodApi: ApodApi get() = _apodApi
-}
+@Entity(tableName = FAVORITE_APOD_TABLE)
+data class Apod(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val title: String,
+    val url: String,
+    val date: String,
+    val mediaType: String,
+    val explanation: String,
+    val thumbnailUrl: String?,
+    val isFavorite: Boolean = false
+) : Serializable

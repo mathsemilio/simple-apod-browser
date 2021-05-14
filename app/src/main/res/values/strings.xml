@@ -8,6 +8,7 @@
     <string name="content_description_network_request_error">Network request error</string>
     <string name="content_description_remove_from_favorites">Remove from Favorites</string>
     <string name="content_description_go_back_to_previous_screen">Go back to previous screen</string>
+    <string name="content_description_no_favorite_apods_found_illustration">No favorite APoD\'s found illustration</string>
 
     <!-- Common -->
     <string name="latest">Latest</string>
@@ -21,17 +22,19 @@
     <string name="toolbar_action_title_add_to_favorites">Add to Favorites</string>
     <string name="toolbar_action_title_search">Search</string>
     <string name="toolbar_action_title_visit_apod_website">Visit APoD Website</string>
-    <string name="toolbar_action_title_download_apod">Download APoD</string>
+    <string name="toolbar_action_title_export_apod_image">Export APoD Image</string>
 
     <!-- Messages -->
     <string name="message_invalid_apod_date">Invalid APoD date! Please select a date that is between June 16, 1995 and today</string>
-    <string name="message_no_favorite_apods_found">No Favorite APoDs found!\n Click the on \"Add to Favorites\" icon to add APoDs to this list.</string>
+    <string name="message_no_favorite_apods_found">No favorite APoDs found</string>
+    <string name="message_click_on_add_to_favorites">Click the on \"Add to Favorites\" icon to add APoDs to this list.</string>
     <string name="message_something_went_wrong_error">Oops, something went wrong… \n %s</string>
     <string name="message_apod_added_to_favorites_completed">APoD added to favorites!</string>
     <string name="message_apod_removed_from_favorites">APoD removed from favorites</string>
     <string name="message_unexpected_error_occurred">Unexpected error occurred. Please try again later.</string>
     <string name="message_apod_image_exported_successfully">APoD image exported to device\'s gallery</string>
     <string name="message_apod_already_on_favorites">APoD already on favorites</string>
+    <string name="message_something_went_wrong">Something went wrong…</string>
 
     <!-- Dialog messages -->
     <string name="dialog_message_grant_external_storage_permission">In order to download APoD images, we need access to the device\'s external storage.</string>

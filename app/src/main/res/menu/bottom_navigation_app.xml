@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@id/APoDListScreen"
+        android:id="@id/ApodListScreen"
         android:icon="@drawable/ic_baseline_explore_24"
         android:title="@string/latest" />
 
     <item
-        android:id="@+id/APoDFavoritesScreen"
+        android:id="@+id/ApodFavoritesScreen"
         android:icon="@drawable/ic_baseline_favorite_24"
         android:title="@string/favorites" />
 

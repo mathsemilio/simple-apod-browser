@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/toolbar_action_download_apod"
-        android:icon="@drawable/ic_baseline_download_24"
-        android:title="@string/toolbar_action_title_download_apod"
+        android:id="@+id/toolbar_action_export_apod_image"
+        android:icon="@drawable/ic_baseline_download_for_offline_24"
+        android:title="@string/toolbar_action_title_export_apod_image"
         app:showAsAction="ifRoom" />
 
 </menu>

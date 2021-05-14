@@ -13,23 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package br.com.mathsemilio.simpleapodbrowser.networking
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.listitem
 
-import br.com.mathsemilio.simpleapodbrowser.common.BASE_URL
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
+import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-class RetrofitBuilder {
+abstract class ApodFavoritesListItemView : BaseObservableView<ApodFavoritesListItemView.Listener>() {
 
-    private val retroFit by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    interface Listener {
+        fun onFavoriteApodClicked(favoriteApod: Apod)
+
+        fun onRemoveFromFavoritesIconClicked(favoriteApod: Apod)
     }
 
-    private val _apodApi by lazy {
-        retroFit.create(ApodApi::class.java)
-    }
-    val apodApi: ApodApi get() = _apodApi
+    abstract fun bindFavoriteApod(favoriteApod: Apod)
 }

@@ -2,41 +2,41 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/APoDListScreen">
+    app:startDestination="@id/ApodListScreen">
 
     <fragment
-        android:id="@+id/APoDListScreen"
-        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.APoDListFragment"
+        android:id="@+id/ApodListScreen"
+        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.ApodListFragment"
         android:label="@string/latest"
         tools:layout="@layout/apod_list_screen">
 
         <action
             android:id="@+id/action_apod_list_to_apod_detail_screen"
-            app:destination="@id/APoDDetailScreen" />
+            app:destination="@id/ApodDetailScreen" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/APoDFavoritesScreen"
-        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.APoDFavoritesFragment"
+        android:id="@+id/ApodFavoritesScreen"
+        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.ApodFavoritesFragment"
         android:label="@string/favorites"
         tools:layout="@layout/apod_favorites_list_screen">
 
         <action
             android:id="@+id/action_apod_favorites_to_apod_detail_screen"
-            app:destination="@id/APoDDetailScreen" />
+            app:destination="@id/ApodDetailScreen" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/APoDDetailScreen"
-        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.APoDDetailFragment"
+        android:id="@+id/ApodDetailScreen"
+        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.ApodDetailFragment"
         android:label="@string/details"
         tools:layout="@layout/apod_detail_screen">
 
         <action
             android:id="@+id/action_apod_detail_to_apod_image_detail_screen"
-            app:destination="@id/APoDImageDetailScreen"
+            app:destination="@id/ApodImageDetailScreen"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
@@ -45,8 +45,8 @@
     </fragment>
 
     <fragment
-        android:id="@+id/APoDImageDetailScreen"
-        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.APoDImageDetailFragment"
+        android:id="@+id/ApodImageDetailScreen"
+        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.ApodImageDetailFragment"
         tools:layout="@layout/apod_image_detail_screen" />
 
 </navigation>

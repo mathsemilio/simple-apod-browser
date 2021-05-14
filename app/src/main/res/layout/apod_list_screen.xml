@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:id="@+id/progress_bar_apod_list"
+        android:id="@+id/progress_bar_apods"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/image_view_apod_list_network_request_error"
+        android:id="@+id/image_view_network_request_error"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:contentDescription="@string/content_description_network_request_error"
@@ -29,24 +29,33 @@
         app:layout_constraintVertical_bias="0.16" />
 
     <TextView
-        android:id="@+id/text_view_apod_list_network_request_error"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:id="@+id/text_view_something_went_wrong"
+        style="?textAppearanceHeadline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/message_something_went_wrong"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_view_network_request_error" />
+
+    <TextView
+        android:id="@+id/text_view_network_error_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:textAlignment="center"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_view_apod_list_network_request_error"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="Oops, something went wrong... \n HTTP error 404" />
+        app:layout_constraintTop_toBottomOf="@+id/text_view_something_went_wrong"
+        tools:text="Unable to resolve host api.nasa.gov: No address associated with hostname" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout_apod_list"
+        android:id="@+id/swipe_refresh_layout_apods"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -55,7 +64,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_apod_list"
+            android:id="@+id/recycler_view_apods"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

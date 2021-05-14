@@ -13,23 +13,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package br.com.mathsemilio.simpleapodbrowser.networking
+package br.com.mathsemilio.simpleapodbrowser.domain.model
 
-import br.com.mathsemilio.simpleapodbrowser.common.BASE_URL
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.google.gson.annotations.SerializedName
 
-class RetrofitBuilder {
-
-    private val retroFit by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    private val _apodApi by lazy {
-        retroFit.create(ApodApi::class.java)
-    }
-    val apodApi: ApodApi get() = _apodApi
-}
+data class ApodSchema(
+    @SerializedName("concept_tags")
+    val conceptTags: Boolean,
+    val title: String,
+    val url: String,
+    val date: String,
+    @SerializedName("media_type")
+    val mediaType: String,
+    val explanation: String,
+    @SerializedName("thumbnail_url")
+    val thumbnailUrl: String?,
+    val concepts: List<String>,
+    val copyright: String?
+)

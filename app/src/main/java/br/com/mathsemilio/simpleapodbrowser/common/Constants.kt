@@ -18,7 +18,7 @@ package br.com.mathsemilio.simpleapodbrowser.common
 const val BASE_URL = "https://api.nasa.gov/planetary/"
 
 const val FAVORITE_APOD_TABLE = "favorite_apod_table"
-const val APP_DATABASE = "app_database"
+const val FAVORITE_APOD_DATABASE = "favorite_apod_database"
 
 const val ARG_APOD = "ARG_APOD"
 const val ARG_APOD_IMAGE = "ARG_APOD_IMAGE"

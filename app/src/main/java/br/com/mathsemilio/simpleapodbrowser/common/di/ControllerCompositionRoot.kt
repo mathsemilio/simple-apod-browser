@@ -25,11 +25,13 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
 
     val dialogManager get() = activityCompositionRoot.dialogManager
 
-    val aPoDImageExporter get() = activityCompositionRoot.aPoDImageExporter
+    val apodImageExporter get() = activityCompositionRoot.apodImageExporter
 
     val messagesManager get() = activityCompositionRoot.messagesManager
 
     val screensNavigator get() = activityCompositionRoot.screensNavigator
+
+    val snackBarManager get() = activityCompositionRoot.snackBarManager
 
     val statusBarManager get() = activityCompositionRoot.statusBarManager
 
@@ -37,21 +39,21 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
 
     val tapGestureHelper get() = activityCompositionRoot.tapGestureHelper
 
-    val rootLayoutHelper get() = activityCompositionRoot.hostLayoutHelper
+    val hostLayoutHelper get() = activityCompositionRoot.hostLayoutHelper
 
     val permissionsHelper get() = activityCompositionRoot.permissionsHelper
 
     val viewFactory get() = activityCompositionRoot.viewFactory
 
-    val fetchAPoDUseCase get() = activityCompositionRoot.fetchAPoDUseCase
+    val fetchApodUseCase get() = activityCompositionRoot.fetchApodUseCase
 
-    val fetchRandomAPoDUseCase get() = activityCompositionRoot.fetchRandomAPoDUseCase
+    val fetchRandomApodUseCase get() = activityCompositionRoot.fetchRandomApodUseCase
 
-    val fetchAPoDBasedOnDateUseCase get() = activityCompositionRoot.fetchAPoDBasedOnDateUseCase
+    val fetchApodBasedOnDateUseCase get() = activityCompositionRoot.fetchApodBasedOnDateUseCase
 
-    val fetchFavoriteAPoDUseCase get() = activityCompositionRoot.fetchFavoriteAPoDUseCase
+    val fetchFavoriteApodUseCase get() = activityCompositionRoot.fetchFavoriteApodUseCase
 
-    val deleteFavoriteAPoDUseCase get() = activityCompositionRoot.deleteFavoriteAPoDUseCase
+    val deleteFavoriteApodUseCase get() = activityCompositionRoot.deleteFavoriteApodUseCase
 
-    val addFavoriteAPodUseCase get() = activityCompositionRoot.addFavoriteAPodUseCase
+    val addFavoriteApodUseCase get() = activityCompositionRoot.addFavoriteApodUseCase
 }

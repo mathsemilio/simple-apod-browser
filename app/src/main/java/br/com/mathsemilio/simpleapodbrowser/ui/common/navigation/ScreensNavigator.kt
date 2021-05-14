@@ -20,23 +20,23 @@ import androidx.navigation.NavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD_IMAGE
-import br.com.mathsemilio.simpleapodbrowser.domain.model.APoD
+import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
 class ScreensNavigator(private val navController: NavController) {
 
-    fun toAPoDDetailsScreen(apod: APoD) {
-        val argAPoD = Bundle(1).apply { putSerializable(ARG_APOD, apod) }
-        navController.navigate(R.id.action_apod_list_to_apod_detail_screen, argAPoD)
+    fun toApodDetailsScreen(apod: Apod) {
+        val argApod = Bundle(1).apply { putSerializable(ARG_APOD, apod) }
+        navController.navigate(R.id.action_apod_list_to_apod_detail_screen, argApod)
     }
 
-    fun toFavoriteAPoDDetailsScreen(favoriteAPoD: APoD) {
-        val argFavoriteAPoD = Bundle(1).apply { putSerializable(ARG_APOD, favoriteAPoD) }
-        navController.navigate(R.id.action_apod_favorites_to_apod_detail_screen, argFavoriteAPoD)
+    fun toFavoriteApodDetailsScreen(favoriteApod: Apod) {
+        val argFavoriteApod = Bundle(1).apply { putSerializable(ARG_APOD, favoriteApod) }
+        navController.navigate(R.id.action_apod_favorites_to_apod_detail_screen, argFavoriteApod)
     }
 
-    fun toAPoDImageDetail(apodImage: ByteArray) {
-        val argAPoDImage = Bundle(1).apply { putByteArray(ARG_APOD_IMAGE, apodImage) }
-        navController.navigate(R.id.action_apod_detail_to_apod_image_detail_screen, argAPoDImage)
+    fun toApodImageDetail(apodImage: ByteArray) {
+        val argApodImage = Bundle(1).apply { putByteArray(ARG_APOD_IMAGE, apodImage) }
+        navController.navigate(R.id.action_apod_detail_to_apod_image_detail_screen, argApodImage)
     }
 
     fun navigateUp() {
