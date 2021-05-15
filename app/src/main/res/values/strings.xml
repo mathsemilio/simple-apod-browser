@@ -37,8 +37,8 @@
     <string name="message_something_went_wrong">Something went wrong…</string>
 
     <!-- Dialog messages -->
-    <string name="dialog_message_grant_external_storage_permission">In order to download APoD images, we need access to the device\'s external storage.</string>
-    <string name="dialog_message_enable_permission_manually">To use this feature, you need to provide the permission to access the external storage in the app\'s info section on your device\'s settings</string>
+    <string name="dialog_message_grant_external_storage_permission">In order to export images, we need access to the device\'s external storage.</string>
+    <string name="dialog_message_enable_permission_manually">To enable this feature, turn on the access to external storage in the app info on your device\'s settings.</string>
 
     <!-- Dialog title -->
     <string name="dialog_title_grant_permission">Grant permission</string>

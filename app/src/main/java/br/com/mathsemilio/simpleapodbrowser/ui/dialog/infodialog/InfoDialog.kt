@@ -15,11 +15,11 @@ limitations under the License.
  */
 package br.com.mathsemilio.simpleapodbrowser.ui.dialog.infodialog
 
+import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_DIALOG_MESSAGE
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_DIALOG_POSITIVE_BUTTON_TEXT
@@ -42,35 +42,44 @@ class InfoDialog : BaseDialogFragment() {
         }
     }
 
-    private val title get() = requireArguments().getString(ARG_DIALOG_TITLE, "")
+    private val title
+        get() = requireArguments().getString(ARG_DIALOG_TITLE, "")
 
-    private val message get() = requireArguments().getString(ARG_DIALOG_MESSAGE, "")
+    private val message
+        get() = requireArguments().getString(ARG_DIALOG_MESSAGE, "")
 
     private val positiveButtonText
         get() = requireArguments().getString(ARG_DIALOG_POSITIVE_BUTTON_TEXT, "")
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.layout_dialog_info, container, false)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return activity?.let { activity ->
+            val dialogBuilder = AlertDialog.Builder(activity)
+            val layoutInflater = requireActivity().layoutInflater
+
+            val dialogView = layoutInflater.inflate(R.layout.layout_dialog_info, null)
+            dialogBuilder.setView(dialogView)
+
+            setupDialogViews(dialogView)
+
+            dialogBuilder.create()
+        } ?: throw IllegalStateException("Activity cannot be null")
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun setupDialogViews(dialogView: View?) {
+        dialogView?.let { view ->
+            val titleTextView =
+                view.findViewById<TextView>(R.id.text_view_info_dialog_title)
+            val messageTextView =
+                view.findViewById<TextView>(R.id.text_view_info_dialog_message)
+            val positiveButton =
+                view.findViewById<MaterialButton>(R.id.button_info_dialog_positive)
 
-        val titleTextView = view.findViewById<TextView>(R.id.text_view_info_dialog_title)
-        val messageTextView = view.findViewById<TextView>(R.id.text_view_info_dialog_message)
-        val positiveButton = view.findViewById<MaterialButton>(R.id.button_info_dialog_positive)
-
-        titleTextView.text = title
-
-        messageTextView.text = message
-
-        positiveButton.apply {
-            text = positiveButtonText
-            setOnClickListener { dismiss() }
+            titleTextView.text = title
+            messageTextView.text = message
+            positiveButton.apply {
+                text = positiveButtonText
+                setOnClickListener { dismiss() }
+            }
         }
     }
 }
