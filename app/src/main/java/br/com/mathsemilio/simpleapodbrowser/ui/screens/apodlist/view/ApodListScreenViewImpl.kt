@@ -102,14 +102,11 @@ class ApodListScreenViewImpl(
         swipeRefreshLayoutApods.isRefreshing = false
     }
 
-    override fun showNetworkRequestErrorState(errorMessage: String) {
+    override fun showNetworkRequestErrorState() {
         recyclerViewApods.isVisible = false
         imageViewNetworkRequestError.isVisible = true
         textViewSomethingWentWrong.isVisible = true
-        textViewNetworkRequestErrorMessage.apply {
-            isVisible = true
-            text = errorMessage
-        }
+        textViewNetworkRequestErrorMessage.isVisible = true
     }
 
     override fun hideNetworkRequestErrorState() {

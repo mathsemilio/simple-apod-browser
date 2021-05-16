@@ -12,7 +12,7 @@ class FetchRandomApodUseCase(private val endpoint: ApodEndpoint) :
     interface Listener {
         fun onFetchRandomApodCompleted(randomApod: Apod)
 
-        fun onFetchRandomApodFailed(errorMessage: String)
+        fun onFetchRandomApodFailed()
     }
 
     suspend fun getRandomAPoD() {
@@ -22,7 +22,7 @@ class FetchRandomApodUseCase(private val endpoint: ApodEndpoint) :
                     listener.onFetchRandomApodCompleted(result.data?.toApodList()?.first()!!)
                 }
                 is Result.Failed -> listeners.forEach { listener ->
-                    listener.onFetchRandomApodFailed(result.error!!)
+                    listener.onFetchRandomApodFailed()
                 }
             }
         }

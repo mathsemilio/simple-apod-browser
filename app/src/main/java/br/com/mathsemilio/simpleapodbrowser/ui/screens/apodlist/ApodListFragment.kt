@@ -101,26 +101,26 @@ class ApodListFragment : BaseFragment(),
         view.bindApods(apods)
     }
 
-    override fun onFetchApodFailed(errorMessage: String) {
+    override fun onFetchApodsFailed() {
         view.hideProgressIndicator()
         view.onRefreshCompleted()
-        view.showNetworkRequestErrorState(errorMessage)
+        view.showNetworkRequestErrorState()
     }
 
     override fun onFetchRandomApodCompleted(randomApod: Apod) {
         screensNavigator.toApodDetailsScreen(randomApod)
     }
 
-    override fun onFetchRandomApodFailed(errorMessage: String) {
-        messagesManager.showUseCaseErrorMessage(errorMessage)
+    override fun onFetchRandomApodFailed() {
+        messagesManager.showCheckYourConnectionMessage()
     }
 
     override fun onFetchApodBasedOnDateCompleted(apod: Apod) {
         screensNavigator.toApodDetailsScreen(apod)
     }
 
-    override fun onFetchApodBasedOnDateFailed(errorMessage: String) {
-        messagesManager.showUseCaseErrorMessage(errorMessage)
+    override fun onFetchApodBasedOnDateFailed() {
+        messagesManager.showCheckYourConnectionMessage()
     }
 
     override fun onEvent(event: Any) {

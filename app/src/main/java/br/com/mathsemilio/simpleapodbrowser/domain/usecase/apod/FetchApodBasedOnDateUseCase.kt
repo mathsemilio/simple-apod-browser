@@ -13,7 +13,7 @@ class FetchApodBasedOnDateUseCase(private val endpoint: ApodEndpoint) :
     interface Listener {
         fun onFetchApodBasedOnDateCompleted(apod: Apod)
 
-        fun onFetchApodBasedOnDateFailed(errorMessage: String)
+        fun onFetchApodBasedOnDateFailed()
     }
 
     suspend fun getApodBasedOnDate(dateInMillis: Long) {
@@ -23,7 +23,7 @@ class FetchApodBasedOnDateUseCase(private val endpoint: ApodEndpoint) :
                     listener.onFetchApodBasedOnDateCompleted(result.data?.toApod()!!)
                 }
                 is Result.Failed -> listeners.forEach { listener ->
-                    listener.onFetchApodBasedOnDateFailed(result.error!!)
+                    listener.onFetchApodBasedOnDateFailed()
                 }
             }
         }

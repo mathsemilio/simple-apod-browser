@@ -34,7 +34,7 @@ abstract class ApodListScreenView : BaseObservableView<ApodListScreenView.Listen
 
     abstract fun onRefreshCompleted()
 
-    abstract fun showNetworkRequestErrorState(errorMessage: String)
+    abstract fun showNetworkRequestErrorState()
 
     abstract fun hideNetworkRequestErrorState()
 }

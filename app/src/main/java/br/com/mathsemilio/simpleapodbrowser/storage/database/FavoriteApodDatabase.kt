@@ -23,7 +23,7 @@ import br.com.mathsemilio.simpleapodbrowser.common.FAVORITE_APOD_DATABASE
 import br.com.mathsemilio.simpleapodbrowser.data.dao.FavoriteApodDao
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
-@Database(entities = [Apod::class], version = 1)
+@Database(entities = [Apod::class], version = 1, exportSchema = false)
 abstract class FavoriteApodDatabase : RoomDatabase() {
 
     abstract val favoriteApodDao: FavoriteApodDao

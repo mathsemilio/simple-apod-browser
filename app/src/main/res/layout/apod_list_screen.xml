@@ -19,21 +19,21 @@
         android:id="@+id/image_view_network_request_error"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_marginBottom="56dp"
         android:contentDescription="@string/content_description_network_request_error"
         android:src="@drawable/ic_undraw_server_down_s4lk"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.16" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_view_something_went_wrong"
         style="?textAppearanceHeadline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/message_something_went_wrong"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,11 +48,12 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:textAlignment="center"
+        android:textSize="16sp"
+        android:text="@string/message_check_your_connection_and_try_again"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_something_went_wrong"
-        tools:text="Unable to resolve host api.nasa.gov: No address associated with hostname" />
+        app:layout_constraintTop_toBottomOf="@+id/text_view_something_went_wrong" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout_apods"

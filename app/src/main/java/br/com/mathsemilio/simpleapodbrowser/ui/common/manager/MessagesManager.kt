@@ -16,16 +16,14 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 
 import android.content.Context
-import android.view.View
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.util.showLongToast
 import br.com.mathsemilio.simpleapodbrowser.common.util.showShortToast
-import br.com.mathsemilio.simpleapodbrowser.common.util.showSnackBarWithAction
 
 class MessagesManager(private val context: Context) {
 
-    fun showUseCaseErrorMessage(errorMessage: String) {
-        context.showLongToast(errorMessage)
+    fun showCheckYourConnectionMessage() {
+        context.showLongToast(context.getString(R.string.message_check_your_connection_and_try_again))
     }
 
     fun showUnexpectedErrorOccurredMessage() {

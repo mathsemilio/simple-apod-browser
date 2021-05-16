@@ -28,7 +28,7 @@ class FetchApodsUseCase(private val endpoint: ApodEndpoint) :
     interface Listener {
         fun onFetchApodsCompleted(apods: List<Apod>)
 
-        fun onFetchApodFailed(errorMessage: String)
+        fun onFetchApodsFailed()
     }
 
     suspend fun fetchAPoDBasedOnDateRange() {
@@ -38,7 +38,7 @@ class FetchApodsUseCase(private val endpoint: ApodEndpoint) :
                     listener.onFetchApodsCompleted(result.data?.toApodList()!!)
                 }
                 is Result.Failed -> listeners.forEach { listener ->
-                    listener.onFetchApodFailed(result.error!!)
+                    listener.onFetchApodsFailed()
                 }
             }
         }
