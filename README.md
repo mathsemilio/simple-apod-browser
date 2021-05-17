@@ -21,7 +21,7 @@ This application makes use of the APoD API, which is part of the open APIs provi
 For more info, please refer to this <a href="https://api.nasa.gov/">link.</a>
 
 ## Points to be fixed
-1. Display of images on the image detail screen;
+1. Display of images on the image detail screen.
 
 ## Build instructions
 Before building the project, you either need to provide your API key or use the "DEMO_KEY".
