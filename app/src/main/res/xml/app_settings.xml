@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <PreferenceCategory app:title="@string/preference_category_title_app_options">
+
+        <ListPreference
+            app:dialogTitle="@string/dialog_title_default_date_range"
+            app:entries="@array/default_date_range_preference_entries"
+            app:entryValues="@array/default_date_range_preference_entry_values"
+            app:icon="@drawable/ic_baseline_date_range_24"
+            app:key="DEFAULT_DATE_RANGE_PREFERENCE"
+            app:title="@string/preference_title_default_date_range"
+            tools:summary="Last seven days" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/preference_category_title_advanced">
+
+        <Preference
+            app:icon="@drawable/ic_baseline_cleaning_services_24"
+            app:key="CLEAR_IMAGE_CACHE_PREFERENCE"
+            app:summary="@string/preference_summary_clear_image_cache"
+            app:title="@string/preference_title_clear_image_cache" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/preference_category_title_app_info">
+
+        <Preference
+            app:icon="@drawable/ic_baseline_info_24"
+            app:key="APP_VERSION_PREFERENCE"
+            app:title="@string/preference_title_app_version"
+            tools:summary="stable-0.1" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

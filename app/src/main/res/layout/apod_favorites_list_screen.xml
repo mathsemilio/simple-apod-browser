@@ -15,45 +15,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/image_view_no_favorite_apods_found_illustration"
-        android:layout_width="162dp"
-        android:layout_height="162dp"
+    <LinearLayout
+        android:id="@+id/linear_layout_screen_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="56dp"
-        android:contentDescription="@string/content_description_no_favorite_apods_found_illustration"
-        android:src="@drawable/ic_undraw_counting_stars_rrnl"
+        android:gravity="center"
+        android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/text_view_no_favorite_apod_found"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/message_nothing_found"
-        android:textAppearance="?textAppearanceHeadline6"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_view_no_favorite_apods_found_illustration" />
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:contentDescription="@string/content_description_no_favorite_apods_found_illustration"
+            android:src="@drawable/ic_undraw_counting_stars_rrnl" />
 
-    <TextView
-        android:id="@+id/text_view_click_on_the_add_to_favorites_icon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/message_click_on_add_to_favorites"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_no_favorite_apod_found" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/message_nothing_found"
+            android:textAppearance="?textAppearanceHeadline6" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/message_click_on_add_to_favorites"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_apod_favorites"

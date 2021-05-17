@@ -58,10 +58,10 @@ class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListene
     private fun checkDateSet(dateSetInMillis: Long) {
         when {
             dateSetInMillis > System.currentTimeMillis() ->
-                eventPublisher.publishEvent(DateSetEvent.InvalidDateSet)
+                eventPublisher.publish(DateSetEvent.InvalidDateSet)
             dateSetInMillis < FIRST_APOD_DATE_IN_MILLIS ->
-                eventPublisher.publishEvent(DateSetEvent.InvalidDateSet)
-            else -> eventPublisher.publishEvent(DateSetEvent.DateSet(dateSetInMillis))
+                eventPublisher.publish(DateSetEvent.InvalidDateSet)
+            else -> eventPublisher.publish(DateSetEvent.DateSet(dateSetInMillis))
         }
     }
 }

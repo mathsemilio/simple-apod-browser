@@ -158,6 +158,16 @@ class ApodFavoritesFragment : BaseFragment(),
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.toolbar_action_settings -> {
+                screensNavigator.toSettingsScreen()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onStart() {
         view.addListener(this)
         fetchFavoriteApodUseCase.addListener(this)

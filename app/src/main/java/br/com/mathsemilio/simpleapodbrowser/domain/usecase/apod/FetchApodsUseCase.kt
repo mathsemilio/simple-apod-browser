@@ -15,7 +15,7 @@ limitations under the License.
  */
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod
 
-import br.com.mathsemilio.simpleapodbrowser.common.util.getLastSevenDays
+import br.com.mathsemilio.simpleapodbrowser.common.util.getDaysInRange
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
 import br.com.mathsemilio.simpleapodbrowser.common.util.toApodList
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
@@ -31,8 +31,8 @@ class FetchApodsUseCase(private val endpoint: ApodEndpoint) :
         fun onFetchApodsFailed()
     }
 
-    suspend fun fetchAPoDBasedOnDateRange() {
-        endpoint.getApodsBasedOnDateRange(getLastSevenDays()).also { result ->
+    suspend fun fetchAPoDBasedOnDateRange(dayRange: Int) {
+        endpoint.getApodsBasedOnDateRange(getDaysInRange(dayRange)).also { result ->
             when (result) {
                 is Result.Completed -> listeners.forEach { listener ->
                     listener.onFetchApodsCompleted(result.data?.toApodList()!!)

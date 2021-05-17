@@ -45,4 +45,8 @@ class MessagesManager(private val context: Context) {
     fun showApodImageExportedSuccessfully() {
         context.showShortToast(context.getString(R.string.message_apod_image_exported_successfully))
     }
+
+    fun showImageCacheClearedSuccessfully() {
+        context.showShortToast(context.getString(R.string.message_cached_images_removed_successfully))
+    }
 }

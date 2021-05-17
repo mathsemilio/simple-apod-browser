@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentManager
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.datepicker.DatePickerDialog
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.infodialog.InfoDialog
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialog
 
 class DialogManager(private val fragmentManager: FragmentManager, private val context: Context) {
 
@@ -44,5 +45,16 @@ class DialogManager(private val fragmentManager: FragmentManager, private val co
             context.getString(R.string.dialog_button_text_ok)
         )
         infoDialog.show(fragmentManager, null)
+    }
+
+    fun showClearImageCacheDialog() {
+        val promptDialog = PromptDialog.newInstance(
+            context.getString(R.string.dialog_title_clear_image_cache),
+            context.getString(R.string.dialog_message_clear_image_cache),
+            context.getString(R.string.dialog_button_text_ok),
+            context.getString(R.string.dialog_button_text_cancel),
+            isCancelable = true
+        )
+        promptDialog.show(fragmentManager, null)
     }
 }

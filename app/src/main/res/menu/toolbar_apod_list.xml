@@ -13,4 +13,10 @@
         android:title="@string/toolbar_action_title_get_random_apod"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/toolbar_action_settings"
+        android:orderInCategory="3"
+        android:title="@string/settings"
+        app:showAsAction="never" />
+
 </menu>

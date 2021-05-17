@@ -17,9 +17,8 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -35,9 +34,7 @@ class ApodFavoritesScreenViewImpl(
 ) : ApodFavoritesScreenView(), ApodFavoritesListAdapter.Listener {
 
     private lateinit var progressBarApodFavorites: ProgressBar
-    private lateinit var imageViewNoFavoriteApodFound: ImageView
-    private lateinit var textViewNoFavoriteApodFound: TextView
-    private lateinit var textViewClickOnTheAddToFavoritesIcon: TextView
+    private lateinit var linearLayoutScreenEmptyState: LinearLayout
     private lateinit var recyclerViewApodFavorites: RecyclerView
 
     private lateinit var apodFavoritesListAdapter: ApodFavoritesListAdapter
@@ -51,16 +48,9 @@ class ApodFavoritesScreenViewImpl(
     }
 
     private fun initializeViews() {
-        progressBarApodFavorites =
-            findViewById(R.id.progress_bar_apod_favorites)
-        imageViewNoFavoriteApodFound =
-            findViewById(R.id.image_view_no_favorite_apods_found_illustration)
-        textViewNoFavoriteApodFound =
-            findViewById(R.id.text_view_no_favorite_apod_found)
-        textViewClickOnTheAddToFavoritesIcon =
-            findViewById(R.id.text_view_click_on_the_add_to_favorites_icon)
-        recyclerViewApodFavorites =
-            findViewById(R.id.recycler_view_apod_favorites)
+        progressBarApodFavorites = findViewById(R.id.progress_bar_apod_favorites)
+        linearLayoutScreenEmptyState = findViewById(R.id.linear_layout_screen_empty_state)
+        recyclerViewApodFavorites = findViewById(R.id.recycler_view_apod_favorites)
     }
 
     private fun setupRecyclerView() {
@@ -103,23 +93,19 @@ class ApodFavoritesScreenViewImpl(
     override fun bindFavoriteApods(favoriteApods: List<Apod>) {
         apodFavoritesListAdapter.submitList(favoriteApods)
         if (favoriteApods.isEmpty())
-            showEmptyFavoriteApodsScreenState()
+            showScreenEmptyState()
         else
-            showFavoriteApodsScreenState()
+            hideScreenEmptyState()
     }
 
-    private fun showEmptyFavoriteApodsScreenState() {
-        imageViewNoFavoriteApodFound.isVisible = true
-        textViewNoFavoriteApodFound.isVisible = true
-        textViewClickOnTheAddToFavoritesIcon.isVisible = true
+    private fun showScreenEmptyState() {
         recyclerViewApodFavorites.isVisible = false
+        linearLayoutScreenEmptyState.isVisible = true
     }
 
-    private fun showFavoriteApodsScreenState() {
-        imageViewNoFavoriteApodFound.isVisible = false
-        textViewNoFavoriteApodFound.isVisible = false
-        textViewClickOnTheAddToFavoritesIcon.isVisible = false
+    private fun hideScreenEmptyState() {
         recyclerViewApodFavorites.isVisible = true
+        linearLayoutScreenEmptyState.isVisible = false
     }
 
     override fun showProgressIndicator() {

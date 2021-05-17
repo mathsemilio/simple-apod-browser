@@ -39,6 +39,10 @@ class ScreensNavigator(private val navController: NavController) {
         navController.navigate(R.id.action_apod_detail_to_apod_image_detail_screen, argApodImage)
     }
 
+    fun toSettingsScreen() {
+        navController.navigate(R.id.action_global_settings)
+    }
+
     fun navigateUp() {
         navController.navigateUp()
     }

@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/toolbar_action_search_favorites"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="@string/toolbar_action_title_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always|collapseActionView" />
+        app:showAsAction="always|collapseActionView"
+        tools:ignore="AlwaysShowAction" />
+
+    <item
+        android:id="@+id/toolbar_action_settings"
+        android:orderInCategory="3"
+        android:title="@string/settings"
+        app:showAsAction="never" />
 
 </menu>

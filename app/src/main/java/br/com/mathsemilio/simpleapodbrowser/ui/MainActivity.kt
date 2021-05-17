@@ -43,8 +43,8 @@ class MainActivity : BaseActivity(),
 
     private lateinit var navController: NavController
 
-    private lateinit var tapGestureHelper: TapGestureHelper
     private lateinit var permissionsHelper: PermissionsHelper
+    private lateinit var tapGestureHelper: TapGestureHelper
 
     private lateinit var gestureDetector: GestureDetectorCompat
 
@@ -53,8 +53,8 @@ class MainActivity : BaseActivity(),
 
         view = compositionRoot.viewFactory.getMainActivityView(null)
 
-        tapGestureHelper = compositionRoot.tapGestureHelper
         permissionsHelper = compositionRoot.permissionsHelper
+        tapGestureHelper = compositionRoot.tapGestureHelper
 
         setContentView(view.rootView)
 
@@ -97,6 +97,8 @@ class MainActivity : BaseActivity(),
                 }
                 R.id.ApodImageDetailScreen ->
                     view.hideToolbar()
+                R.id.SettingsScreen ->
+                    view.hideBottomNavigationView()
                 else -> {
                     view.showToolbar()
                     view.showBottomNavigationView()

@@ -18,8 +18,10 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 import android.os.Bundle
 import android.view.*
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.*
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
+import br.com.mathsemilio.simpleapodbrowser.data.manager.PreferencesManager
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodBasedOnDateUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodsUseCase
@@ -43,6 +45,7 @@ class ApodListFragment : BaseFragment(),
 
     private lateinit var view: ApodListScreenView
 
+    private lateinit var preferencesManager: PreferencesManager
     private lateinit var screensNavigator: ScreensNavigator
     private lateinit var messagesManager: MessagesManager
     private lateinit var coroutineScope: CoroutineScope
@@ -57,6 +60,7 @@ class ApodListFragment : BaseFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        preferencesManager = compositionRoot.preferencesManager
         screensNavigator = compositionRoot.screensNavigator
         messagesManager = compositionRoot.messagesManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
@@ -90,7 +94,17 @@ class ApodListFragment : BaseFragment(),
     private fun fetchApods() {
         coroutineScope.launch {
             view.showProgressIndicator()
-            fetchApodsUseCase.fetchAPoDBasedOnDateRange()
+            fetchApodsUseCase.fetchAPoDBasedOnDateRange(getDefaultDateRange())
+        }
+    }
+
+    private fun getDefaultDateRange(): Int {
+        return when (preferencesManager.defaultDateRange) {
+            DEFAULT_DATE_RANGE_LAST_SEVEN_DAYS -> 6
+            DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS -> 13
+            DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS -> 20
+            DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS -> 29
+            else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DATE_RANGE)
         }
     }
 
@@ -151,6 +165,10 @@ class ApodListFragment : BaseFragment(),
             }
             R.id.toolbar_action_get_random_apod -> {
                 getRandomApod()
+                true
+            }
+            R.id.toolbar_action_settings -> {
+                screensNavigator.toSettingsScreen()
                 true
             }
             else -> super.onOptionsItemSelected(item)

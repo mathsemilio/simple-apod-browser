@@ -49,4 +49,13 @@
         android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.ApodImageDetailFragment"
         tools:layout="@layout/apod_image_detail_screen" />
 
+    <fragment
+        android:id="@+id/SettingsScreen"
+        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.settings.SettingsFragment"
+        android:label="@string/settings" />
+
+    <action
+        android:id="@+id/action_global_settings"
+        app:destination="@id/SettingsScreen" />
+
 </navigation>

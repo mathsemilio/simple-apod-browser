@@ -17,9 +17,8 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -35,9 +34,7 @@ class ApodListScreenViewImpl(
 ) : ApodListScreenView(), ApodListAdapter.Listener {
 
     private lateinit var progressBarApods: ProgressBar
-    private lateinit var imageViewNetworkRequestError: ImageView
-    private lateinit var textViewSomethingWentWrong: TextView
-    private lateinit var textViewNetworkRequestErrorMessage: TextView
+    private lateinit var linearLayoutScreenErrorState: LinearLayout
     private lateinit var swipeRefreshLayoutApods: SwipeRefreshLayout
     private lateinit var recyclerViewApods: RecyclerView
 
@@ -51,18 +48,10 @@ class ApodListScreenViewImpl(
     }
 
     private fun initializeViews() {
-        progressBarApods =
-            findViewById(R.id.progress_bar_apods)
-        imageViewNetworkRequestError =
-            findViewById(R.id.image_view_network_request_error)
-        textViewSomethingWentWrong =
-            findViewById(R.id.text_view_something_went_wrong)
-        textViewNetworkRequestErrorMessage =
-            findViewById(R.id.text_view_network_error_message)
-        swipeRefreshLayoutApods =
-            findViewById(R.id.swipe_refresh_layout_apods)
-        recyclerViewApods =
-            findViewById(R.id.recycler_view_apods)
+        progressBarApods = findViewById(R.id.progress_bar_apods)
+        linearLayoutScreenErrorState = findViewById(R.id.linear_layout_screen_error_state)
+        swipeRefreshLayoutApods = findViewById(R.id.swipe_refresh_layout_apods)
+        recyclerViewApods = findViewById(R.id.recycler_view_apods)
     }
 
     private fun setupRecyclerView() {
@@ -70,7 +59,6 @@ class ApodListScreenViewImpl(
         recyclerViewApods.apply {
             adapter = apodListScreenListAdapter
             setHasFixedSize(true)
-            setItemViewCacheSize(7)
         }
     }
 
@@ -88,8 +76,7 @@ class ApodListScreenViewImpl(
 
     override fun showProgressIndicator() {
         progressBarApods.isVisible = true
-        imageViewNetworkRequestError.isVisible = false
-        textViewSomethingWentWrong.isVisible = false
+        linearLayoutScreenErrorState.isVisible = false
         swipeRefreshLayoutApods.isVisible = false
     }
 
@@ -104,16 +91,12 @@ class ApodListScreenViewImpl(
 
     override fun showNetworkRequestErrorState() {
         recyclerViewApods.isVisible = false
-        imageViewNetworkRequestError.isVisible = true
-        textViewSomethingWentWrong.isVisible = true
-        textViewNetworkRequestErrorMessage.isVisible = true
+        linearLayoutScreenErrorState.isVisible = true
     }
 
     override fun hideNetworkRequestErrorState() {
         recyclerViewApods.isVisible = true
-        imageViewNetworkRequestError.isVisible = false
-        textViewSomethingWentWrong.isVisible = false
-        textViewNetworkRequestErrorMessage.isVisible = false
+        linearLayoutScreenErrorState.isVisible = false
     }
 
     override fun onApodClicked(apod: Apod) {

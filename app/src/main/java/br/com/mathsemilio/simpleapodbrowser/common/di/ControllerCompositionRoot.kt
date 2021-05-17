@@ -43,6 +43,8 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
 
     val permissionsHelper get() = activityCompositionRoot.permissionsHelper
 
+    val preferencesManager get() = activityCompositionRoot.preferencesManager
+
     val viewFactory get() = activityCompositionRoot.viewFactory
 
     val fetchApodUseCase get() = activityCompositionRoot.fetchApodUseCase

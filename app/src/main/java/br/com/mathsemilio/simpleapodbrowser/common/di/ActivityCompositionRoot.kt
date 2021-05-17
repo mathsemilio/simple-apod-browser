@@ -18,6 +18,7 @@ package br.com.mathsemilio.simpleapodbrowser.common.di
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
+import br.com.mathsemilio.simpleapodbrowser.data.manager.PreferencesManager
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodBasedOnDateUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodsUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase
@@ -27,6 +28,7 @@ import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFav
 import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.ApodEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteApodDatabase
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
+import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesEndpoint
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ApodImageExporter
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
@@ -105,6 +107,10 @@ class ActivityCompositionRoot(
         PermissionsHelper(activity)
     }
 
+    private val _preferencesManager by lazy {
+        PreferencesManager(PreferencesEndpoint(activity))
+    }
+
     private val _viewFactory by lazy {
         ViewFactory(activity.layoutInflater)
     }
@@ -136,6 +142,8 @@ class ActivityCompositionRoot(
     val tapGestureHelper get() = _tapGestureHelper
 
     val permissionsHelper get() = _permissionsHelper
+
+    val preferencesManager get() = _preferencesManager
 
     val viewFactory get() = _viewFactory
 

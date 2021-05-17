@@ -12,8 +12,8 @@ android {
         applicationId "br.com.mathsemilio.simpleapodbrowser"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 4
-        versionName "stable-0.4"
+        versionCode 5
+        versionName "stable-0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    def preference_version = "1.1.1"
     def room_version = "2.3.0"
     def retrofit_version = "2.9.0"
     def glide_version = "4.12.0"
@@ -53,6 +54,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation "androidx.preference:preference-ktx:$preference_version"
 
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"

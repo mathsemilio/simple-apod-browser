@@ -20,13 +20,8 @@ features, like "Pick APoD by Date" and "Get Random APoD".
 This application makes use of the APoD API, which is part of the open APIs provided by NASA.
 For more info, please refer to this <a href="https://api.nasa.gov/">link.</a>
 
-## Functionalities to be added
-1. Settings screen;
-2. Ability to download pictures.
-
 ## Points to be fixed
-1. Display of images on the detail screen;
-2. Undo operation on excluded favorite APoDs.
+1. Display of images on the image detail screen;
 
 ## Build instructions
 Before building the project, you either need to provide your API key or use the "DEMO_KEY".
@@ -34,14 +29,15 @@ Open the APoDEndpoint.kt file and replace all occurrences of ```apiKeyProvider.g
 
 **Note:** You can generate a API key at the <a href="https://api.nasa.gov/">NASA Open APIs website.</a>
 
-## External Libraries used
+## External Libraries used 
 1. Room;
 2. Retrofit;
 3. Glide;
 4. Kotlin Coroutines for Android;
 5. Swipe-Refresh Layout;
 6. PhotoView;
-7. Jetpack Navigation Component.
+7. Jetpack Navigation Component;
+8. Preferences (PreferenceX)
 
 *For more info on the libraries used, refer to these links:*
 <p><a href="https://developer.android.com/training/data-storage/room/">Room</a></p>
@@ -51,6 +47,7 @@ Open the APoDEndpoint.kt file and replace all occurrences of ```apiKeyProvider.g
 <p><a href="https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout">Swipe-Refresh Layout</a></p>
 <p><a href="https://github.com/Baseflow/PhotoView">PhotoView</a></p>
 <p><a href="https://developer.android.com/guide/navigation/navigation-getting-started">Jetpack Navigation Component</a></p>
+<p><a href="https://developer.android.com/jetpack/androidx/releases/preference/">Preferences (PreferenceX)</a></p>
 
 ## License
 ```
