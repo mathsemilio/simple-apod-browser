@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.common
 
 const val BASE_URL = "https://api.nasa.gov/planetary/"
@@ -20,10 +21,13 @@ const val BASE_URL = "https://api.nasa.gov/planetary/"
 const val FAVORITE_APOD_TABLE = "favorite_apod_table"
 const val FAVORITE_APOD_DATABASE = "favorite_apod_database"
 
+const val CACHED_APOD_TABLE = "CACHED_APOD_TABLE"
+
 const val ARG_APOD = "ARG_APOD"
 const val ARG_APOD_IMAGE = "ARG_APOD_IMAGE"
 const val OUT_STATE_APOD = "OUT_STATE_APOD"
 const val OUT_STATE_APOD_IMAGE = "OUT_STATE_APOD_IMAGE"
+
 const val ARG_DIALOG_TITLE = "ARG_DIALOG_TITLE"
 const val ARG_DIALOG_MESSAGE = "ARG_DIALOG_MESSAGE"
 const val ARG_POSITIVE_BUTTON_TEXT = "ARG_DIALOG_POSITIVE_BUTTON_TEXT"

@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.common.util
 
 import android.annotation.SuppressLint
@@ -22,6 +23,8 @@ import android.net.Uri
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
+import br.com.mathsemilio.simpleapodbrowser.domain.model.CachedApod
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
@@ -75,4 +78,12 @@ inline fun SearchView.onQueryTextChangedListener(crossinline onQueryTextChanged:
             return true
         }
     })
+}
+
+fun CachedApod.toApod(): Apod {
+    return Apod(id, title, url, date, mediaType, explanation, thumbnailUrl, isFavorite)
+}
+
+fun Apod.toCachedApod(): CachedApod {
+    return CachedApod(id, title, url, date, mediaType, explanation, thumbnailUrl, isFavorite)
 }

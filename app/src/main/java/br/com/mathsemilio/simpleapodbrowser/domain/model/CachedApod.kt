@@ -17,13 +17,11 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.domain.model
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
-import br.com.mathsemilio.simpleapodbrowser.common.FAVORITE_APOD_TABLE
+import br.com.mathsemilio.simpleapodbrowser.common.CACHED_APOD_TABLE
 import java.io.Serializable
 
-@Entity(tableName = FAVORITE_APOD_TABLE)
-data class Apod(
-    @PrimaryKey(autoGenerate = true)
+@Entity(tableName = CACHED_APOD_TABLE)
+data class CachedApod(
     val id: Int = 0,
     val title: String,
     val url: String,
