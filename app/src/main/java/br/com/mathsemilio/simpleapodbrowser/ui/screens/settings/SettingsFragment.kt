@@ -1,3 +1,19 @@
+/*
+Copyright 2021 Matheus Menezes
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.settings
 
 import android.os.Bundle
@@ -51,7 +67,7 @@ class SettingsFragment : BasePreferenceFragment(), EventListener {
                 DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS -> getString(R.string.last_fourteen_days)
                 DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS -> getString(R.string.last_twenty_one_days)
                 DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS -> getString(R.string.last_thirty_days)
-                else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DATE_RANGE)
+                else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION)
             }
         }
     }
@@ -65,10 +81,10 @@ class SettingsFragment : BasePreferenceFragment(), EventListener {
     private fun handleClearImageCachePromptDialogEvent(event: PromptDialogEvent) {
         when (event) {
             PromptDialogEvent.PositiveButtonClicked -> coroutineScope.launch {
-                GlideProvider.clearLocalCachedImages(requireContext())
+                GlideProvider.clearLocallyCachedImages(requireContext())
                 messagesManager.showImageCacheClearedSuccessfully()
             }
-            PromptDialogEvent.NegativeButtonClicked -> { /* no-op */ }
+            PromptDialogEvent.NegativeButtonClicked -> { /* no-op -> No action required */ }
         }
     }
 

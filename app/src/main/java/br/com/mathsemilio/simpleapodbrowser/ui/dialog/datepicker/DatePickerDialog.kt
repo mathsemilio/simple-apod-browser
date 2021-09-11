@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.dialog.datepicker
 
 import android.app.DatePickerDialog
@@ -34,7 +35,7 @@ class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListene
             set(Calendar.DAY_OF_MONTH, dayOfMonth)
         }
 
-        checkDateSet(dateSet.timeInMillis)
+        eventPublisher.publish(DateSetEvent.DateSet(dateSet.timeInMillis))
     }
 
     private lateinit var calendar: Calendar
@@ -52,16 +53,11 @@ class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListene
         val month = calendar.get(Calendar.MONTH)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
-        return DatePickerDialog(requireContext(), this, year, month, dayOfMonth)
-    }
-
-    private fun checkDateSet(dateSetInMillis: Long) {
-        when {
-            dateSetInMillis > System.currentTimeMillis() ->
-                eventPublisher.publish(DateSetEvent.InvalidDateSet)
-            dateSetInMillis < FIRST_APOD_DATE_IN_MILLIS ->
-                eventPublisher.publish(DateSetEvent.InvalidDateSet)
-            else -> eventPublisher.publish(DateSetEvent.DateSet(dateSetInMillis))
+        return DatePickerDialog(requireContext(), this, year, month, dayOfMonth).apply {
+            datePicker.apply {
+                minDate = FIRST_APOD_DATE_IN_MILLIS
+                maxDate = System.currentTimeMillis()
+            }
         }
     }
 }

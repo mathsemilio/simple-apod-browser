@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 
 import android.content.Context
@@ -42,7 +43,7 @@ class MessagesManager(private val context: Context) {
         context.showShortToast(context.getString(R.string.message_apod_already_on_favorites))
     }
 
-    fun showApodImageExportedSuccessfully() {
+    fun showApodImageExportedSuccessfullyMessage() {
         context.showShortToast(context.getString(R.string.message_apod_image_exported_successfully))
     }
 

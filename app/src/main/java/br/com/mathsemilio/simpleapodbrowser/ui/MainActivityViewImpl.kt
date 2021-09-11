@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui
 
 import android.graphics.Color
@@ -24,8 +25,10 @@ import br.com.mathsemilio.simpleapodbrowser.R
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-@Suppress("DEPRECATION")
-class MainActivityViewImpl(inflater: LayoutInflater, parent: ViewGroup?) : MainActivityView() {
+class MainActivityViewImpl(
+    layoutInflater: LayoutInflater,
+    parent: ViewGroup?
+) : MainActivityView() {
 
     private var materialToolbarApp: MaterialToolbar
     private var fragmentContainerApp: FragmentContainerView
@@ -34,10 +37,11 @@ class MainActivityViewImpl(inflater: LayoutInflater, parent: ViewGroup?) : MainA
     private var previousStatusBarColor = 0
 
     init {
-        rootView = inflater.inflate(R.layout.activity_main, parent, false)
-        materialToolbarApp = findViewById(R.id.material_toolbar_app)
-        fragmentContainerApp = findViewById(R.id.fragment_container_view_app)
-        bottomNavigationViewApp = findViewById(R.id.bottom_navigation_view_app)
+        rootView = layoutInflater.inflate(R.layout.activity_main, parent, false)
+
+        materialToolbarApp = rootView.findViewById(R.id.material_toolbar_app)
+        fragmentContainerApp = rootView.findViewById(R.id.fragment_container_view_app)
+        bottomNavigationViewApp = rootView.findViewById(R.id.bottom_navigation_view_app)
     }
 
     override val appToolbar get() = materialToolbarApp
@@ -76,29 +80,27 @@ class MainActivityViewImpl(inflater: LayoutInflater, parent: ViewGroup?) : MainA
     }
 
     override fun hideSystemUI(window: Window) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
             rootView.doOnLayout { view ->
                 view.windowInsetsController?.hide(
                     WindowInsets.Type.statusBars() and WindowInsets.Type.navigationBars()
                 )
             }
-        } else {
+        else
             window.decorView.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_IMMERSIVE or
                         View.SYSTEM_UI_FLAG_FULLSCREEN or
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        }
     }
 
     override fun showSystemUI(window: Window) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
             rootView.doOnLayout { view ->
                 view.windowInsetsController?.show(
                     WindowInsets.Type.statusBars() and WindowInsets.Type.navigationBars()
                 )
             }
-        } else {
+        else
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        }
     }
 }

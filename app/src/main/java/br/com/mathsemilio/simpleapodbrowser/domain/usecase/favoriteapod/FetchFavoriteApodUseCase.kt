@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod
 
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
@@ -20,8 +21,9 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
 
-class FetchFavoriteApodUseCase(private val favoriteApodEndpoint: FavoriteApodEndpoint) :
-    BaseObservable<FetchFavoriteApodUseCase.Listener>() {
+class FetchFavoriteApodUseCase(
+    private val endpoint: FavoriteApodEndpoint
+) : BaseObservable<FetchFavoriteApodUseCase.Listener>() {
 
     interface Listener {
         fun onFetchFavoriteApodsCompleted(favoriteApods: List<Apod>)
@@ -32,10 +34,10 @@ class FetchFavoriteApodUseCase(private val favoriteApodEndpoint: FavoriteApodEnd
     }
 
     suspend fun getFavoriteApods() {
-        favoriteApodEndpoint.getFavoriteApods().also { result ->
+        endpoint.getFavoriteApods().also { result ->
             when (result) {
                 is Result.Completed -> listeners.forEach { listener ->
-                    listener.onFetchFavoriteApodsCompleted(result.data!!)
+                    listener.onFetchFavoriteApodsCompleted(favoriteApods = result.data!!)
                 }
                 is Result.Failed -> listeners.forEach { listener ->
                     listener.onFetchFavoriteApodFailed()
@@ -45,10 +47,10 @@ class FetchFavoriteApodUseCase(private val favoriteApodEndpoint: FavoriteApodEnd
     }
 
     suspend fun getFavoriteApodsBasedOnSearchQuery(searchQuery: String) {
-        favoriteApodEndpoint.getFavoriteApodsBasedOnSearchQuery(searchQuery).also { result ->
+        endpoint.getFavoriteApodsBasedOnSearchQuery(searchQuery).also { result ->
             when (result) {
                 is Result.Completed -> listeners.forEach { listener ->
-                    listener.onFetchFavoriteApodsBasedOnSearchQueryCompleted(result.data!!)
+                    listener.onFetchFavoriteApodsBasedOnSearchQueryCompleted(matchingApods = result.data!!)
                 }
                 is Result.Failed -> listeners.forEach { listener ->
                     listener.onFetchFavoriteApodFailed()

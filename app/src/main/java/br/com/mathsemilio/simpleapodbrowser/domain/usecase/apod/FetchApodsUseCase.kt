@@ -13,17 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod
 
-import br.com.mathsemilio.simpleapodbrowser.common.util.getDaysInRange
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
+import br.com.mathsemilio.simpleapodbrowser.common.util.getDaysInRange
 import br.com.mathsemilio.simpleapodbrowser.common.util.toApodList
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.ApodEndpoint
 
-class FetchApodsUseCase(private val endpoint: ApodEndpoint) :
-    BaseObservable<FetchApodsUseCase.Listener>() {
+class FetchApodsUseCase(
+    private val endpoint: ApodEndpoint
+) : BaseObservable<FetchApodsUseCase.Listener>() {
 
     interface Listener {
         fun onFetchApodsCompleted(apods: List<Apod>)
@@ -31,13 +33,13 @@ class FetchApodsUseCase(private val endpoint: ApodEndpoint) :
         fun onFetchApodsFailed()
     }
 
-    suspend fun fetchAPoDBasedOnDateRange(dayRange: Int) {
+    suspend fun fetchApodsBasedOnDateRange(dayRange: Int) {
         endpoint.getApodsBasedOnDateRange(getDaysInRange(dayRange)).also { result ->
             when (result) {
-                is Result.Completed -> listeners.forEach { listener ->
-                    listener.onFetchApodsCompleted(result.data?.toApodList()!!)
+                is Result.Completed -> notifyListener { listener ->
+                    listener.onFetchApodsCompleted(apods = result.data?.toApodList()!!)
                 }
-                is Result.Failed -> listeners.forEach { listener ->
+                is Result.Failed -> notifyListener { listener ->
                     listener.onFetchApodsFailed()
                 }
             }

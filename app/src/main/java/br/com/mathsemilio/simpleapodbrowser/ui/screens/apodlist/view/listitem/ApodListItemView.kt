@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem
 
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod

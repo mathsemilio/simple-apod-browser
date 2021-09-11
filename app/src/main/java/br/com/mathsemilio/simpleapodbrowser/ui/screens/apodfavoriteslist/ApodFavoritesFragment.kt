@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist
 
 import android.os.Bundle
@@ -29,14 +30,15 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SnackBarManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.ApodFavoritesScreenView
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.ApodFavoritesScreenViewImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
 class ApodFavoritesFragment : BaseFragment(),
     ApodFavoritesScreenView.Listener,
-    DeleteFavoriteApodUseCase.Listener,
-    FetchFavoriteApodUseCase.Listener {
+    FetchFavoriteApodUseCase.Listener,
+    DeleteFavoriteApodUseCase.Listener {
 
     private lateinit var view: ApodFavoritesScreenView
 
@@ -48,6 +50,10 @@ class ApodFavoritesFragment : BaseFragment(),
 
     private lateinit var fetchFavoriteApodUseCase: FetchFavoriteApodUseCase
     private lateinit var deleteFavoriteApodUseCase: DeleteFavoriteApodUseCase
+
+    private val favoriteApods = mutableListOf<Apod>()
+
+    private var isDataLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,26 +72,8 @@ class ApodFavoritesFragment : BaseFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        view = compositionRoot.viewFactory.getApodFavoritesScreenView(container)
+        view = ApodFavoritesScreenViewImpl(inflater, container)
         return view.rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        fetchFavoriteApods()
-    }
-
-    private fun fetchFavoriteApods() {
-        coroutineScope.launch {
-            view.showProgressIndicator()
-            fetchFavoriteApodUseCase.getFavoriteApods()
-        }
-    }
-
-    private fun revertFavoriteApodDeletion() {
-        coroutineScope.launch {
-            deleteFavoriteApodUseCase.revertFavoriteApodDeletion()
-        }
     }
 
     override fun onFavoriteApodClicked(favoriteApod: Apod) {
@@ -105,6 +93,16 @@ class ApodFavoritesFragment : BaseFragment(),
         }
     }
 
+    private fun fetchFavoriteApods() {
+        if (!isDataLoaded)
+            coroutineScope.launch {
+                view.showProgressIndicator()
+                fetchFavoriteApodUseCase.getFavoriteApods()
+            }
+        else
+            view.bindFavoriteApods(favoriteApods)
+    }
+
     override fun onDeleteFavoriteApodCompleted() {
         snackBarManager.showFavoriteApodDeletedSuccessfullySnackBar(
             hostLayoutHelper.getFragmentContainer(),
@@ -114,19 +112,20 @@ class ApodFavoritesFragment : BaseFragment(),
         )
     }
 
+    private fun revertFavoriteApodDeletion() {
+        coroutineScope.launch {
+            deleteFavoriteApodUseCase.revertFavoriteApodDeletion()
+        }
+    }
+
     override fun onRevertFavoriteApodDeletionCompleted() {
         fetchFavoriteApods()
     }
 
-    override fun onDeleteFavoriteApodFailed() {
-        messagesManager.showUnexpectedErrorOccurredMessage()
-    }
-
-    override fun onRevertFavoriteApodDeletionFailed() {
-        messagesManager.showUnexpectedErrorOccurredMessage()
-    }
-
     override fun onFetchFavoriteApodsCompleted(favoriteApods: List<Apod>) {
+        isDataLoaded = true
+        this.favoriteApods.addAll(favoriteApods)
+
         view.hideProgressIndicator()
         view.bindFavoriteApods(favoriteApods)
     }
@@ -138,6 +137,14 @@ class ApodFavoritesFragment : BaseFragment(),
 
     override fun onFetchFavoriteApodFailed() {
         view.hideProgressIndicator()
+        messagesManager.showUnexpectedErrorOccurredMessage()
+    }
+
+    override fun onDeleteFavoriteApodFailed() {
+        messagesManager.showUnexpectedErrorOccurredMessage()
+    }
+
+    override fun onRevertFavoriteApodDeletionFailed() {
         messagesManager.showUnexpectedErrorOccurredMessage()
     }
 
@@ -169,17 +176,18 @@ class ApodFavoritesFragment : BaseFragment(),
     }
 
     override fun onStart() {
+        super.onStart()
         view.addListener(this)
         fetchFavoriteApodUseCase.addListener(this)
         deleteFavoriteApodUseCase.addListener(this)
-        super.onStart()
+        fetchFavoriteApods()
     }
 
     override fun onStop() {
+        super.onStop()
         view.removeListener(this)
         fetchFavoriteApodUseCase.removeListener(this)
         deleteFavoriteApodUseCase.removeListener(this)
         coroutineScope.coroutineContext.cancelChildren()
-        super.onStop()
     }
 }

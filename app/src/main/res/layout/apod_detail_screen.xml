@@ -19,14 +19,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_example_apod" />
+            tools:src="@drawable/im_example_apod" />
 
         <ImageView
             android:id="@+id/image_view_play_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:contentDescription="@string/content_description_play_apod_video"
-            android:src="@drawable/ic_baseline_play_circle_24"
+            android:src="@drawable/ic_play_circle"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/image_view_apod_detail_image"
             app:layout_constraintEnd_toEndOf="@id/image_view_apod_detail_image"

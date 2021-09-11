@@ -13,21 +13,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
 
 import android.view.GestureDetector
 import android.view.MotionEvent
 import br.com.mathsemilio.simpleapodbrowser.common.observable.Observable
 
-class TapGestureHelper :
-    Observable<TapGestureHelper.Listener>,
+class TapGestureHelper : Observable<TapGestureHelper.Listener>,
     GestureDetector.SimpleOnGestureListener() {
 
     interface Listener {
         fun onScreenTapped()
     }
 
-    private val listeners = mutableSetOf<Listener>()
+    private val listeners = mutableSetOf<Listener>().toHashSet()
 
     override fun onDown(e: MotionEvent?): Boolean {
         return true

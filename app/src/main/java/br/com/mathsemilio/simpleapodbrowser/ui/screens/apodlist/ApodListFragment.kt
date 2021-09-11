@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 
 import android.os.Bundle
@@ -32,6 +33,7 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.ApodListScreenView
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.ApodListScreenViewImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
@@ -57,6 +59,10 @@ class ApodListFragment : BaseFragment(),
     private lateinit var fetchRandomApodUseCase: FetchRandomApodUseCase
     private lateinit var fetchApodBasedOnDateUseCase: FetchApodBasedOnDateUseCase
 
+    private val apods = mutableListOf<Apod>()
+
+    private var isDataLoaded = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -76,26 +82,26 @@ class ApodListFragment : BaseFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        view = compositionRoot.viewFactory.getApodListScreenView(container)
+        view = ApodListScreenViewImpl(inflater, container)
         return view.rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        fetchApods()
     }
 
     override fun onApodClicked(apod: Apod) {
         screensNavigator.toApodDetailsScreen(apod)
     }
 
-    override fun onScreenSwipedToRefresh() = fetchApods()
+    override fun onScreenSwipedToRefresh() {
+        fetchApods()
+    }
 
     private fun fetchApods() {
-        coroutineScope.launch {
-            view.showProgressIndicator()
-            fetchApodsUseCase.fetchAPoDBasedOnDateRange(getDefaultDateRange())
-        }
+        if (!isDataLoaded)
+            coroutineScope.launch {
+                view.showProgressIndicator()
+                fetchApodsUseCase.fetchApodsBasedOnDateRange(getDefaultDateRange())
+            }
+        else
+            view.bindApods(apods)
     }
 
     private fun getDefaultDateRange(): Int {
@@ -104,11 +110,14 @@ class ApodListFragment : BaseFragment(),
             DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS -> 13
             DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS -> 20
             DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS -> 29
-            else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DATE_RANGE)
+            else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION)
         }
     }
 
     override fun onFetchApodsCompleted(apods: List<Apod>) {
+        isDataLoaded = true
+        this.apods.addAll(apods)
+
         view.hideNetworkRequestErrorState()
         view.hideProgressIndicator()
         view.onRefreshCompleted()
@@ -148,8 +157,6 @@ class ApodListFragment : BaseFragment(),
             is DateSetEvent.DateSet -> coroutineScope.launch {
                 fetchApodBasedOnDateUseCase.getApodBasedOnDate(event.dateInMillis)
             }
-            DateSetEvent.InvalidDateSet ->
-                messagesManager.showInvalidApodDateErrorMessage()
         }
     }
 
@@ -187,6 +194,7 @@ class ApodListFragment : BaseFragment(),
         fetchApodsUseCase.addListener(this)
         fetchRandomApodUseCase.addListener(this)
         fetchApodBasedOnDateUseCase.addListener(this)
+        fetchApods()
         super.onStart()
     }
 

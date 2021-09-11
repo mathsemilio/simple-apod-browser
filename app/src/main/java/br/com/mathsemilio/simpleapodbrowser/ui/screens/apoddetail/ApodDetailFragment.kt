@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail
 
 import android.graphics.Bitmap
@@ -60,12 +61,13 @@ class ApodDetailFragment : BaseFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        view = compositionRoot.viewFactory.getApodDetailsView(container)
+        view = ApodDetailViewImpl(inflater, container)
         return view.rootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         currentApod = if (savedInstanceState != null)
             savedInstanceState.getSerializable(OUT_STATE_APOD) as Apod
         else
@@ -76,19 +78,7 @@ class ApodDetailFragment : BaseFragment(),
         screensNavigator.toApodImageDetail(apodImage.toByteArray())
     }
 
-    override fun onPlayIconClicked(videoUrl: String) {
-        requireContext().launchWebPage(videoUrl)
-    }
-
-    private fun bindApod() {
-        view.bindApod(currentApod)
-    }
-
-    private fun addCurrentApodToFavorites() {
-        coroutineScope.launch {
-            addFavoriteApodUseCase.addApodToFavorites(currentApod)
-        }
-    }
+    override fun onPlayIconClicked(videoUrl: String) = launchWebPage(videoUrl)
 
     override fun onAddApodToFavoritesCompleted() {
         messagesManager.showApodAddedToFavoritesSuccessfullyMessage()
@@ -120,22 +110,28 @@ class ApodDetailFragment : BaseFragment(),
         }
     }
 
+    private fun addCurrentApodToFavorites() {
+        coroutineScope.launch {
+            addFavoriteApodUseCase.addApodToFavorites(currentApod)
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(OUT_STATE_APOD, currentApod)
     }
 
     override fun onStart() {
+        super.onStart()
         view.addListener(this)
         addFavoriteApodUseCase.addListener(this)
-        bindApod()
-        super.onStart()
+        view.bindApod(currentApod)
     }
 
     override fun onStop() {
+        super.onStop()
         view.removeListener(this)
         addFavoriteApodUseCase.removeListener(this)
         coroutineScope.coroutineContext.cancelChildren()
-        super.onStop()
     }
 }

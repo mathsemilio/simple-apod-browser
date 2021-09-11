@@ -32,7 +32,7 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:contentDescription="@string/content_description_network_request_error"
-            android:src="@drawable/ic_undraw_server_down_s4lk" />
+            android:src="@drawable/dr_undraw_server_down_s4lk" />
 
         <TextView
             style="?textAppearanceHeadline6"

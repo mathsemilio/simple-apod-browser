@@ -23,8 +23,7 @@ import android.net.Uri
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.domain.model.CachedApod
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
@@ -67,7 +66,17 @@ fun Context.launchWebPage(url: String) {
         this.startActivity(intent)
 }
 
-inline fun SearchView.onQueryTextChangedListener(crossinline onQueryTextChanged: (String) -> Unit) {
+@SuppressLint("QueryPermissionsNeeded")
+fun Fragment.launchWebPage(url: String) {
+    val page = Uri.parse(url)
+    val intent = Intent(Intent.ACTION_VIEW, page)
+    if (intent.resolveActivity(requireContext().packageManager) != null)
+        this.startActivity(intent)
+}
+
+inline fun SearchView.onQueryTextChangedListener(
+    crossinline onQueryTextChanged: (String) -> Unit
+) {
     this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
             return false
@@ -78,12 +87,4 @@ inline fun SearchView.onQueryTextChangedListener(crossinline onQueryTextChanged:
             return true
         }
     })
-}
-
-fun CachedApod.toApod(): Apod {
-    return Apod(id, title, url, date, mediaType, explanation, thumbnailUrl, isFavorite)
-}
-
-fun Apod.toCachedApod(): CachedApod {
-    return CachedApod(id, title, url, date, mediaType, explanation, thumbnailUrl, isFavorite)
 }

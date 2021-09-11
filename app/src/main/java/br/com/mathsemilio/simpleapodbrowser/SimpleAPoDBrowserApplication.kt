@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser
 
 import android.app.Application
@@ -21,12 +22,13 @@ import kotlinx.coroutines.IO_PARALLELISM_PROPERTY_NAME
 
 class SimpleAPoDBrowserApplication : Application() {
 
-    private lateinit var _compositionRoot: CompositionRoot
-    val compositionRoot get() = _compositionRoot
+    lateinit var compositionRoot: CompositionRoot
 
     override fun onCreate() {
         super.onCreate()
+
         System.setProperty(IO_PARALLELISM_PROPERTY_NAME, Int.MAX_VALUE.toString())
-        _compositionRoot = CompositionRoot()
+
+        compositionRoot = CompositionRoot(this)
     }
 }

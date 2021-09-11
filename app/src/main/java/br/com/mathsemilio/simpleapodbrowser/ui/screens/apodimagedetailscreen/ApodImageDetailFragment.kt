@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen
 
 import android.Manifest
@@ -24,17 +25,17 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.OUT_STATE_APOD_IMAGE
-import br.com.mathsemilio.simpleapodbrowser.common.RC_WRITE_EXTERNAL_STORAGE
+import br.com.mathsemilio.simpleapodbrowser.common.WRITE_EXTERNAL_STORAGE_REQUEST_CODE
 import br.com.mathsemilio.simpleapodbrowser.common.util.toBitmap
 import br.com.mathsemilio.simpleapodbrowser.common.util.toByteArray
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
+import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.StatusBarDelegate
+import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ApodImageExporter
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.StatusBarManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SystemUIManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 
 class ApodImageDetailFragment : BaseFragment(),
@@ -49,12 +50,12 @@ class ApodImageDetailFragment : BaseFragment(),
     private lateinit var apodImageExporter: ApodImageExporter
     private lateinit var tapGestureHelper: TapGestureHelper
     private lateinit var screensNavigator: ScreensNavigator
-    private lateinit var statusBarManager: StatusBarManager
-    private lateinit var systemUIManager: SystemUIManager
+    private lateinit var statusBarDelegate: StatusBarDelegate
+    private lateinit var systemUIDelegate: SystemUIDelegate
     private lateinit var messagesManager: MessagesManager
     private lateinit var dialogManager: DialogManager
 
-    private lateinit var currentAPoDImage: Bitmap
+    private lateinit var apodImage: Bitmap
 
     private var screenHasBeenTapped = false
 
@@ -64,8 +65,8 @@ class ApodImageDetailFragment : BaseFragment(),
         apodImageExporter = compositionRoot.apodImageExporter
         tapGestureHelper = compositionRoot.tapGestureHelper
         screensNavigator = compositionRoot.screensNavigator
-        statusBarManager = compositionRoot.statusBarManager
-        systemUIManager = compositionRoot.systemUIManager
+        statusBarDelegate = compositionRoot.statusBarManager
+        systemUIDelegate = compositionRoot.systemUIManager
         messagesManager = compositionRoot.messagesManager
         dialogManager = compositionRoot.dialogManager
     }
@@ -75,16 +76,21 @@ class ApodImageDetailFragment : BaseFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        view = compositionRoot.viewFactory.getApodImageDetailView(container)
+        view = ApodImageDetailViewImpl(inflater, container)
         return view.rootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        currentAPoDImage = if (savedInstanceState != null)
-            savedInstanceState.getByteArray(OUT_STATE_APOD_IMAGE)?.toBitmap()!!
+
+        apodImage = if (savedInstanceState != null)
+            savedInstanceState.getByteArray(OUT_STATE_APOD_IMAGE)?.toBitmap() as Bitmap
         else
-            getAPoDImage()
+            getApodImage()
+    }
+
+    private fun getApodImage(): Bitmap {
+        return requireArguments().getByteArray(ARG_APOD_IMAGE)?.toBitmap() as Bitmap
     }
 
     override fun onToolbarNavigationIconClicked() {
@@ -93,27 +99,27 @@ class ApodImageDetailFragment : BaseFragment(),
 
     override fun onToolbarActionExportApodImageClicked() {
         if (permissionsHelper.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            apodImageExporter.export(currentAPoDImage)
+            apodImageExporter.export(apodImage)
         else
             permissionsHelper.requestPermission(
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                RC_WRITE_EXTERNAL_STORAGE
+                WRITE_EXTERNAL_STORAGE_REQUEST_CODE
             )
     }
 
     override fun onPermissionRequestResult(result: PermissionsHelper.PermissionResult) {
         when (result) {
-            PermissionsHelper.PermissionResult.Granted ->
-                apodImageExporter.export(currentAPoDImage)
-            PermissionsHelper.PermissionResult.Denied ->
+            PermissionsHelper.PermissionResult.GRANTED ->
+                apodImageExporter.export(apodImage)
+            PermissionsHelper.PermissionResult.DENIED ->
                 dialogManager.showGrantExternalStoragePermissionDialog()
-            PermissionsHelper.PermissionResult.DeniedPermanently ->
-                dialogManager.showEnablePermissionsManuallyDialog()
+            PermissionsHelper.PermissionResult.DENIED_PERMANENTLY ->
+                dialogManager.showManuallyGrantPermissionDialog()
         }
     }
 
     override fun onApodImageExportedSuccessfully() {
-        messagesManager.showApodImageExportedSuccessfully()
+        messagesManager.showApodImageExportedSuccessfullyMessage()
     }
 
     override fun onExportApodImageFailed() {
@@ -123,48 +129,40 @@ class ApodImageDetailFragment : BaseFragment(),
     override fun onScreenTapped() {
         screenHasBeenTapped = when (screenHasBeenTapped) {
             true -> {
-                systemUIManager.onShowSystemUI()
+                systemUIDelegate.onShowSystemUI()
                 view.showToolbar()
                 false
             }
             false -> {
-                systemUIManager.onHideSystemUI()
+                systemUIDelegate.onHideSystemUI()
                 view.hideToolbar()
                 true
             }
         }
     }
 
-    private fun getAPoDImage(): Bitmap {
-        return requireArguments().getByteArray(ARG_APOD_IMAGE)?.toBitmap()!!
-    }
-
-    private fun bindAPoDImage() {
-        view.bindApodImage(currentAPoDImage)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putByteArray(OUT_STATE_APOD_IMAGE, currentAPoDImage.toByteArray())
+        outState.putByteArray(OUT_STATE_APOD_IMAGE, apodImage.toByteArray())
     }
 
     override fun onStart() {
+        super.onStart()
         view.addListener(this)
+        view.bindApodImage(apodImage)
         permissionsHelper.addListener(this)
         tapGestureHelper.addListener(this)
-        statusBarManager.onSetStatusBarColor(Color.BLACK)
         apodImageExporter.addListener(this)
-        bindAPoDImage()
-        super.onStart()
+        statusBarDelegate.onSetStatusBarColor(Color.BLACK)
     }
 
     override fun onStop() {
+        super.onStop()
         view.removeListener(this)
         permissionsHelper.addListener(this)
         tapGestureHelper.removeListener(this)
         apodImageExporter.removeListener(this)
-        statusBarManager.onRevertStatusBarColor()
-        systemUIManager.onShowSystemUI()
-        super.onStop()
+        systemUIDelegate.onShowSystemUI()
+        statusBarDelegate.onRevertStatusBarColor()
     }
 }

@@ -17,11 +17,10 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.common
 
 const val BASE_URL = "https://api.nasa.gov/planetary/"
+const val APOD_ENDPOINT = "apod"
 
 const val FAVORITE_APOD_TABLE = "favorite_apod_table"
 const val FAVORITE_APOD_DATABASE = "favorite_apod_database"
-
-const val CACHED_APOD_TABLE = "CACHED_APOD_TABLE"
 
 const val ARG_APOD = "ARG_APOD"
 const val ARG_APOD_IMAGE = "ARG_APOD_IMAGE"
@@ -46,9 +45,10 @@ const val DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS = "1"
 const val DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS = "2"
 const val DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS = "3"
 
-const val RC_WRITE_EXTERNAL_STORAGE = 1000
+const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1000
 
 const val FIRST_APOD_DATE_IN_MILLIS = 803271600000L
 
-const val INVALID_MONTH = "Invalid month. Must be in the 1 to 12 month range"
-const val ILLEGAL_DEFAULT_DATE_RANGE = "Illegal default date range"
+const val INVALID_MONTH_EXCEPTION = "Invalid month. Must be in the 1 to 12 month range"
+const val ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION = "Illegal default date range"
+const val COULD_NOT_OPEN_OUTPUT_STREAM_EXCEPTION = "Could not open file output stream"

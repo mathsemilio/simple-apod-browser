@@ -13,11 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.common.util
 
 import android.content.Context
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.INVALID_MONTH
+import br.com.mathsemilio.simpleapodbrowser.common.INVALID_MONTH_EXCEPTION
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -53,6 +54,6 @@ fun convertMonthNumberToString(month: String): String {
         "10" -> "October"
         "11" -> "November"
         "12" -> "December"
-        else -> throw IllegalArgumentException(INVALID_MONTH)
+        else -> throw IllegalArgumentException(INVALID_MONTH_EXCEPTION)
     }
 }

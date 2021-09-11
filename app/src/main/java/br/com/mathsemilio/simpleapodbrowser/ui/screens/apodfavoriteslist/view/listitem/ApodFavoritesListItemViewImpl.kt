@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.listitem
 
 import android.view.LayoutInflater
@@ -23,31 +24,36 @@ import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
-class ApodFavoritesListItemViewImpl(inflater: LayoutInflater, parent: ViewGroup?) :
-    ApodFavoritesListItemView() {
+class ApodFavoritesListItemViewImpl(
+    layoutInflater: LayoutInflater,
+    parent: ViewGroup?
+) : ApodFavoritesListItemView() {
 
-    private lateinit var imageViewAPoDFavoritesListItemImage: ImageView
-    private lateinit var textViewAPoDFavoritesListItemTitle: TextView
+    private lateinit var imageViewApodFavoritesListItemImage: ImageView
+    private lateinit var textViewApodFavoritesListItemTitle: TextView
     private lateinit var imageViewRemoveFromFavorites: ImageView
 
-    private lateinit var currentFavoriteApod: Apod
+    private lateinit var favoriteApod: Apod
 
     init {
-        rootView = inflater.inflate(R.layout.apod_favorites_list_item, parent, false)
+        rootView = layoutInflater.inflate(R.layout.apod_favorites_list_item, parent, false)
+
         rootView.setOnClickListener {
             onFavoriteAPoDClicked()
         }
+
         initializeViews()
+
         setRemoveFromFavoritesIconOnClickListener()
     }
 
     private fun initializeViews() {
-        imageViewAPoDFavoritesListItemImage =
-            findViewById(R.id.image_view_apod_favorites_list_item_image)
-        textViewAPoDFavoritesListItemTitle =
-            findViewById(R.id.text_view_apod_favorites_list_item_title)
+        imageViewApodFavoritesListItemImage =
+            rootView.findViewById(R.id.image_view_apod_favorites_list_item_image)
+        textViewApodFavoritesListItemTitle =
+            rootView.findViewById(R.id.text_view_apod_favorites_list_item_title)
         imageViewRemoveFromFavorites =
-            findViewById(R.id.image_view_remove_from_favorites)
+            rootView.findViewById(R.id.image_view_remove_from_favorites)
     }
 
     private fun setRemoveFromFavoritesIconOnClickListener() {
@@ -57,26 +63,30 @@ class ApodFavoritesListItemViewImpl(inflater: LayoutInflater, parent: ViewGroup?
     }
 
     override fun bindFavoriteApod(favoriteApod: Apod) {
-        currentFavoriteApod = favoriteApod
-        GlideProvider.loadResourceFromUrl(favoriteApod.url, imageViewAPoDFavoritesListItemImage)
-        loadAPoDVideoThumbnail(favoriteApod.thumbnailUrl)
-        textViewAPoDFavoritesListItemTitle.text = favoriteApod.title
+        this.favoriteApod = favoriteApod
+
+        GlideProvider.loadResourceFromUrl(favoriteApod.url, imageViewApodFavoritesListItemImage)
+
+        loadApodVideoThumbnail()
+
+        textViewApodFavoritesListItemTitle.text = favoriteApod.title
     }
 
-    private fun loadAPoDVideoThumbnail(thumbnailUrl: String?) {
-        if (thumbnailUrl != null)
-            GlideProvider.loadResourceFromUrl(thumbnailUrl, imageViewAPoDFavoritesListItemImage)
+    private fun loadApodVideoThumbnail() {
+        favoriteApod.thumbnailUrl?.let { thumbnailUrl ->
+            GlideProvider.loadResourceFromUrl(thumbnailUrl, imageViewApodFavoritesListItemImage)
+        }
     }
 
     private fun onFavoriteAPoDClicked() {
-        listeners.forEach { listener ->
-            listener.onFavoriteApodClicked(currentFavoriteApod)
+        notifyListener { listener ->
+            listener.onFavoriteApodClicked(favoriteApod)
         }
     }
 
     private fun onRemoveFromFavoritesIconClicked() {
-        listeners.forEach { listener ->
-            listener.onRemoveFromFavoritesIconClicked(currentFavoriteApod)
+        notifyListener { listener ->
+            listener.onRemoveFromFavoritesIconClicked(favoriteApod)
         }
     }
 }

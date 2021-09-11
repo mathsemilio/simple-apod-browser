@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod
 
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
@@ -20,8 +21,9 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
 
-class DeleteFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) :
-    BaseObservable<DeleteFavoriteApodUseCase.Listener>() {
+class DeleteFavoriteApodUseCase(
+    private val endpoint: FavoriteApodEndpoint
+) : BaseObservable<DeleteFavoriteApodUseCase.Listener>() {
 
     interface Listener {
         fun onDeleteFavoriteApodCompleted()
@@ -38,11 +40,11 @@ class DeleteFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) :
     suspend fun deleteFavoriteApod(apod: Apod) {
         endpoint.delete(apod).also { result ->
             when (result) {
-                is Result.Completed -> listeners.forEach { listener ->
+                is Result.Completed -> notifyListener { listener ->
                     lastDeletedFavoriteApod = apod
                     listener.onDeleteFavoriteApodCompleted()
                 }
-                is Result.Failed -> listeners.forEach { listener ->
+                is Result.Failed -> notifyListener { listener ->
                     listener.onDeleteFavoriteApodFailed()
                 }
             }
@@ -52,10 +54,10 @@ class DeleteFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) :
     suspend fun revertFavoriteApodDeletion() {
         endpoint.insert(lastDeletedFavoriteApod).also { result ->
             when (result) {
-                is Result.Completed -> listeners.forEach { listener ->
+                is Result.Completed -> notifyListener { listener ->
                     listener.onRevertFavoriteApodDeletionCompleted()
                 }
-                is Result.Failed -> listeners.forEach { listener ->
+                is Result.Failed -> notifyListener { listener ->
                     listener.onRevertFavoriteApodDeletionFailed()
                 }
             }

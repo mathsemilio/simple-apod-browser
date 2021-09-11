@@ -13,17 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem.ApodListItemView
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem.ApodListItemViewImpl
 
 class ApodListAdapter(
-    private val viewFactory: ViewFactory,
     private val listener: Listener
 ) : ListAdapter<Apod, ApodListAdapter.ViewHolder>(ApodListDiffUtilCallback()),
     ApodListItemView.Listener {
@@ -32,15 +33,19 @@ class ApodListAdapter(
         fun onApodClicked(apod: Apod)
     }
 
-    class ViewHolder(private val listItemView: ApodListItemView) :
-        RecyclerView.ViewHolder(listItemView.rootView) {
+    class ViewHolder(
+        private val listItemView: ApodListItemView
+    ) : RecyclerView.ViewHolder(listItemView.rootView) {
 
         fun bind(apod: Apod) = listItemView.bindApodDetails(apod)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(viewFactory.getApodListItemView(parent).also { listItemView ->
-            listItemView.addListener(this)
+        return ViewHolder(ApodListItemViewImpl(
+            LayoutInflater.from(parent.context),
+            parent
+        ).also { view ->
+            view.addListener(this)
         })
     }
 

@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail
 
 import android.view.LayoutInflater
@@ -28,71 +29,76 @@ import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.common.util.formatDate
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
-class ApodDetailViewImpl(inflater: LayoutInflater, container: ViewGroup?) : ApodDetailView() {
+class ApodDetailViewImpl(
+    layoutInflater: LayoutInflater,
+    container: ViewGroup?
+) : ApodDetailView() {
 
     private lateinit var imageViewApodDetailImage: ImageView
     private lateinit var imageViewPlayIcon: ImageView
-    private lateinit var textViewApodDetailWithImageTitle: TextView
-    private lateinit var textViewApodDetailWithImageDate: TextView
-    private lateinit var textViewApodDetailWithImageExplanation: TextView
+    private lateinit var textViewApodDetailTitle: TextView
+    private lateinit var textViewApodDetailDate: TextView
+    private lateinit var textViewApodDetailExplanation: TextView
+
+    private lateinit var apod: Apod
 
     init {
-        rootView = inflater.inflate(R.layout.apod_detail_screen, container, false)
+        rootView = layoutInflater.inflate(R.layout.apod_detail_screen, container, false)
+
         initializeViews()
-        attachAPoDImageViewOnClickListener()
+
+        attachApodImageViewClickListener()
     }
 
     private fun initializeViews() {
-        imageViewApodDetailImage =
-            findViewById(R.id.image_view_apod_detail_image)
-        imageViewPlayIcon =
-            findViewById(R.id.image_view_play_icon)
-        textViewApodDetailWithImageTitle =
-            findViewById(R.id.text_view_apod_detail_title)
-        textViewApodDetailWithImageDate =
-            findViewById(R.id.text_view_apod_detail_date)
-        textViewApodDetailWithImageExplanation =
-            findViewById(R.id.text_view_apod_detail_explanation)
+        imageViewApodDetailImage = rootView.findViewById(R.id.image_view_apod_detail_image)
+        imageViewPlayIcon = rootView.findViewById(R.id.image_view_play_icon)
+        textViewApodDetailTitle = rootView.findViewById(R.id.text_view_apod_detail_title)
+        textViewApodDetailDate = rootView.findViewById(R.id.text_view_apod_detail_date)
+        textViewApodDetailExplanation = rootView.findViewById(R.id.text_view_apod_detail_explanation)
     }
 
-    private fun attachAPoDImageViewOnClickListener() {
+    private fun attachApodImageViewClickListener() {
         imageViewApodDetailImage.setOnClickListener {
-            listeners.forEach { listener ->
+            notifyListener { listener ->
                 listener.onApodImageClicked(imageViewApodDetailImage.drawable.toBitmap())
             }
         }
     }
 
     override fun bindApod(apod: Apod) {
-        loadResourcesBasedOnMediaType(apod)
-        textViewApodDetailWithImageTitle.text = apod.title
-        textViewApodDetailWithImageDate.text = apod.date.formatDate(context)
-        textViewApodDetailWithImageExplanation.text = apod.explanation
+        this.apod = apod
+        loadResourcesBasedOnMediaType()
+
+        textViewApodDetailTitle.text = apod.title
+        textViewApodDetailDate.text = apod.date.formatDate(context)
+        textViewApodDetailExplanation.text = apod.explanation
     }
 
-    private fun loadResourcesBasedOnMediaType(apod: Apod) {
+    private fun loadResourcesBasedOnMediaType() {
         when (apod.mediaType) {
-            APOD_TYPE_IMAGE -> loadApodImage(apod.url)
-            APOD_TYPE_VIDEO -> loadApodVideoThumbnail(apod.url, apod.thumbnailUrl)
+            APOD_TYPE_IMAGE -> loadApodImage()
+            APOD_TYPE_VIDEO -> loadApodVideoThumbnail()
         }
     }
 
-    private fun loadApodImage(url: String) {
-        GlideProvider.loadResourceFromUrl(url, imageViewApodDetailImage)
+    private fun loadApodImage() {
+        GlideProvider.loadResourceFromUrl(apod.url, imageViewApodDetailImage)
     }
 
-    private fun loadApodVideoThumbnail(videoUrl: String, thumbnailUrl: String?) {
+    private fun loadApodVideoThumbnail() {
         imageViewPlayIcon.apply {
             visibility = View.VISIBLE
-            setOnClickListener { onPlayIconClicked(videoUrl) }
+            setOnClickListener { onPlayIconClicked(apod.url) }
         }
-        thumbnailUrl?.let { url ->
+
+        apod.thumbnailUrl?.let { url ->
             GlideProvider.loadResourceFromUrl(url, imageViewApodDetailImage)
         }
     }
 
     private fun onPlayIconClicked(videoUrl: String) {
-        listeners.forEach { listener ->
+        notifyListener { listener ->
             listener.onPlayIconClicked(videoUrl)
         }
     }

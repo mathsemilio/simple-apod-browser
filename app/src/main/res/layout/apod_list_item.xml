@@ -17,12 +17,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_example_apod" />
+        tools:src="@drawable/im_example_apod" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/ic_list_item_gradient_background"
+        android:background="@drawable/dr_list_item_gradient_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

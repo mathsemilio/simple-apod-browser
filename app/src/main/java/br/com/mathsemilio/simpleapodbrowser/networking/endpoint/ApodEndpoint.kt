@@ -13,13 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.networking.endpoint
 
 import br.com.mathsemilio.simpleapodbrowser.common.provider.APIKeyProvider
-import br.com.mathsemilio.simpleapodbrowser.common.util.performAPICall
+import br.com.mathsemilio.simpleapodbrowser.common.util.performRequestOn
 import br.com.mathsemilio.simpleapodbrowser.domain.model.ApodSchema
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
-import br.com.mathsemilio.simpleapodbrowser.networking.ApodApi
+import br.com.mathsemilio.simpleapodbrowser.networking.api.ApodApi
 import kotlinx.coroutines.Dispatchers
 
 class ApodEndpoint(
@@ -27,23 +28,20 @@ class ApodEndpoint(
     private val apiKeyProvider: APIKeyProvider
 ) {
     suspend fun getApodsBasedOnDateRange(startDate: String): Result<List<ApodSchema>> {
-        return performAPICall(Dispatchers.IO) {
-            apodApi.getAPoDsBasedOnDateRange(
-                apiKeyProvider.getAPoDKey(),
-                startDate,
-            ).body()?.reversed()!!
+        return performRequestOn(Dispatchers.IO) {
+            apodApi.getApodsBasedOnDateRange(apiKeyProvider.apiKey, startDate).body()?.reversed()!!
         }
     }
 
     suspend fun getApodsBasedOnDate(date: String): Result<ApodSchema> {
-        return performAPICall(Dispatchers.IO) {
-            apodApi.getAPoDBasedOnDate(apiKeyProvider.getAPoDKey(), date).body()!!
+        return performRequestOn(Dispatchers.IO) {
+            apodApi.getApodBasedOnDate(apiKeyProvider.apiKey, date).body()!!
         }
     }
 
     suspend fun getRandomApod(): Result<List<ApodSchema>> {
-        return performAPICall(Dispatchers.IO) {
-            apodApi.getRandomAPoD(apiKeyProvider.getAPoDKey(), 1).body()!!
+        return performRequestOn(Dispatchers.IO) {
+            apodApi.getRandomApod(apiKeyProvider.apiKey, 1).body()!!
         }
     }
 }

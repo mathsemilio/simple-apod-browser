@@ -13,18 +13,28 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.common.util
 
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
 
-suspend fun <T> performAPICall(dispatcher: CoroutineDispatcher, block: suspend () -> T): Result<T> {
+suspend fun <T> performRequestOn(
+    dispatcher: CoroutineDispatcher,
+    block: suspend () -> T?
+): Result<T> {
     return withContext(dispatcher) {
         try {
             Result.Completed(data = block.invoke())
-        } catch (e: Exception) {
-            Result.Failed(error = e.message)
+        } catch (throwable: Throwable) {
+            when (throwable) {
+                is IOException -> Result.Failed(exception = throwable)
+                is HttpException -> Result.Failed(exception = throwable)
+                else -> Result.Failed(exception = throwable as Exception)
+            }
         }
     }
 }

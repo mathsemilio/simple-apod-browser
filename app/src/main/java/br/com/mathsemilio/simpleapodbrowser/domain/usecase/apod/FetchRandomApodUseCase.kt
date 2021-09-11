@@ -6,8 +6,9 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.ApodEndpoint
 
-class FetchRandomApodUseCase(private val endpoint: ApodEndpoint) :
-    BaseObservable<FetchRandomApodUseCase.Listener>() {
+class FetchRandomApodUseCase(
+    private val endpoint: ApodEndpoint
+) : BaseObservable<FetchRandomApodUseCase.Listener>() {
 
     interface Listener {
         fun onFetchRandomApodCompleted(randomApod: Apod)
@@ -18,10 +19,10 @@ class FetchRandomApodUseCase(private val endpoint: ApodEndpoint) :
     suspend fun getRandomAPoD() {
         endpoint.getRandomApod().also { result ->
             when (result) {
-                is Result.Completed -> listeners.forEach { listener ->
-                    listener.onFetchRandomApodCompleted(result.data?.toApodList()?.first()!!)
+                is Result.Completed -> notifyListener { listener ->
+                    listener.onFetchRandomApodCompleted(randomApod = result.data?.toApodList()?.first()!!)
                 }
-                is Result.Failed -> listeners.forEach { listener ->
+                is Result.Failed -> notifyListener { listener ->
                     listener.onFetchRandomApodFailed()
                 }
             }

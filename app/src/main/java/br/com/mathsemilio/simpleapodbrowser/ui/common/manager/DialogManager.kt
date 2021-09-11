@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 
 import android.content.Context
@@ -38,7 +39,7 @@ class DialogManager(private val fragmentManager: FragmentManager, private val co
         infoDialog.show(fragmentManager, null)
     }
 
-    fun showEnablePermissionsManuallyDialog() {
+    fun showManuallyGrantPermissionDialog() {
         val infoDialog = InfoDialog.newInstance(
             context.getString(R.string.dialog_title_grant_permission),
             context.getString(R.string.dialog_message_enable_permission_manually),

@@ -13,29 +13,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.common.view
 
 import android.content.Context
-import android.view.View
 import androidx.annotation.StringRes
 
-abstract class BaseView :
-    br.com.mathsemilio.simpleapodbrowser.ui.common.view.View {
+abstract class BaseView : View {
 
-    private lateinit var _rootView: View
+    private lateinit var _rootView: android.view.View
 
-    override var rootView: View
+    override var rootView: android.view.View
         get() = _rootView
         set(value) {
             _rootView = value
         }
 
-    protected fun <T : View> findViewById(id: Int): T = _rootView.findViewById(id)
-
     protected val context: Context get() = _rootView.context
 
     protected fun getString(@StringRes id: Int) = context.getString(id)
-
-    protected fun getString(@StringRes id: Int, vararg formatArgs: Any) =
-        context.getString(id, formatArgs)
 }

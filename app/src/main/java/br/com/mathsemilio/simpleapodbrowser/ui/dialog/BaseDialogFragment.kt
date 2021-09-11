@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.dialog
 
 import androidx.fragment.app.DialogFragment
@@ -21,8 +22,7 @@ import br.com.mathsemilio.simpleapodbrowser.ui.MainActivity
 
 abstract class BaseDialogFragment : DialogFragment() {
 
-    private val _compositionRoot by lazy {
+    val compositionRoot by lazy {
         ControllerCompositionRoot((requireActivity() as MainActivity).compositionRoot)
     }
-    val compositionRoot get() = _compositionRoot
 }

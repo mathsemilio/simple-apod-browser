@@ -13,10 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 
-interface SystemUIManager {
-    fun onHideSystemUI()
+package br.com.mathsemilio.simpleapodbrowser.ui.common
 
-    fun onShowSystemUI()
+import androidx.appcompat.app.AppCompatActivity
+import br.com.mathsemilio.simpleapodbrowser.SimpleAPoDBrowserApplication
+import br.com.mathsemilio.simpleapodbrowser.common.di.ActivityCompositionRoot
+
+abstract class BaseActivity : AppCompatActivity() {
+
+    val compositionRoot by lazy {
+        ActivityCompositionRoot(
+            activity = this,
+            (application as SimpleAPoDBrowserApplication).compositionRoot
+        )
+    }
 }

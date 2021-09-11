@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/toolbar_apod_image_detail"
-        app:navigationIcon="@drawable/ic_baseline_arrow_back_24" />
+        app:navigationIcon="@drawable/ic_arrow_back" />
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/photo_view_apod_image_detail"
@@ -28,6 +28,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/material_toolbar_apod_image_detail"
-        tools:src="@drawable/ic_example_apod" />
+        tools:src="@drawable/im_example_apod" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

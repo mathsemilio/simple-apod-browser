@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod
 
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
@@ -20,8 +21,9 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
 
-class AddFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) :
-    BaseObservable<AddFavoriteApodUseCase.Listener>() {
+class AddFavoriteApodUseCase(
+    private val endpoint: FavoriteApodEndpoint
+) : BaseObservable<AddFavoriteApodUseCase.Listener>() {
 
     interface Listener {
         fun onAddApodToFavoritesCompleted()
@@ -33,18 +35,19 @@ class AddFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) :
 
     suspend fun addApodToFavorites(apod: Apod) {
         if (isApodAlreadyOnFavorites(apod)) {
-            listeners.forEach { listener ->
+            notifyListener { listener ->
                 listener.onApodIsAlreadyOnFavorites()
             }
+
             return
         }
 
         endpoint.insert(apod.copy(isFavorite = true)).also { result ->
             when (result) {
-                is Result.Completed -> listeners.forEach { listener ->
+                is Result.Completed -> notifyListener { listener ->
                     listener.onAddApodToFavoritesCompleted()
                 }
-                is Result.Failed -> listeners.forEach { listener ->
+                is Result.Failed -> notifyListener { listener ->
                     listener.onAddApodToFavoritesFailed()
                 }
             }
@@ -59,7 +62,7 @@ class AddFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) :
                 is Result.Completed -> {
                     isAlreadyOnFavorites = result.data != null
                 }
-                is Result.Failed -> throw RuntimeException(result.error)
+                is Result.Failed -> throw RuntimeException(result.exception)
             }
         }
 

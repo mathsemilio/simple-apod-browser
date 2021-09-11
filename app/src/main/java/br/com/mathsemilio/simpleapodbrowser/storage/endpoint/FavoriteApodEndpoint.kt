@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.storage.endpoint
 
 import br.com.mathsemilio.simpleapodbrowser.data.dao.FavoriteApodDao
@@ -28,8 +29,8 @@ class FavoriteApodEndpoint(private val favoriteApodDao: FavoriteApodDao) {
             try {
                 favoriteApodDao.insert(apod)
                 Result.Completed(data = null)
-            } catch (e: Exception) {
-                Result.Failed(error = null)
+            } catch (exception: Exception) {
+                Result.Failed(exception = null)
             }
         }
     }
@@ -39,8 +40,8 @@ class FavoriteApodEndpoint(private val favoriteApodDao: FavoriteApodDao) {
             try {
                 favoriteApodDao.delete(apod)
                 Result.Completed(data = null)
-            } catch (e: Exception) {
-                Result.Failed(error = null)
+            } catch (exception: Exception) {
+                Result.Failed(exception = null)
             }
         }
     }
@@ -49,8 +50,8 @@ class FavoriteApodEndpoint(private val favoriteApodDao: FavoriteApodDao) {
         return withContext(Dispatchers.IO) {
             try {
                 Result.Completed(data = favoriteApodDao.getFavoriteApods())
-            } catch (e: Exception) {
-                Result.Failed(error = null)
+            } catch (exception: Exception) {
+                Result.Failed(exception = null)
             }
         }
     }
@@ -59,8 +60,8 @@ class FavoriteApodEndpoint(private val favoriteApodDao: FavoriteApodDao) {
         return withContext(Dispatchers.IO) {
             try {
                 Result.Completed(data = favoriteApodDao.getFavoriteApodByDate(date))
-            } catch (e: Exception) {
-                Result.Failed(error = e.message)
+            } catch (exception: Exception) {
+                Result.Failed(exception = exception)
             }
         }
     }
@@ -68,11 +69,9 @@ class FavoriteApodEndpoint(private val favoriteApodDao: FavoriteApodDao) {
     suspend fun getFavoriteApodsBasedOnSearchQuery(searchQuery: String): Result<List<Apod>> {
         return withContext(Dispatchers.IO) {
             try {
-                Result.Completed(
-                    data = favoriteApodDao.getFavoriteApodsBasedOnSearchQuery(searchQuery)
-                )
-            } catch (e: Exception) {
-                Result.Failed(error = null)
+                Result.Completed(data = favoriteApodDao.getFavoriteApodsBasedOnSearchQuery(searchQuery))
+            } catch (exception: Exception) {
+                Result.Failed(exception = null)
             }
         }
     }

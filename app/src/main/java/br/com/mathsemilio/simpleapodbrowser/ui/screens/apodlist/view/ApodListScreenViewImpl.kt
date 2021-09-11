@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view
 
 import android.view.LayoutInflater
@@ -24,13 +25,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.ApodListAdapter
 
 class ApodListScreenViewImpl(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    private val viewFactory: ViewFactory
+    layoutInflater: LayoutInflater,
+    container: ViewGroup?
 ) : ApodListScreenView(), ApodListAdapter.Listener {
 
     private lateinit var progressBarApods: ProgressBar
@@ -41,21 +40,25 @@ class ApodListScreenViewImpl(
     private lateinit var apodListScreenListAdapter: ApodListAdapter
 
     init {
-        rootView = inflater.inflate(R.layout.apod_list_screen, container, false)
+        rootView = layoutInflater.inflate(R.layout.apod_list_screen, container, false)
+
         initializeViews()
+
         setupRecyclerView()
+
         attachOnSwipeRefreshListener()
     }
 
     private fun initializeViews() {
-        progressBarApods = findViewById(R.id.progress_bar_apods)
-        linearLayoutScreenErrorState = findViewById(R.id.linear_layout_screen_error_state)
-        swipeRefreshLayoutApods = findViewById(R.id.swipe_refresh_layout_apods)
-        recyclerViewApods = findViewById(R.id.recycler_view_apods)
+        progressBarApods = rootView.findViewById(R.id.progress_bar_apods)
+        linearLayoutScreenErrorState = rootView.findViewById(R.id.linear_layout_screen_error_state)
+        swipeRefreshLayoutApods = rootView.findViewById(R.id.swipe_refresh_layout_apods)
+        recyclerViewApods = rootView.findViewById(R.id.recycler_view_apods)
     }
 
     private fun setupRecyclerView() {
-        apodListScreenListAdapter = ApodListAdapter(viewFactory, this)
+        apodListScreenListAdapter = ApodListAdapter(this)
+
         recyclerViewApods.apply {
             adapter = apodListScreenListAdapter
             setHasFixedSize(true)
@@ -64,7 +67,7 @@ class ApodListScreenViewImpl(
 
     private fun attachOnSwipeRefreshListener() {
         swipeRefreshLayoutApods.setOnRefreshListener {
-            listeners.forEach { listener ->
+            notifyListener { listener ->
                 listener.onScreenSwipedToRefresh()
             }
         }
@@ -100,7 +103,7 @@ class ApodListScreenViewImpl(
     }
 
     override fun onApodClicked(apod: Apod) {
-        listeners.forEach { listener ->
+        notifyListener { listener ->
             listener.onApodClicked(apod)
         }
     }

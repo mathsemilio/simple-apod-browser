@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
 
 import android.content.pm.PackageManager
@@ -21,17 +22,18 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
 
-class PermissionsHelper(private val activity: AppCompatActivity) :
-    BaseObservable<PermissionsHelper.Listener>() {
+class PermissionsHelper(
+    private val activity: AppCompatActivity
+) : BaseObservable<PermissionsHelper.Listener>() {
 
     interface Listener {
         fun onPermissionRequestResult(result: PermissionResult)
     }
 
-    sealed class PermissionResult {
-        object Granted : PermissionResult()
-        object Denied : PermissionResult()
-        object DeniedPermanently : PermissionResult()
+    enum class PermissionResult {
+        GRANTED,
+        DENIED,
+        DENIED_PERMANENTLY
     }
 
     private var currentRequestCode = 0
@@ -54,30 +56,23 @@ class PermissionsHelper(private val activity: AppCompatActivity) :
         grantResults: IntArray
     ) {
         if (androidPermissions.isEmpty() || grantResults.isEmpty())
-            onPermissionResult(PermissionResult.Denied)
+            notifyListenerOnPermissionResult(PermissionResult.DENIED)
 
         when (requestCode) {
             currentRequestCode -> {
                 when {
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
-                        onPermissionResult(PermissionResult.Granted)
-                    }
-                    ActivityCompat.shouldShowRequestPermissionRationale(
-                        activity,
-                        androidPermissions[0]
-                    ) -> {
-                        onPermissionResult(PermissionResult.Denied)
-                    }
-                    else -> {
-                        onPermissionResult(PermissionResult.DeniedPermanently)
-                    }
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED ->
+                        notifyListenerOnPermissionResult(PermissionResult.GRANTED)
+                    ActivityCompat.shouldShowRequestPermissionRationale(activity, androidPermissions[0]) ->
+                        notifyListenerOnPermissionResult(PermissionResult.DENIED)
+                    else -> notifyListenerOnPermissionResult(PermissionResult.DENIED_PERMANENTLY)
                 }
             }
         }
     }
 
-    private fun onPermissionResult(result: PermissionResult) {
-        listeners.forEach { listener ->
+    private fun notifyListenerOnPermissionResult(result: PermissionResult) {
+        notifyListener { listener ->
             listener.onPermissionRequestResult(result)
         }
     }

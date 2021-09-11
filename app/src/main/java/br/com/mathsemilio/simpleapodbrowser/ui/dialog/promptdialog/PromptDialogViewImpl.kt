@@ -1,3 +1,19 @@
+/*
+Copyright 2021 Matheus Menezes
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog
 
 import android.view.LayoutInflater
@@ -15,10 +31,11 @@ class PromptDialogViewImpl(inflater: LayoutInflater) : PromptDialogView() {
 
     init {
         rootView = inflater.inflate(R.layout.layout_prompt_dialog, null, false)
-        textViewPromptDialogTitle = findViewById(R.id.text_view_prompt_dialog_title)
-        textViewPromptDialogMessage = findViewById(R.id.text_view_prompt_dialog_message)
-        buttonPromptDialogPositive = findViewById(R.id.button_prompt_dialog_positive)
-        buttonPromptDialogNegative = findViewById(R.id.button_prompt_dialog_negative)
+
+        textViewPromptDialogTitle = rootView.findViewById(R.id.text_view_prompt_dialog_title)
+        textViewPromptDialogMessage = rootView.findViewById(R.id.text_view_prompt_dialog_message)
+        buttonPromptDialogPositive = rootView.findViewById(R.id.button_prompt_dialog_positive)
+        buttonPromptDialogNegative = rootView.findViewById(R.id.button_prompt_dialog_negative)
     }
 
     override fun setTitle(title: String) {
@@ -32,7 +49,7 @@ class PromptDialogViewImpl(inflater: LayoutInflater) : PromptDialogView() {
     override fun setPositiveButtonText(positiveButtonText: String) {
         buttonPromptDialogPositive.apply {
             text = positiveButtonText
-            setOnClickListener { notifyPositiveButtonClick() }
+            setOnClickListener { notifyListenerOnPositiveButtonClick() }
         }
     }
 
@@ -40,20 +57,20 @@ class PromptDialogViewImpl(inflater: LayoutInflater) : PromptDialogView() {
         if (negativeButtonText != null)
             buttonPromptDialogNegative.apply {
                 text = negativeButtonText
-                setOnClickListener { notifyNegativeButtonClick() }
+                setOnClickListener { notifyListenerOnNegativeButtonClick() }
             }
         else
             buttonPromptDialogNegative.isVisible = false
     }
 
-    private fun notifyPositiveButtonClick() {
-        listeners.forEach { listener ->
+    private fun notifyListenerOnPositiveButtonClick() {
+        notifyListener { listener ->
             listener.onPositiveButtonClicked()
         }
     }
 
-    private fun notifyNegativeButtonClick() {
-        listeners.forEach { listener ->
+    private fun notifyListenerOnNegativeButtonClick() {
+        notifyListener { listener ->
             listener.onNegativeButtonClicked()
         }
     }

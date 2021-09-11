@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui
 
 import android.os.Bundle
@@ -28,18 +29,16 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.util.launchWebPage
+import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseActivity
+import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.StatusBarDelegate
+import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.StatusBarManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SystemUIManager
 
-class MainActivity : BaseActivity(),
-    HostLayoutHelper,
-    StatusBarManager,
-    SystemUIManager {
+class MainActivity : BaseActivity(), HostLayoutHelper, StatusBarDelegate, SystemUIDelegate {
 
-    private lateinit var view: MainActivityView
+    private lateinit var view: MainActivityViewImpl
 
     private lateinit var navController: NavController
 
@@ -51,7 +50,7 @@ class MainActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        view = compositionRoot.viewFactory.getMainActivityView(null)
+        view = MainActivityViewImpl(layoutInflater, parent = null)
 
         permissionsHelper = compositionRoot.permissionsHelper
         tapGestureHelper = compositionRoot.tapGestureHelper
@@ -95,10 +94,12 @@ class MainActivity : BaseActivity(),
                     view.showToolbar()
                     view.hideBottomNavigationView()
                 }
-                R.id.ApodImageDetailScreen ->
+                R.id.ApodImageDetailScreen -> {
                     view.hideToolbar()
-                R.id.SettingsScreen ->
+                }
+                R.id.SettingsScreen -> {
                     view.hideBottomNavigationView()
+                }
                 else -> {
                     view.showToolbar()
                     view.showBottomNavigationView()

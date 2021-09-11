@@ -13,23 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package br.com.mathsemilio.simpleapodbrowser.networking
 
-import br.com.mathsemilio.simpleapodbrowser.common.BASE_URL
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+package br.com.mathsemilio.simpleapodbrowser.ui.common.delegate
 
-class RetrofitBuilder {
+interface SystemUIDelegate {
+    fun onHideSystemUI()
 
-    private val retroFit by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    private val _apodApi by lazy {
-        retroFit.create(ApodApi::class.java)
-    }
-    val apodApi: ApodApi get() = _apodApi
+    fun onShowSystemUI()
 }

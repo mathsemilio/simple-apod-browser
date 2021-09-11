@@ -13,12 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 
 import androidx.recyclerview.widget.DiffUtil
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
 class ApodListDiffUtilCallback : DiffUtil.ItemCallback<Apod>() {
+
     override fun areItemsTheSame(oldItem: Apod, newItem: Apod): Boolean {
         return oldItem.date == newItem.date
     }

@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.data.dao
 
 import androidx.room.Dao
@@ -25,17 +26,17 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 interface FavoriteApodDao {
 
     @Insert
-    fun insert(apod: Apod)
+    suspend fun insert(apod: Apod)
 
     @Delete
-    fun delete(apod: Apod)
+    suspend fun delete(apod: Apod)
 
     @Query("SELECT * FROM favorite_apod_table")
-    fun getFavoriteApods(): List<Apod>
+    suspend fun getFavoriteApods(): List<Apod>
 
     @Query("SELECT * FROM favorite_apod_table WHERE date = :date")
-    fun getFavoriteApodByDate(date: String): Apod
+    suspend fun getFavoriteApodByDate(date: String): Apod
 
     @Query("SELECT * FROM favorite_apod_table WHERE title LIKE '%' || :searchQuery || '%'")
-    fun getFavoriteApodsBasedOnSearchQuery(searchQuery: String): List<Apod>
+    suspend fun getFavoriteApodsBasedOnSearchQuery(searchQuery: String): List<Apod>
 }

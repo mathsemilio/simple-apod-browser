@@ -13,17 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
+
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.ViewFactory
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.listitem.ApodFavoritesListItemView
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.listitem.ApodFavoritesListItemViewImpl
 
 class ApodFavoritesListAdapter(
-    private val viewFactory: ViewFactory,
     private val listener: Listener
 ) : ListAdapter<Apod, ApodFavoritesListAdapter.ViewHolder>(ApodFavoritesDiffUtilCallback()),
     ApodFavoritesListItemView.Listener {
@@ -34,15 +35,19 @@ class ApodFavoritesListAdapter(
         fun onRemoveFromFavoritesIconClicked(apod: Apod)
     }
 
-    class ViewHolder(private val listItemView: ApodFavoritesListItemView) :
-        RecyclerView.ViewHolder(listItemView.rootView) {
+    class ViewHolder(
+        private val listItemView: ApodFavoritesListItemView
+    ) : RecyclerView.ViewHolder(listItemView.rootView) {
 
         fun bind(apod: Apod) = listItemView.bindFavoriteApod(apod)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(viewFactory.getApodFavoritesListItemView(parent).also { listItemView ->
-            listItemView.addListener(this)
+        return ViewHolder(ApodFavoritesListItemViewImpl(
+            LayoutInflater.from(parent.context),
+            parent
+        ).also { view ->
+            view.addListener(this)
         })
     }
 

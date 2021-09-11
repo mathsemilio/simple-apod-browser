@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/toolbar_action_search_favorites"
-        android:icon="@drawable/ic_baseline_search_24"
+        android:icon="@drawable/ic_search"
         android:title="@string/toolbar_action_title_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always|collapseActionView"

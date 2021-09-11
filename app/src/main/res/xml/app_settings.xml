@@ -8,7 +8,7 @@
             app:dialogTitle="@string/dialog_title_default_date_range"
             app:entries="@array/default_date_range_preference_entries"
             app:entryValues="@array/default_date_range_preference_entry_values"
-            app:icon="@drawable/ic_baseline_date_range_24"
+            app:icon="@drawable/ic_date_range"
             app:key="DEFAULT_DATE_RANGE_PREFERENCE"
             app:title="@string/preference_title_default_date_range"
             tools:summary="Last seven days" />
@@ -18,7 +18,7 @@
     <PreferenceCategory app:title="@string/preference_category_title_advanced">
 
         <Preference
-            app:icon="@drawable/ic_baseline_cleaning_services_24"
+            app:icon="@drawable/ic_cleaning_services"
             app:key="CLEAR_IMAGE_CACHE_PREFERENCE"
             app:summary="@string/preference_summary_clear_image_cache"
             app:title="@string/preference_title_clear_image_cache" />
@@ -28,7 +28,7 @@
     <PreferenceCategory app:title="@string/preference_category_title_app_info">
 
         <Preference
-            app:icon="@drawable/ic_baseline_info_24"
+            app:icon="@drawable/ic_info"
             app:key="APP_VERSION_PREFERENCE"
             app:title="@string/preference_title_app_version"
             tools:summary="stable-0.1" />

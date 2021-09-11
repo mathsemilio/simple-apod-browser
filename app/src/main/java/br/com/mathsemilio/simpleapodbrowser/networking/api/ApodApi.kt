@@ -13,8 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package br.com.mathsemilio.simpleapodbrowser.networking
 
+package br.com.mathsemilio.simpleapodbrowser.networking.api
+
+import br.com.mathsemilio.simpleapodbrowser.common.APOD_ENDPOINT
 import br.com.mathsemilio.simpleapodbrowser.domain.model.ApodSchema
 import retrofit2.Response
 import retrofit2.http.GET
@@ -22,22 +24,22 @@ import retrofit2.http.Query
 
 interface ApodApi {
 
-    @GET("apod")
-    suspend fun getAPoDsBasedOnDateRange(
+    @GET(APOD_ENDPOINT)
+    suspend fun getApodsBasedOnDateRange(
         @Query("api_key") key: String,
         @Query("start_date") startDate: String,
         @Query("thumbs") includeThumbnail: Boolean = true
     ): Response<List<ApodSchema>>
 
-    @GET("apod")
-    suspend fun getAPoDBasedOnDate(
+    @GET(APOD_ENDPOINT)
+    suspend fun getApodBasedOnDate(
         @Query("api_key") key: String,
         @Query("date") date: String,
         @Query("thumbs") includeThumbnail: Boolean = true
     ): Response<ApodSchema>
 
-    @GET("apod")
-    suspend fun getRandomAPoD(
+    @GET(APOD_ENDPOINT)
+    suspend fun getRandomApod(
         @Query("api_key") key: String,
         @Query("count") count: Int,
         @Query("thumbs") includeThumbnail: Boolean = true
