@@ -36,7 +36,7 @@ class ApodFavoritesListItemViewImpl(
     private lateinit var favoriteApod: Apod
 
     init {
-        rootView = layoutInflater.inflate(R.layout.apod_favorites_list_item, parent, false)
+        rootView = layoutInflater.inflate(R.layout.apod_list_item, parent, false)
 
         rootView.setOnClickListener {
             onFavoriteAPoDClicked()

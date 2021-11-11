@@ -3,7 +3,7 @@
 
     <item
         android:id="@id/ApodListScreen"
-        android:icon="@drawable/ic_explore"
+        android:icon="@drawable/ic_outline_explore"
         android:title="@string/latest" />
 
     <item

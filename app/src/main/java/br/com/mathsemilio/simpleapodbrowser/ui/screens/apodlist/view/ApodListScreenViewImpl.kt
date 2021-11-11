@@ -50,9 +50,9 @@ class ApodListScreenViewImpl(
     }
 
     private fun initializeViews() {
-        progressBarApods = rootView.findViewById(R.id.progress_bar_apods)
+        progressBarApods = rootView.findViewById(R.id.progress_bar_apod_list)
         linearLayoutScreenErrorState = rootView.findViewById(R.id.linear_layout_screen_error_state)
-        swipeRefreshLayoutApods = rootView.findViewById(R.id.swipe_refresh_layout_apods)
+        swipeRefreshLayoutApods = rootView.findViewById(R.id.swipe_refresh_layout_apod_list)
         recyclerViewApods = rootView.findViewById(R.id.recycler_view_apods)
     }
 

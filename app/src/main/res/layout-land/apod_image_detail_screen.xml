@@ -8,7 +8,6 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/material_toolbar_apod_image_detail"
-        style="@style/Widget.App.Toolbar"
         android:layout_width="0dp"
         android:layout_height="?actionBarSize"
         android:background="@android:color/transparent"
