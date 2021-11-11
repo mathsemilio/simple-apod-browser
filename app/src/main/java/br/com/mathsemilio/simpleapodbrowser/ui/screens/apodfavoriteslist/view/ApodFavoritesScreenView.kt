@@ -25,8 +25,6 @@ abstract class ApodFavoritesScreenView : BaseObservableView<ApodFavoritesScreenV
         fun onFavoriteApodClicked(favoriteApod: Apod)
 
         fun onFavoriteApodSwipedToDelete(favoriteApod: Apod)
-
-        fun onRemoveFromFavoritesIconClicked(apod: Apod)
     }
 
     abstract fun bindFavoriteApods(favoriteApods: List<Apod>)

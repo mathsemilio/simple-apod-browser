@@ -19,12 +19,11 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.l
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-abstract class ApodFavoritesListItemView : BaseObservableView<ApodFavoritesListItemView.Listener>() {
+abstract class ApodFavoritesListItemView :
+    BaseObservableView<ApodFavoritesListItemView.Listener>() {
 
     interface Listener {
         fun onFavoriteApodClicked(favoriteApod: Apod)
-
-        fun onRemoveFromFavoritesIconClicked(favoriteApod: Apod)
     }
 
     abstract fun bindFavoriteApod(favoriteApod: Apod)

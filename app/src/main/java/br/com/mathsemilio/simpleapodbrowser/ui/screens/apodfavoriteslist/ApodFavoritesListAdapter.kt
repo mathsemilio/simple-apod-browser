@@ -31,8 +31,6 @@ class ApodFavoritesListAdapter(
 
     interface Listener {
         fun onFavoriteApodClicked(favoriteApod: Apod)
-
-        fun onRemoveFromFavoritesIconClicked(apod: Apod)
     }
 
     class ViewHolder(
@@ -57,9 +55,5 @@ class ApodFavoritesListAdapter(
 
     override fun onFavoriteApodClicked(favoriteApod: Apod) {
         listener.onFavoriteApodClicked(favoriteApod)
-    }
-
-    override fun onRemoveFromFavoritesIconClicked(favoriteApod: Apod) {
-        listener.onRemoveFromFavoritesIconClicked(favoriteApod)
     }
 }

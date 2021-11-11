@@ -121,12 +121,6 @@ class ApodFavoritesScreenViewImpl(
         }
     }
 
-    override fun onRemoveFromFavoritesIconClicked(apod: Apod) {
-        notifyListener { listener ->
-            listener.onRemoveFromFavoritesIconClicked(apod)
-        }
-    }
-
     private fun notifyFavoriteApodSwipedToDelete() {
         notifyListener { listener ->
             listener.onFavoriteApodSwipedToDelete(lastSwipedFavoriteApod)

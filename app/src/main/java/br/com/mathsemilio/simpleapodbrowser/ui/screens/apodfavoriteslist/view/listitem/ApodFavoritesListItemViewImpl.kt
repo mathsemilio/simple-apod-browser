@@ -21,6 +21,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_IMAGE
+import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_VIDEO
+import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_APOD_TYPE_EXCEPTION
 import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
@@ -29,64 +32,57 @@ class ApodFavoritesListItemViewImpl(
     parent: ViewGroup?
 ) : ApodFavoritesListItemView() {
 
-    private lateinit var imageViewApodFavoritesListItemImage: ImageView
-    private lateinit var textViewApodFavoritesListItemTitle: TextView
-    private lateinit var imageViewRemoveFromFavorites: ImageView
+    private lateinit var imageViewApod: ImageView
+    private lateinit var textViewApodTitle: TextView
+    private lateinit var textViewApodType: TextView
 
     private lateinit var favoriteApod: Apod
 
     init {
         rootView = layoutInflater.inflate(R.layout.apod_list_item, parent, false)
 
-        rootView.setOnClickListener {
-            onFavoriteAPoDClicked()
-        }
-
         initializeViews()
 
-        setRemoveFromFavoritesIconOnClickListener()
+        attachApodListItemOnClickListener()
     }
 
     private fun initializeViews() {
-        imageViewApodFavoritesListItemImage =
-            rootView.findViewById(R.id.image_view_apod_favorites_list_item_image)
-        textViewApodFavoritesListItemTitle =
-            rootView.findViewById(R.id.text_view_apod_favorites_list_item_title)
-        imageViewRemoveFromFavorites =
-            rootView.findViewById(R.id.image_view_remove_from_favorites)
+        imageViewApod = rootView.findViewById(R.id.image_view_apod)
+        textViewApodTitle = rootView.findViewById(R.id.text_view_apod_title)
+        textViewApodType = rootView.findViewById(R.id.text_view_apod_type)
     }
 
-    private fun setRemoveFromFavoritesIconOnClickListener() {
-        imageViewRemoveFromFavorites.setOnClickListener {
-            onRemoveFromFavoritesIconClicked()
+    private fun attachApodListItemOnClickListener() {
+        rootView.setOnClickListener {
+            notifyListener { listener ->
+                listener.onFavoriteApodClicked(favoriteApod)
+            }
         }
     }
 
     override fun bindFavoriteApod(favoriteApod: Apod) {
         this.favoriteApod = favoriteApod
 
-        GlideProvider.loadResourceFromUrl(favoriteApod.url, imageViewApodFavoritesListItemImage)
+        GlideProvider.loadResourceFromUrl(favoriteApod.url, imageViewApod)
 
         loadApodVideoThumbnail()
 
-        textViewApodFavoritesListItemTitle.text = favoriteApod.title
+        textViewApodTitle.text = favoriteApod.title
+
+        setApodType(favoriteApod.mediaType)
     }
 
     private fun loadApodVideoThumbnail() {
-        favoriteApod.thumbnailUrl?.let { thumbnailUrl ->
-            GlideProvider.loadResourceFromUrl(thumbnailUrl, imageViewApodFavoritesListItemImage)
+        favoriteApod.thumbnailUrl?.let { url ->
+            GlideProvider.loadResourceFromUrl(url, imageViewApod)
         }
     }
 
-    private fun onFavoriteAPoDClicked() {
-        notifyListener { listener ->
-            listener.onFavoriteApodClicked(favoriteApod)
-        }
-    }
-
-    private fun onRemoveFromFavoritesIconClicked() {
-        notifyListener { listener ->
-            listener.onRemoveFromFavoritesIconClicked(favoriteApod)
+    private fun setApodType(mediaType: String) {
+        textViewApodType.text = when (mediaType) {
+            APOD_TYPE_IMAGE -> getString(R.string.apod_type_image)
+            APOD_TYPE_VIDEO -> getString(R.string.apod_type_video)
+            else -> throw IllegalArgumentException(ILLEGAL_APOD_TYPE_EXCEPTION)
         }
     }
 }

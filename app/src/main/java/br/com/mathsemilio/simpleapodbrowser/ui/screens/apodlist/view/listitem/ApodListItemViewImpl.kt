@@ -21,6 +21,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_IMAGE
+import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_VIDEO
+import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_APOD_TYPE_EXCEPTION
 import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
@@ -29,23 +32,27 @@ class ApodListItemViewImpl(
     parent: ViewGroup?
 ) : ApodListItemView() {
 
-    private var imageViewApodListItemImage: ImageView
-    private var textViewApodListItemTitle: TextView
+    private lateinit var imageViewApod: ImageView
+    private lateinit var textViewApodTitle: TextView
+    private lateinit var textViewApodType: TextView
 
     private lateinit var apod: Apod
 
     init {
         rootView = layoutInflater.inflate(R.layout.apod_list_item, parent, false)
 
-        rootView.setOnClickListener {
-            onApodClicked()
-        }
+        initializeViews()
 
-        imageViewApodListItemImage = rootView.findViewById(R.id.image_view_apod_list_item_image)
-        textViewApodListItemTitle = rootView.findViewById(R.id.text_view_apod_list_item_title)
+        attachApodListItemOnClickListener()
     }
 
-    private fun onApodClicked() {
+    private fun initializeViews() {
+        imageViewApod = rootView.findViewById(R.id.image_view_apod)
+        textViewApodTitle = rootView.findViewById(R.id.text_view_apod_title)
+        textViewApodType = rootView.findViewById(R.id.text_view_apod_type)
+    }
+
+    private fun attachApodListItemOnClickListener() {
         notifyListener { listener ->
             listener.onApodClicked(apod)
         }
@@ -54,16 +61,26 @@ class ApodListItemViewImpl(
     override fun bindApodDetails(apod: Apod) {
         this.apod = apod
 
-        GlideProvider.loadResourceFromUrl(apod.url, imageViewApodListItemImage)
+        GlideProvider.loadResourceFromUrl(apod.url, imageViewApod)
 
         loadApodVideoThumbnail()
 
-        textViewApodListItemTitle.text = apod.title
+        textViewApodTitle.text = apod.title
+
+        setApodType(apod.mediaType)
     }
 
     private fun loadApodVideoThumbnail() {
-        apod.thumbnailUrl?.let { thumbnailUrl ->
-            GlideProvider.loadResourceFromUrl(thumbnailUrl, imageViewApodListItemImage)
+        apod.thumbnailUrl?.let { url ->
+            GlideProvider.loadResourceFromUrl(url, imageViewApod)
+        }
+    }
+
+    private fun setApodType(mediaType: String) {
+        textViewApodType.text = when (mediaType) {
+            APOD_TYPE_IMAGE -> getString(R.string.apod_type_image)
+            APOD_TYPE_VIDEO -> getString(R.string.apod_type_video)
+            else -> throw IllegalArgumentException(ILLEGAL_APOD_TYPE_EXCEPTION)
         }
     }
 }

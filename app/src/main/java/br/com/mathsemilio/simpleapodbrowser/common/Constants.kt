@@ -52,3 +52,4 @@ const val FIRST_APOD_DATE_IN_MILLIS = 803271600000L
 const val INVALID_MONTH_EXCEPTION = "Invalid month. Must be in the 1 to 12 month range"
 const val ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION = "Illegal default date range"
 const val COULD_NOT_OPEN_OUTPUT_STREAM_EXCEPTION = "Could not open file output stream"
+const val ILLEGAL_APOD_TYPE_EXCEPTION = "Invalid APoD type: must be either \"Image\" or \"Video\""

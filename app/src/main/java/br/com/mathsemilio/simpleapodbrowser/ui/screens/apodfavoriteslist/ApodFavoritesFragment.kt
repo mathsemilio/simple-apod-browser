@@ -86,13 +86,6 @@ class ApodFavoritesFragment : BaseFragment(),
         }
     }
 
-    override fun onRemoveFromFavoritesIconClicked(apod: Apod) {
-        coroutineScope.launch {
-            deleteFavoriteApodUseCase.deleteFavoriteApod(apod)
-            fetchFavoriteApods()
-        }
-    }
-
     private fun fetchFavoriteApods() {
         if (!isDataLoaded)
             coroutineScope.launch {
