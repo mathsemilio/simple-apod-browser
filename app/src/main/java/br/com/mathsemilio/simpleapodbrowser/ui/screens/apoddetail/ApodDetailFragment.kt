@@ -19,6 +19,7 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.*
+import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
 import br.com.mathsemilio.simpleapodbrowser.common.OUT_STATE_APOD
@@ -50,7 +51,7 @@ class ApodDetailFragment : BaseFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        screensNavigator = compositionRoot.screensNavigator
+        screensNavigator = ScreensNavigator(findNavController())
         messagesManager = compositionRoot.messagesManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
         addFavoriteApodUseCase = compositionRoot.addFavoriteApodUseCase

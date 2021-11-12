@@ -19,6 +19,7 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.util.onQueryTextChangedListener
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
@@ -58,7 +59,7 @@ class ApodFavoritesFragment : BaseFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        screensNavigator = compositionRoot.screensNavigator
+        screensNavigator = ScreensNavigator(findNavController())
         hostLayoutHelper = compositionRoot.hostLayoutHelper
         messagesManager = compositionRoot.messagesManager
         snackBarManager = compositionRoot.snackBarManager

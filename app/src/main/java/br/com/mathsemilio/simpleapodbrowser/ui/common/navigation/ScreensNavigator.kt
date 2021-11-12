@@ -26,17 +26,26 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 class ScreensNavigator(private val navController: NavController) {
 
     fun toApodDetailsScreen(apod: Apod) {
-        val argApod = Bundle(1).apply { putSerializable(ARG_APOD, apod) }
+        val argApod = Bundle(1).apply {
+            putSerializable(ARG_APOD, apod)
+        }
+
         navController.navigate(R.id.action_apod_list_to_apod_detail_screen, argApod)
     }
 
     fun toFavoriteApodDetailsScreen(favoriteApod: Apod) {
-        val argFavoriteApod = Bundle(1).apply { putSerializable(ARG_APOD, favoriteApod) }
+        val argFavoriteApod = Bundle(1).apply {
+            putSerializable(ARG_APOD, favoriteApod)
+        }
+
         navController.navigate(R.id.action_apod_favorites_to_apod_detail_screen, argFavoriteApod)
     }
 
     fun toApodImageDetail(apodImage: ByteArray) {
-        val argApodImage = Bundle(1).apply { putByteArray(ARG_APOD_IMAGE, apodImage) }
+        val argApodImage = Bundle(1).apply {
+            putByteArray(ARG_APOD_IMAGE, apodImage)
+        }
+
         navController.navigate(R.id.action_apod_detail_to_apod_image_detail_screen, argApodImage)
     }
 

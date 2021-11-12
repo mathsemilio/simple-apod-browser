@@ -18,6 +18,7 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 
 import android.os.Bundle
 import android.view.*
+import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.*
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
@@ -67,7 +68,7 @@ class ApodListFragment : BaseFragment(),
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         preferencesManager = compositionRoot.preferencesManager
-        screensNavigator = compositionRoot.screensNavigator
+        screensNavigator = ScreensNavigator(findNavController())
         messagesManager = compositionRoot.messagesManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
         dialogManager = compositionRoot.dialogManager

@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.OUT_STATE_APOD_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.WRITE_EXTERNAL_STORAGE_REQUEST_CODE
@@ -64,7 +65,7 @@ class ApodImageDetailFragment : BaseFragment(),
         permissionsHelper = compositionRoot.permissionsHelper
         apodImageExporter = compositionRoot.apodImageExporter
         tapGestureHelper = compositionRoot.tapGestureHelper
-        screensNavigator = compositionRoot.screensNavigator
+        screensNavigator = ScreensNavigator(findNavController())
         statusBarDelegate = compositionRoot.statusBarManager
         systemUIDelegate = compositionRoot.systemUIManager
         messagesManager = compositionRoot.messagesManager

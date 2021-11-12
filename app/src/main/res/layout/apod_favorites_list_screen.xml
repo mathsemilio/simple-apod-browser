@@ -37,20 +37,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="@string/message_nothing_found"
-            android:textAppearance="?textAppearanceTitleLarge" />
+            android:textAppearance="?textAppearanceTitleMedium" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="24dp"
             android:text="@string/message_click_on_add_to_favorites"
             android:textAlignment="center"
-            android:textAppearance="?textAppearanceBodyMedium"
-            android:textSize="16sp" />
+            android:textAppearance="?textAppearanceBodyMedium" />
 
     </LinearLayout>
 

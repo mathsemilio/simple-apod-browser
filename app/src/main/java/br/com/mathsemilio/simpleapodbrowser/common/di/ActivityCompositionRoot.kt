@@ -17,7 +17,6 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.common.di
 
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import br.com.mathsemilio.simpleapodbrowser.common.provider.APIKeyProvider
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
 import br.com.mathsemilio.simpleapodbrowser.data.manager.PreferencesManager
@@ -25,11 +24,11 @@ import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.ApodEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteApodDatabase
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesEndpoint
+import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.StatusBarDelegate
+import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.StatusBarDelegate
-import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
 
 class ActivityCompositionRoot(
     private val activity: AppCompatActivity,
@@ -62,8 +61,6 @@ class ActivityCompositionRoot(
     val fragmentManager get() = activity.supportFragmentManager
 
     val hostLayoutHelper get() = activity as HostLayoutHelper
-
-    val navController get() = hostLayoutHelper.getFragmentContainer().findNavController()
 
     val preferencesManager get() = PreferencesManager(PreferencesEndpoint(application))
 

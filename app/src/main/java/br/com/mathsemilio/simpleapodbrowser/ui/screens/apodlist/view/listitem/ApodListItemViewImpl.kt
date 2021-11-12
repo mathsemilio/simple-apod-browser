@@ -53,8 +53,10 @@ class ApodListItemViewImpl(
     }
 
     private fun attachApodListItemOnClickListener() {
-        notifyListener { listener ->
-            listener.onApodClicked(apod)
+        rootView.setOnClickListener {
+            notifyListener { listener ->
+                listener.onApodClicked(apod)
+            }
         }
     }
 

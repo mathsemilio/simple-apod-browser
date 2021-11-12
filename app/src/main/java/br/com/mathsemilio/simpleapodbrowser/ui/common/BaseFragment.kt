@@ -22,7 +22,7 @@ import br.com.mathsemilio.simpleapodbrowser.ui.MainActivity
 
 abstract class BaseFragment : Fragment() {
 
-    val compositionRoot by lazy {
-        ControllerCompositionRoot((requireActivity() as MainActivity).compositionRoot)
+    protected val compositionRoot by lazy {
+        ControllerCompositionRoot((requireActivity() as BaseActivity).compositionRoot)
     }
 }

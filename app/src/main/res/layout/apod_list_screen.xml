@@ -35,22 +35,21 @@
             android:src="@drawable/ic_undraw_counting_stars_rrnl" />
 
         <TextView
-            style="?textAppearanceTitleLarge"
+            style="?textAppearanceTitleMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="@string/message_something_went_wrong" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:text="@string/message_check_your_connection_and_try_again"
             android:textAlignment="center"
-            android:textAppearance="?textAppearanceBodyMedium"
-            android:textSize="16sp" />
+            android:textAppearance="?textAppearanceBodyMedium" />
 
     </LinearLayout>
 
