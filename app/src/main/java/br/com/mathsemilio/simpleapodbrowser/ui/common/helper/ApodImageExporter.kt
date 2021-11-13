@@ -60,11 +60,11 @@ class ApodImageExporter(
                 compressImage(contentResolver, apodImage, imageUri)
             }
 
-            notifyListener { listener ->
+            notify { listener ->
                 listener.onApodImageExportedSuccessfully()
             }
         } catch (exception: Exception) {
-            notifyListener { listener ->
+            notify { listener ->
                 listener.onExportApodImageFailed()
             }
         }

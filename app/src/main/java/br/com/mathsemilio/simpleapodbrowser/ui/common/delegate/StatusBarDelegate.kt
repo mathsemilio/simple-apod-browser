@@ -17,7 +17,5 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.ui.common.delegate
 
 interface StatusBarDelegate {
-    fun onSetStatusBarColor(color: Int)
-
-    fun onRevertStatusBarColor()
+    var statusBarColor: Int
 }

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -24,19 +24,21 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.util.onRecyclerViewItemSwipedToTheLeft
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.ApodFavoritesListAdapter
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.FavoriteApodsListAdapter
 
-class ApodFavoritesScreenViewImpl(
+class FavoriteApodsScreenViewImpl(
     layoutInflater: LayoutInflater,
     container: ViewGroup?
-) : ApodFavoritesScreenView(), ApodFavoritesListAdapter.Listener {
+) : FavoriteApodsScreenView(),
+    FavoriteApodsListAdapter.Listener {
 
     private lateinit var progressBarApodFavorites: ProgressBar
     private lateinit var linearLayoutScreenEmptyState: LinearLayout
     private lateinit var recyclerViewApodFavorites: RecyclerView
 
-    private lateinit var apodFavoritesListAdapter: ApodFavoritesListAdapter
+    private lateinit var favoriteApodsListAdapter: FavoriteApodsListAdapter
 
     private lateinit var lastSwipedFavoriteApod: Apod
 
@@ -55,41 +57,31 @@ class ApodFavoritesScreenViewImpl(
     }
 
     private fun setupRecyclerView() {
-        apodFavoritesListAdapter = ApodFavoritesListAdapter(this)
+        favoriteApodsListAdapter = FavoriteApodsListAdapter(this)
 
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerViewApodFavorites)
 
         recyclerViewApodFavorites.apply {
-            adapter = apodFavoritesListAdapter
+            adapter = favoriteApodsListAdapter
             setHasFixedSize(true)
         }
     }
 
     private val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback
-        get() {
-            return object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    return false
-                }
+        get() = onRecyclerViewItemSwipedToTheLeft { viewHolder ->
+            val apodFavoritesList = favoriteApodsListAdapter.currentList.toMutableList()
 
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val currentApodFavoritesList = apodFavoritesListAdapter.currentList.toMutableList()
+            lastSwipedFavoriteApod = apodFavoritesList.removeAt(viewHolder.adapterPosition)
 
-                    lastSwipedFavoriteApod = currentApodFavoritesList.removeAt(viewHolder.adapterPosition)
+            favoriteApodsListAdapter.submitList(apodFavoritesList)
 
-                    apodFavoritesListAdapter.submitList(currentApodFavoritesList)
-
-                    notifyFavoriteApodSwipedToDelete()
-                }
+            notify { listener ->
+                listener.onFavoriteApodSwipedToDelete(lastSwipedFavoriteApod)
             }
         }
 
-    override fun bindFavoriteApods(favoriteApods: List<Apod>) {
-        apodFavoritesListAdapter.submitList(favoriteApods)
+    override fun bind(favoriteApods: List<Apod>) {
+        favoriteApodsListAdapter.submitList(favoriteApods)
 
         if (favoriteApods.isEmpty())
             showScreenEmptyState()
@@ -116,14 +108,8 @@ class ApodFavoritesScreenViewImpl(
     }
 
     override fun onFavoriteApodClicked(favoriteApod: Apod) {
-        notifyListener { listener ->
+        notify { listener ->
             listener.onFavoriteApodClicked(favoriteApod)
-        }
-    }
-
-    private fun notifyFavoriteApodSwipedToDelete() {
-        notifyListener { listener ->
-            listener.onFavoriteApodSwipedToDelete(lastSwipedFavoriteApod)
         }
     }
 }

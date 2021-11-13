@@ -16,33 +16,29 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod
 
-import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
 import br.com.mathsemilio.simpleapodbrowser.common.util.formatTimeInMillis
 import br.com.mathsemilio.simpleapodbrowser.common.util.toApod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.ApodEndpoint
 
-class FetchApodBasedOnDateUseCase(
-    private val endpoint: ApodEndpoint
-) : BaseObservable<FetchApodBasedOnDateUseCase.Listener>() {
+class FetchApodBasedOnDateUseCase(private val endpoint: ApodEndpoint) {
 
-    interface Listener {
-        fun onFetchApodBasedOnDateCompleted(apod: Apod)
-
-        fun onFetchApodBasedOnDateFailed()
+    sealed class FetchApodBasedOnDateResult {
+        data class Completed(val apod: Apod?) : FetchApodBasedOnDateResult()
+        object Failed : FetchApodBasedOnDateResult()
     }
 
-    suspend fun getApodBasedOnDate(dateInMillis: Long) {
-        endpoint.getApodsBasedOnDate(dateInMillis.formatTimeInMillis()).also { result ->
-            when (result) {
-                is Result.Completed -> notifyListener { listener ->
-                    listener.onFetchApodBasedOnDateCompleted(apod = result.data?.toApod()!!)
-                }
-                is Result.Failed -> notifyListener { listener ->
-                    listener.onFetchApodBasedOnDateFailed()
-                }
+    suspend fun fetchApodBasedOnDate(dateInMillis: Long): FetchApodBasedOnDateResult {
+        var fetchApodBasedOnDateResult: FetchApodBasedOnDateResult
+
+        endpoint.fetchApodsBasedOn(dateInMillis.formatTimeInMillis()).also { result ->
+            fetchApodBasedOnDateResult = when (result) {
+                is Result.Completed -> FetchApodBasedOnDateResult.Completed(apod = result.data?.toApod())
+                is Result.Failed -> FetchApodBasedOnDateResult.Failed
             }
         }
+
+        return fetchApodBasedOnDateResult
     }
 }

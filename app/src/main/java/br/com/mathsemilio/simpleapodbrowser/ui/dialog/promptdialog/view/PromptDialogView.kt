@@ -14,22 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view
+package br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.view
 
-import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-abstract class ApodFavoritesScreenView : BaseObservableView<ApodFavoritesScreenView.Listener>() {
+abstract class PromptDialogView : BaseObservableView<PromptDialogView.Listener>() {
 
     interface Listener {
-        fun onFavoriteApodClicked(favoriteApod: Apod)
+        fun onPositiveButtonClicked()
 
-        fun onFavoriteApodSwipedToDelete(favoriteApod: Apod)
+        fun onNegativeButtonClicked()
     }
 
-    abstract fun bindFavoriteApods(favoriteApods: List<Apod>)
+    abstract fun setTitle(title: String)
 
-    abstract fun showProgressIndicator()
+    abstract fun setMessage(message: String)
 
-    abstract fun hideProgressIndicator()
+    abstract fun setPositiveButtonText(positiveButtonText: String)
+
+    abstract fun setNegativeButtonText(negativeButtonText: String?)
 }

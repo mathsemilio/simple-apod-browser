@@ -28,7 +28,7 @@
     <PreferenceCategory app:title="@string/preference_category_title_app_info">
 
         <Preference
-            app:icon="@drawable/ic_info"
+            app:icon="@drawable/ic_outline_info"
             app:key="APP_VERSION_PREFERENCE"
             app:title="@string/preference_title_app_version"
             tools:summary="stable-0.1" />

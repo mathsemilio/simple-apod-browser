@@ -26,17 +26,17 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 interface FavoriteApodDao {
 
     @Insert
-    suspend fun insert(apod: Apod)
+    suspend fun add(favoriteApod: Apod)
 
     @Delete
-    suspend fun delete(apod: Apod)
+    suspend fun delete(favoriteApod: Apod)
 
     @Query("SELECT * FROM favorite_apod_table")
-    suspend fun getFavoriteApods(): List<Apod>
+    suspend fun fetchFavoriteApods(): List<Apod>
 
     @Query("SELECT * FROM favorite_apod_table WHERE date = :date")
-    suspend fun getFavoriteApodByDate(date: String): Apod
+    suspend fun fetchFavoriteApodBy(date: String): Apod
 
     @Query("SELECT * FROM favorite_apod_table WHERE title LIKE '%' || :searchQuery || '%'")
-    suspend fun getFavoriteApodsBasedOnSearchQuery(searchQuery: String): List<Apod>
+    suspend fun fetchFavoriteApodsBasedOn(searchQuery: String): List<Apod>
 }

@@ -14,8 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.common.event
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.view
 
-sealed class DateSetEvent {
-    data class DateSet(val dateInMillis: Long) : DateSetEvent()
+import android.graphics.Bitmap
+import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
+
+abstract class ApodImageDetailView : BaseObservableView<ApodImageDetailView.Listener>() {
+
+    interface Listener {
+        fun onToolbarNavigationIconClicked()
+
+        fun onToolbarActionExportApodImageClicked()
+    }
+
+    abstract fun bind(apodImage: Bitmap)
+
+    abstract fun showToolbar()
+
+    abstract fun hideToolbar()
 }

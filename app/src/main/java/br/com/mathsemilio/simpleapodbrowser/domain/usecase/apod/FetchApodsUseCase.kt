@@ -16,33 +16,32 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod
 
-import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
-import br.com.mathsemilio.simpleapodbrowser.common.util.getDaysInRange
+import br.com.mathsemilio.simpleapodbrowser.common.util.convertDefaultDateRangeFrom
+import br.com.mathsemilio.simpleapodbrowser.common.util.getDaysIn
 import br.com.mathsemilio.simpleapodbrowser.common.util.toApodList
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.ApodEndpoint
 
-class FetchApodsUseCase(
-    private val endpoint: ApodEndpoint
-) : BaseObservable<FetchApodsUseCase.Listener>() {
+class FetchApodsUseCase(private val endpoint: ApodEndpoint) {
 
-    interface Listener {
-        fun onFetchApodsCompleted(apods: List<Apod>)
-
-        fun onFetchApodsFailed()
+    sealed class FetchApodsResult {
+        data class Completed(val apods: List<Apod>?) : FetchApodsResult()
+        object Failed : FetchApodsResult()
     }
 
-    suspend fun fetchApodsBasedOnDateRange(dayRange: Int) {
-        endpoint.getApodsBasedOnDateRange(getDaysInRange(dayRange)).also { result ->
-            when (result) {
-                is Result.Completed -> notifyListener { listener ->
-                    listener.onFetchApodsCompleted(apods = result.data?.toApodList()!!)
-                }
-                is Result.Failed -> notifyListener { listener ->
-                    listener.onFetchApodsFailed()
-                }
+    suspend fun fetchApodsBasedOn(dateRange: String): FetchApodsResult {
+        var fetchApodsResult: FetchApodsResult
+
+        endpoint.fetchApodsBasedOnDateRange(
+            getDaysIn(convertDefaultDateRangeFrom(dateRange))
+        ).also { result ->
+            fetchApodsResult = when (result) {
+                is Result.Completed -> FetchApodsResult.Completed(apods = result.data?.toApodList())
+                is Result.Failed -> FetchApodsResult.Failed
             }
         }
+
+        return fetchApodsResult
     }
 }

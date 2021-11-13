@@ -27,7 +27,7 @@ abstract class ApodListScreenView : BaseObservableView<ApodListScreenView.Listen
         fun onScreenSwipedToRefresh()
     }
 
-    abstract fun bindApods(apods: List<Apod>)
+    abstract fun bind(apods: List<Apod>)
 
     abstract fun showProgressIndicator()
 

@@ -20,13 +20,13 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_DIALOG_MESSAGE
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_DIALOG_TITLE
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_POSITIVE_BUTTON_TEXT
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class InfoDialog : BaseDialogFragment() {
 
@@ -44,15 +44,18 @@ class InfoDialog : BaseDialogFragment() {
         }
     }
 
-    private val title get() = requireArguments().getString(ARG_DIALOG_TITLE, "")
+    private val title
+        get() = requireArguments().getString(ARG_DIALOG_TITLE, "")
 
-    private val message get() = requireArguments().getString(ARG_DIALOG_MESSAGE, "")
+    private val message
+        get() = requireArguments().getString(ARG_DIALOG_MESSAGE, "")
 
-    private val positiveButtonText get() = requireArguments().getString(ARG_POSITIVE_BUTTON_TEXT, "")
+    private val positiveButtonText
+        get() = requireArguments().getString(ARG_POSITIVE_BUTTON_TEXT, "")
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return requireActivity().let { activity ->
-            val dialogBuilder = AlertDialog.Builder(activity)
+            val dialogBuilder = MaterialAlertDialogBuilder(activity)
             val layoutInflater = requireActivity().layoutInflater
 
             val dialogView = layoutInflater.inflate(R.layout.layout_info_dialog, null)
@@ -71,7 +74,6 @@ class InfoDialog : BaseDialogFragment() {
             val positiveButton = view.findViewById<MaterialButton>(R.id.button_info_dialog_positive)
 
             titleTextView.text = title
-
             messageTextView.text = message
 
             positiveButton.apply {

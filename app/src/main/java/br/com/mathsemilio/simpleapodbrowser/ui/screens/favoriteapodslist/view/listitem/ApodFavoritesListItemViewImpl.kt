@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.listitem
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -24,7 +24,7 @@ import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_VIDEO
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_APOD_TYPE_EXCEPTION
-import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
 class ApodFavoritesListItemViewImpl(
@@ -54,16 +54,16 @@ class ApodFavoritesListItemViewImpl(
 
     private fun attachApodListItemOnClickListener() {
         rootView.setOnClickListener {
-            notifyListener { listener ->
+            notify { listener ->
                 listener.onFavoriteApodClicked(favoriteApod)
             }
         }
     }
 
-    override fun bindFavoriteApod(favoriteApod: Apod) {
+    override fun bind(favoriteApod: Apod) {
         this.favoriteApod = favoriteApod
 
-        GlideProvider.loadResourceFromUrl(favoriteApod.url, imageViewApod)
+        ImageResourceManager.loadFrom(favoriteApod.url, imageViewApod)
 
         loadApodVideoThumbnail()
 
@@ -74,7 +74,7 @@ class ApodFavoritesListItemViewImpl(
 
     private fun loadApodVideoThumbnail() {
         favoriteApod.thumbnailUrl?.let { url ->
-            GlideProvider.loadResourceFromUrl(url, imageViewApod)
+            ImageResourceManager.loadFrom(url, imageViewApod)
         }
     }
 

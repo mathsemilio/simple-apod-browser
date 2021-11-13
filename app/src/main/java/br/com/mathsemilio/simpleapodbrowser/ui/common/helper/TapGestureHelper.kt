@@ -37,6 +37,7 @@ class TapGestureHelper : Observable<TapGestureHelper.Listener>,
         listeners.forEach { listener ->
             listener.onScreenTapped()
         }
+
         return true
     }
 

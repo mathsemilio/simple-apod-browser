@@ -14,9 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.common.event
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.view
 
-sealed class PromptDialogEvent {
-    object PositiveButtonClicked : PromptDialogEvent()
-    object NegativeButtonClicked : PromptDialogEvent()
+import android.graphics.Bitmap
+import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
+import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
+
+abstract class ApodDetailView : BaseObservableView<ApodDetailView.Listener>() {
+
+    interface Listener {
+        fun onApodImageClicked(apodImage: Bitmap)
+
+        fun onPlayIconClicked(videoUrl: String)
+    }
+
+    abstract fun bind(apod: Apod)
 }

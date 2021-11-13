@@ -17,31 +17,51 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.networking.endpoint
 
 import br.com.mathsemilio.simpleapodbrowser.common.provider.APIKeyProvider
-import br.com.mathsemilio.simpleapodbrowser.common.util.performRequestOn
 import br.com.mathsemilio.simpleapodbrowser.domain.model.ApodSchema
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.networking.api.ApodApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ApodEndpoint(
     private val apodApi: ApodApi,
     private val apiKeyProvider: APIKeyProvider
 ) {
-    suspend fun getApodsBasedOnDateRange(startDate: String): Result<List<ApodSchema>> {
-        return performRequestOn(Dispatchers.IO) {
-            apodApi.getApodsBasedOnDateRange(apiKeyProvider.apiKey, startDate).body()?.reversed()!!
+    suspend fun fetchApodsBasedOnDateRange(startDate: String): Result<List<ApodSchema>?> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Completed(
+                    data = apodApi.fetchApodsBasedOnDateRange(apiKeyProvider.apiKey, startDate)
+                        .body()
+                        ?.reversed()
+                )
+            } catch (exception: Exception) {
+                Result.Failed(exception = exception)
+            }
         }
     }
 
-    suspend fun getApodsBasedOnDate(date: String): Result<ApodSchema> {
-        return performRequestOn(Dispatchers.IO) {
-            apodApi.getApodBasedOnDate(apiKeyProvider.apiKey, date).body()!!
+    suspend fun fetchApodsBasedOn(date: String): Result<ApodSchema?> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Completed(
+                    data = apodApi.fetchApodBasedOnDate(apiKeyProvider.apiKey, date).body()
+                )
+            } catch (exception: Exception) {
+                Result.Failed(exception = exception)
+            }
         }
     }
 
-    suspend fun getRandomApod(): Result<List<ApodSchema>> {
-        return performRequestOn(Dispatchers.IO) {
-            apodApi.getRandomApod(apiKeyProvider.apiKey, 1).body()!!
+    suspend fun fetchRandomApod(): Result<ApodSchema?> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Completed(
+                    data = apodApi.fetchRandomApod(apiKeyProvider.apiKey, count = 1).body()?.first()
+                )
+            } catch (exception: Exception) {
+                Result.Failed(exception = exception)
+            }
         }
     }
 }

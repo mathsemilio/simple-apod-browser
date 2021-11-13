@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/image_view_apod_detail_image"
+            android:id="@+id/image_view_apod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
@@ -28,13 +28,13 @@
             android:contentDescription="@string/content_description_play_apod_video"
             android:src="@drawable/ic_play_circle"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/image_view_apod_detail_image"
-            app:layout_constraintEnd_toEndOf="@id/image_view_apod_detail_image"
-            app:layout_constraintStart_toStartOf="@id/image_view_apod_detail_image"
-            app:layout_constraintTop_toTopOf="@+id/image_view_apod_detail_image" />
+            app:layout_constraintBottom_toBottomOf="@id/image_view_apod"
+            app:layout_constraintEnd_toEndOf="@id/image_view_apod"
+            app:layout_constraintStart_toStartOf="@id/image_view_apod"
+            app:layout_constraintTop_toTopOf="@+id/image_view_apod" />
 
         <TextView
-            android:id="@+id/text_view_apod_detail_title"
+            android:id="@+id/text_view_apod_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -45,25 +45,25 @@
             android:textAppearance="?textAppearanceTitleLarge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_view_apod_detail_image"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_apod"
             tools:text="APoD Title" />
 
         <TextView
-            android:id="@+id/text_view_apod_detail_date"
+            android:id="@+id/text_view_apod_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:textAppearance="?textAppearanceBodyMedium"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/text_view_apod_detail_title"
+            app:layout_constraintEnd_toEndOf="@+id/text_view_apod_title"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_apod_detail_title"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_apod_title"
             tools:text="Date: January 1, 2021" />
 
         <TextView
-            android:id="@+id/text_view_apod_detail_explanation"
+            android:id="@+id/text_view_apod_explanation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -74,7 +74,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_apod_detail_date"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_apod_date"
             app:layout_constraintVertical_bias="1.0"
             tools:text="@string/lorem_ipsum" />
 

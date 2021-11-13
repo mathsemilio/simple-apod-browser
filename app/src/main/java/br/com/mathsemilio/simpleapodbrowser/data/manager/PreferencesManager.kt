@@ -20,5 +20,6 @@ import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesEndpo
 
 class PreferencesManager(private val endpoint: PreferencesEndpoint) {
 
-    val defaultDateRange get() = endpoint.defaultDateRange
+    val defaultDateRange
+        get() = endpoint.defaultDateRange
 }

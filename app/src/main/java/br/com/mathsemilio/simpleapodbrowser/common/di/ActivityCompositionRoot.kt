@@ -17,6 +17,7 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.common.di
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GestureDetectorCompat
 import br.com.mathsemilio.simpleapodbrowser.common.provider.APIKeyProvider
 import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
 import br.com.mathsemilio.simpleapodbrowser.data.manager.PreferencesManager
@@ -24,9 +25,9 @@ import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.ApodEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteApodDatabase
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesEndpoint
+import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.ContainerLayoutDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.StatusBarDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
 
@@ -34,9 +35,11 @@ class ActivityCompositionRoot(
     private val activity: AppCompatActivity,
     private val compositionRoot: CompositionRoot
 ) {
-    private val appDatabase get() = FavoriteApodDatabase.getDatabase(application)
+    private val appDatabase
+        get() = FavoriteApodDatabase.getDatabase(application)
 
-    private val favoriteApodDao get() = appDatabase.favoriteApodDao
+    private val favoriteApodDao
+        get() = appDatabase.favoriteApodDao
 
     val tapGestureHelper by lazy {
         TapGestureHelper()
@@ -46,25 +49,39 @@ class ActivityCompositionRoot(
         PermissionsHelper(activity)
     }
 
-    val apodEndpoint get() = ApodEndpoint(compositionRoot.apodApi, APIKeyProvider)
+    val application
+        get() = compositionRoot.application
 
-    val application get() = compositionRoot.application
+    val coroutineScopeProvider
+        get() = CoroutineScopeProvider
 
-    val coroutineScopeProvider get() = CoroutineScopeProvider
+    val containerLayoutDelegate
+        get() = activity as ContainerLayoutDelegate
 
-    val eventPublisher get() = compositionRoot.eventPublisher
+    val eventPublisher
+        get() = compositionRoot.eventPublisher
 
-    val eventSubscriber get() = compositionRoot.eventSubscriber
+    val eventSubscriber
+        get() = compositionRoot.eventSubscriber
 
-    val favoriteApodEndpoint get() = FavoriteApodEndpoint(favoriteApodDao)
+    val fragmentManager
+        get() = activity.supportFragmentManager
 
-    val fragmentManager get() = activity.supportFragmentManager
+    val gestureDetectorCompat
+        get() = GestureDetectorCompat(application, tapGestureHelper)
 
-    val hostLayoutHelper get() = activity as HostLayoutHelper
+    val preferencesManager
+        get() = PreferencesManager(PreferencesEndpoint(application))
 
-    val preferencesManager get() = PreferencesManager(PreferencesEndpoint(application))
+    val statusBarDelegate
+        get() = activity as StatusBarDelegate
 
-    val statusBarManager get() = activity as StatusBarDelegate
+    val systemUIDelegate
+        get() = SystemUIDelegate()
 
-    val systemUIManager get() = activity as SystemUIDelegate
+    val apodEndpoint
+        get() = ApodEndpoint(compositionRoot.apodApi, APIKeyProvider)
+
+    val favoriteApodEndpoint
+        get() = FavoriteApodEndpoint(favoriteApodDao)
 }

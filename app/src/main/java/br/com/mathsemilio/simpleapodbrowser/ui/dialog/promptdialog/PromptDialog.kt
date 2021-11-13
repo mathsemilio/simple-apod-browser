@@ -21,13 +21,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import br.com.mathsemilio.simpleapodbrowser.common.*
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.PromptDialogEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.view.PromptDialogView
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.view.PromptDialogViewImpl
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class PromptDialog : BaseDialogFragment(), PromptDialogView.Listener {
 
-    companion object Factory {
+    companion object {
         fun newInstance(
             dialogTitle: String,
             dialogMessage: String,
@@ -55,7 +56,7 @@ class PromptDialog : BaseDialogFragment(), PromptDialogView.Listener {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        dialogView = PromptDialogViewImpl(LayoutInflater.from(requireContext()))
+        dialogView = PromptDialogViewImpl(LayoutInflater.from(requireContext()), container = null)
 
         dialogView.apply {
             setTitle(requireArguments().getString(ARG_DIALOG_TITLE, ""))

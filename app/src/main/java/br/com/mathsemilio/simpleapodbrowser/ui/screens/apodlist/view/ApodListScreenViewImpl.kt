@@ -67,13 +67,13 @@ class ApodListScreenViewImpl(
 
     private fun attachOnSwipeRefreshListener() {
         swipeRefreshLayoutApods.setOnRefreshListener {
-            notifyListener { listener ->
+            notify { listener ->
                 listener.onScreenSwipedToRefresh()
             }
         }
     }
 
-    override fun bindApods(apods: List<Apod>) {
+    override fun bind(apods: List<Apod>) {
         apodListScreenListAdapter.submitList(apods)
     }
 
@@ -103,7 +103,7 @@ class ApodListScreenViewImpl(
     }
 
     override fun onApodClicked(apod: Apod) {
-        notifyListener { listener ->
+        notify { listener ->
             listener.onApodClicked(apod)
         }
     }

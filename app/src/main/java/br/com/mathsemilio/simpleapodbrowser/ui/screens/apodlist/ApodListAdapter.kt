@@ -37,7 +37,7 @@ class ApodListAdapter(
         private val listItemView: ApodListItemView
     ) : RecyclerView.ViewHolder(listItemView.rootView) {
 
-        fun bind(apod: Apod) = listItemView.bindApodDetails(apod)
+        fun bind(apod: Apod) = listItemView.bind(apod)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

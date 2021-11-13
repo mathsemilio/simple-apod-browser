@@ -20,42 +20,47 @@ import android.content.Context
 import androidx.fragment.app.FragmentManager
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.datepicker.DatePickerDialog
-import br.com.mathsemilio.simpleapodbrowser.ui.dialog.infodialog.InfoDialog
-import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialog
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.infodialog.InfoDialogBuilder
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialogBuilder
 
-class DialogManager(private val fragmentManager: FragmentManager, private val context: Context) {
-
+class DialogManager(
+    private val fragmentManager: FragmentManager,
+    private val context: Context
+) {
     fun showDatePickerDialog() {
         val datePickerDialog = DatePickerDialog()
         datePickerDialog.show(fragmentManager, null)
     }
 
     fun showGrantExternalStoragePermissionDialog() {
-        val infoDialog = InfoDialog.newInstance(
-            context.getString(R.string.dialog_title_grant_permission),
-            context.getString(R.string.dialog_message_grant_external_storage_permission),
-            context.getString(R.string.dialog_button_text_ok)
-        )
+        val infoDialog = InfoDialogBuilder
+            .withTitle(context.getString(R.string.dialog_title_grant_permission))
+            .withMessage(context.getString(R.string.dialog_message_grant_external_storage_permission))
+            .withPositiveButtonText(context.getString(R.string.dialog_button_text_ok))
+            .build()
+
         infoDialog.show(fragmentManager, null)
     }
 
     fun showManuallyGrantPermissionDialog() {
-        val infoDialog = InfoDialog.newInstance(
-            context.getString(R.string.dialog_title_grant_permission),
-            context.getString(R.string.dialog_message_enable_permission_manually),
-            context.getString(R.string.dialog_button_text_ok)
-        )
+        val infoDialog = InfoDialogBuilder
+            .withTitle(context.getString(R.string.dialog_title_grant_permission))
+            .withMessage(context.getString(R.string.dialog_message_enable_permission_manually))
+            .withPositiveButtonText(context.getString(R.string.dialog_button_text_ok))
+            .build()
+
         infoDialog.show(fragmentManager, null)
     }
 
     fun showClearImageCacheDialog() {
-        val promptDialog = PromptDialog.newInstance(
-            context.getString(R.string.dialog_title_clear_image_cache),
-            context.getString(R.string.dialog_message_clear_image_cache),
-            context.getString(R.string.dialog_button_text_ok),
-            context.getString(R.string.dialog_button_text_cancel),
-            isCancelable = true
-        )
+        val promptDialog = PromptDialogBuilder
+            .withTitle(context.getString(R.string.dialog_title_clear_image_cache))
+            .withMessage(context.getString(R.string.dialog_message_clear_image_cache))
+            .withPositiveButtonText(context.getString(R.string.dialog_button_text_ok))
+            .withNegativeButtonText(context.getString(R.string.dialog_button_text_cancel))
+            .setIsCancelable(true)
+            .build()
+
         promptDialog.show(fragmentManager, null)
     }
 }

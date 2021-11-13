@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.widget.DatePicker
 import br.com.mathsemilio.simpleapodbrowser.common.FIRST_APOD_DATE_IN_MILLIS
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
 import java.util.*
 

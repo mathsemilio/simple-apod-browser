@@ -20,23 +20,23 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
 
-class DeleteFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) {
+class FetchFavoriteApodsUseCase(private val endpoint: FavoriteApodEndpoint) {
 
-    sealed class DeleteFavoriteApodResult {
-        data class Completed(val deletedApod: Apod) : DeleteFavoriteApodResult()
-        object Failed : DeleteFavoriteApodResult()
+    sealed class FetchFavoriteApodsResult {
+        data class Completed(val apods: List<Apod>?) : FetchFavoriteApodsResult()
+        object Failed : FetchFavoriteApodsResult()
     }
 
-    suspend fun deleteFavoriteApod(favoriteApod: Apod): DeleteFavoriteApodResult {
-        var deleteFavoriteApodResult: DeleteFavoriteApodResult
+    suspend fun fetchFavoriteApods(): FetchFavoriteApodsResult {
+        var fetchFavoriteApodsResult: FetchFavoriteApodsResult
 
-        endpoint.delete(favoriteApod).also { result ->
-            deleteFavoriteApodResult = when (result) {
-                is Result.Completed -> DeleteFavoriteApodResult.Completed(deletedApod = favoriteApod)
-                is Result.Failed -> DeleteFavoriteApodResult.Failed
+        endpoint.fetchFavoriteApods().also { result ->
+            fetchFavoriteApodsResult = when (result) {
+                is Result.Completed -> FetchFavoriteApodsResult.Completed(apods = result.data)
+                is Result.Failed -> FetchFavoriteApodsResult.Failed
             }
         }
 
-        return deleteFavoriteApodResult
+        return fetchFavoriteApodsResult
     }
 }

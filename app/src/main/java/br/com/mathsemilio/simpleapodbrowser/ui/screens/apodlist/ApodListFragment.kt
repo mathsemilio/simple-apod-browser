@@ -20,31 +20,29 @@ import android.os.Bundle
 import android.view.*
 import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.*
+import br.com.mathsemilio.simpleapodbrowser.common.DEFAULT_DATE_RANGE_LAST_SEVEN_DAYS
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
 import br.com.mathsemilio.simpleapodbrowser.data.manager.PreferencesManager
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodBasedOnDateUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodBasedOnDateUseCase.FetchApodBasedOnDateResult
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodsUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodsUseCase.FetchApodsResult
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase.FetchRandomApodResult
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.datepicker.DateSetEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.ApodListScreenView
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.ApodListScreenViewImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
-class ApodListFragment : BaseFragment(),
-    ApodListScreenView.Listener,
-    FetchApodsUseCase.Listener,
-    FetchRandomApodUseCase.Listener,
-    FetchApodBasedOnDateUseCase.Listener,
-    EventListener {
+class ApodListFragment : BaseFragment(), ApodListScreenView.Listener, EventListener {
 
     private lateinit var view: ApodListScreenView
 
@@ -60,19 +58,19 @@ class ApodListFragment : BaseFragment(),
     private lateinit var fetchRandomApodUseCase: FetchRandomApodUseCase
     private lateinit var fetchApodBasedOnDateUseCase: FetchApodBasedOnDateUseCase
 
-    private val apods = mutableListOf<Apod>()
-
-    private var isDataLoaded = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setHasOptionsMenu(true)
+
         preferencesManager = compositionRoot.preferencesManager
         screensNavigator = ScreensNavigator(findNavController())
         messagesManager = compositionRoot.messagesManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
         dialogManager = compositionRoot.dialogManager
+
         eventSubscriber = compositionRoot.eventSubscriber
+
         fetchApodsUseCase = compositionRoot.fetchApodUseCase
         fetchRandomApodUseCase = compositionRoot.fetchRandomApodUseCase
         fetchApodBasedOnDateUseCase = compositionRoot.fetchApodBasedOnDateUseCase
@@ -87,64 +85,41 @@ class ApodListFragment : BaseFragment(),
         return view.rootView
     }
 
-    override fun onApodClicked(apod: Apod) {
-        screensNavigator.toApodDetailsScreen(apod)
-    }
+    override fun onApodClicked(apod: Apod) = screensNavigator.toApodDetailsScreen(apod)
 
-    override fun onScreenSwipedToRefresh() {
-        fetchApods()
-    }
+    override fun onScreenSwipedToRefresh() = fetchApods()
 
     private fun fetchApods() {
-        if (!isDataLoaded)
-            coroutineScope.launch {
-                view.showProgressIndicator()
-                fetchApodsUseCase.fetchApodsBasedOnDateRange(getDefaultDateRange())
-            }
-        else
-            view.bindApods(apods)
-    }
+        coroutineScope.launch {
+            view.showProgressIndicator()
 
-    private fun getDefaultDateRange(): Int {
-        return when (preferencesManager.defaultDateRange) {
-            DEFAULT_DATE_RANGE_LAST_SEVEN_DAYS -> 6
-            DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS -> 13
-            DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS -> 20
-            DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS -> 29
-            else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION)
+            val result = fetchApodsUseCase.fetchApodsBasedOn(
+                preferencesManager.defaultDateRange ?: DEFAULT_DATE_RANGE_LAST_SEVEN_DAYS
+            )
+
+            handleFetchApodsResult(result)
         }
     }
 
-    override fun onFetchApodsCompleted(apods: List<Apod>) {
-        isDataLoaded = true
-        this.apods.addAll(apods)
+    private fun handleFetchApodsResult(result: FetchApodsResult) {
+        when (result) {
+            is FetchApodsResult.Completed -> onFetchApodsCompleted(result.apods)
+            FetchApodsResult.Failed -> onFetchApodsFailed()
+        }
+    }
 
+    private fun onFetchApodsCompleted(apods: List<Apod>?) {
         view.hideNetworkRequestErrorState()
         view.hideProgressIndicator()
         view.onRefreshCompleted()
-        view.bindApods(apods)
+
+        apods?.let { view.bind(it) }
     }
 
-    override fun onFetchApodsFailed() {
+    private fun onFetchApodsFailed() {
         view.hideProgressIndicator()
         view.onRefreshCompleted()
         view.showNetworkRequestErrorState()
-    }
-
-    override fun onFetchRandomApodCompleted(randomApod: Apod) {
-        screensNavigator.toApodDetailsScreen(randomApod)
-    }
-
-    override fun onFetchRandomApodFailed() {
-        messagesManager.showCheckYourConnectionMessage()
-    }
-
-    override fun onFetchApodBasedOnDateCompleted(apod: Apod) {
-        screensNavigator.toApodDetailsScreen(apod)
-    }
-
-    override fun onFetchApodBasedOnDateFailed() {
-        messagesManager.showCheckYourConnectionMessage()
     }
 
     override fun onEvent(event: Any) {
@@ -155,9 +130,24 @@ class ApodListFragment : BaseFragment(),
 
     private fun onApodDateSetEvent(event: DateSetEvent) {
         when (event) {
-            is DateSetEvent.DateSet -> coroutineScope.launch {
-                fetchApodBasedOnDateUseCase.getApodBasedOnDate(event.dateInMillis)
+            is DateSetEvent.DateSet -> {
+                coroutineScope.launch {
+                    val result = fetchApodBasedOnDateUseCase.fetchApodBasedOnDate(event.dateInMillis)
+                    handleFetchApodBasedOnDateResult(result)
+                }
             }
+        }
+    }
+
+    private fun handleFetchApodBasedOnDateResult(result: FetchApodBasedOnDateResult) {
+        when (result) {
+            is FetchApodBasedOnDateResult.Completed -> {
+                result.apod?.let { apod ->
+                    screensNavigator.toApodDetailsScreen(apod)
+                }
+            }
+            FetchApodBasedOnDateResult.Failed ->
+                messagesManager.showCheckYourConnectionMessage()
         }
     }
 
@@ -172,7 +162,7 @@ class ApodListFragment : BaseFragment(),
                 true
             }
             R.id.toolbar_action_get_random_apod -> {
-                getRandomApod()
+                fetchRandomApod()
                 true
             }
             R.id.toolbar_action_settings -> {
@@ -183,29 +173,36 @@ class ApodListFragment : BaseFragment(),
         }
     }
 
-    private fun getRandomApod() {
+    private fun fetchRandomApod() {
         coroutineScope.launch {
-            fetchRandomApodUseCase.getRandomAPoD()
+            val result = fetchRandomApodUseCase.fetchRandomApod()
+            handleFetchRandomApodUseCaseResult(result)
+        }
+    }
+
+    private fun handleFetchRandomApodUseCaseResult(result: FetchRandomApodResult) {
+        when (result) {
+            is FetchRandomApodResult.Completed -> {
+                result.randomApod?.let { randomApod ->
+                    screensNavigator.toApodDetailsScreen(randomApod)
+                }
+            }
+            FetchRandomApodResult.Failed ->
+                messagesManager.showCheckYourConnectionMessage()
         }
     }
 
     override fun onStart() {
+        super.onStart()
         view.addListener(this)
         eventSubscriber.subscribe(this)
-        fetchApodsUseCase.addListener(this)
-        fetchRandomApodUseCase.addListener(this)
-        fetchApodBasedOnDateUseCase.addListener(this)
         fetchApods()
-        super.onStart()
     }
 
     override fun onStop() {
+        super.onStop()
         view.removeListener(this)
         eventSubscriber.unsubscribe(this)
-        fetchApodsUseCase.removeListener(this)
-        fetchRandomApodUseCase.removeListener(this)
-        fetchApodBasedOnDateUseCase.removeListener(this)
         coroutineScope.coroutineContext.cancelChildren()
-        super.onStop()
     }
 }

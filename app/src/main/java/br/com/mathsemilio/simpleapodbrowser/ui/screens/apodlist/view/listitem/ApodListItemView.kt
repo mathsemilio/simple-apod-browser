@@ -25,5 +25,5 @@ abstract class ApodListItemView : BaseObservableView<ApodListItemView.Listener>(
         fun onApodClicked(apod: Apod)
     }
 
-    abstract fun bindApodDetails(apod: Apod)
+    abstract fun bind(apod: Apod)
 }

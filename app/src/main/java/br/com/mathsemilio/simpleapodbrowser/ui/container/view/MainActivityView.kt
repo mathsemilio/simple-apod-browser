@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui
+package br.com.mathsemilio.simpleapodbrowser.ui.container.view
 
 import android.view.Window
 import androidx.fragment.app.FragmentContainerView
@@ -24,11 +24,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 abstract class MainActivityView : BaseView() {
 
-    abstract val appToolbar: MaterialToolbar
+    abstract val toolbar: MaterialToolbar
 
     abstract val fragmentContainer: FragmentContainerView
 
     abstract val bottomNavigationView: BottomNavigationView
+
+    abstract val statusBarColor: Int
+
+    abstract fun bind(window: Window)
 
     abstract fun showToolbar()
 
@@ -38,11 +42,11 @@ abstract class MainActivityView : BaseView() {
 
     abstract fun hideBottomNavigationView()
 
-    abstract fun setStatusBarColor(window: Window, color: Int)
+    abstract fun setStatusBarColor(color: Int)
 
-    abstract fun revertStatusBarColor(window: Window)
+    abstract fun revertStatusBarColor()
 
-    abstract fun hideSystemUI(window: Window)
+    abstract fun showSystemUI()
 
-    abstract fun showSystemUI(window: Window)
+    abstract fun hideSystemUI()
 }

@@ -16,7 +16,6 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.common.util
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -24,6 +23,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
@@ -58,18 +59,18 @@ inline fun Context.showSnackBarWithAction(
         }).show()
 }
 
-@SuppressLint("QueryPermissionsNeeded")
 fun Context.launchWebPage(url: String) {
     val page = Uri.parse(url)
     val intent = Intent(Intent.ACTION_VIEW, page)
+
     if (intent.resolveActivity(this.packageManager) != null)
         this.startActivity(intent)
 }
 
-@SuppressLint("QueryPermissionsNeeded")
 fun Fragment.launchWebPage(url: String) {
     val page = Uri.parse(url)
     val intent = Intent(Intent.ACTION_VIEW, page)
+
     if (intent.resolveActivity(requireContext().packageManager) != null)
         this.startActivity(intent)
 }
@@ -87,4 +88,22 @@ inline fun SearchView.onQueryTextChangedListener(
             return true
         }
     })
+}
+
+inline fun onRecyclerViewItemSwipedToTheLeft(
+    crossinline onItemSwiped: (RecyclerView.ViewHolder) -> Unit
+): ItemTouchHelper.SimpleCallback {
+    return object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            onItemSwiped(viewHolder)
+        }
+    }
 }

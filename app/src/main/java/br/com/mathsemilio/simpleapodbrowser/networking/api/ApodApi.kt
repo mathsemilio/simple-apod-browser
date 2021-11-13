@@ -25,21 +25,21 @@ import retrofit2.http.Query
 interface ApodApi {
 
     @GET(APOD_ENDPOINT)
-    suspend fun getApodsBasedOnDateRange(
+    suspend fun fetchApodsBasedOnDateRange(
         @Query("api_key") key: String,
         @Query("start_date") startDate: String,
         @Query("thumbs") includeThumbnail: Boolean = true
     ): Response<List<ApodSchema>>
 
     @GET(APOD_ENDPOINT)
-    suspend fun getApodBasedOnDate(
+    suspend fun fetchApodBasedOnDate(
         @Query("api_key") key: String,
         @Query("date") date: String,
         @Query("thumbs") includeThumbnail: Boolean = true
     ): Response<ApodSchema>
 
     @GET(APOD_ENDPOINT)
-    suspend fun getRandomApod(
+    suspend fun fetchRandomApod(
         @Query("api_key") key: String,
         @Query("count") count: Int,
         @Query("thumbs") includeThumbnail: Boolean = true

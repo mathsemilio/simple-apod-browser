@@ -16,8 +16,25 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.common.delegate
 
-interface SystemUIDelegate {
-    fun onHideSystemUI()
+import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
 
-    fun onShowSystemUI()
+class SystemUIDelegate : BaseObservable<SystemUIDelegate.Listener>() {
+
+    interface Listener {
+        fun onShowSystemUIRequested()
+
+        fun onHideSystemUIRequested()
+    }
+
+    fun showSystemUI() {
+        notify { listener ->
+            listener.onShowSystemUIRequested()
+        }
+    }
+
+    fun hideSystemUI() {
+        notify { listener ->
+            listener.onHideSystemUIRequested()
+        }
+    }
 }

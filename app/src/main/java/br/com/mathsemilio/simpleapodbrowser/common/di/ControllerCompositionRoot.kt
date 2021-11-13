@@ -19,9 +19,7 @@ package br.com.mathsemilio.simpleapodbrowser.common.di
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodBasedOnDateUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodsUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.*
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ApodImageExporter
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
@@ -29,49 +27,75 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SnackBarManager
 
 class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCompositionRoot) {
 
-    private val application get() = activityCompositionRoot.application
+    private val apodEndpoint
+        get() = activityCompositionRoot.apodEndpoint
 
-    private val apodEndpoint get() = activityCompositionRoot.apodEndpoint
+    private val favoriteApodEndpoint
+        get() = activityCompositionRoot.favoriteApodEndpoint
 
-    private val favoriteApodEndpoint get() = activityCompositionRoot.favoriteApodEndpoint
+    private val fragmentManager
+        get() = activityCompositionRoot.fragmentManager
 
-    private val fragmentManager get() = activityCompositionRoot.fragmentManager
+    val apodImageExporter
+        get() = ApodImageExporter(activityCompositionRoot.application)
 
-    val addFavoriteApodUseCase get() = AddFavoriteApodUseCase(favoriteApodEndpoint)
+    val dialogManager
+        get() = DialogManager(fragmentManager, activityCompositionRoot.application)
 
-    val apodImageExporter get() = ApodImageExporter(application)
+    val coroutineScopeProvider
+        get() = activityCompositionRoot.coroutineScopeProvider
 
-    val deleteFavoriteApodUseCase get() = DeleteFavoriteApodUseCase(favoriteApodEndpoint)
+    val eventPublisher
+        get() = activityCompositionRoot.eventPublisher
 
-    val dialogManager get() = DialogManager(fragmentManager, application)
+    val eventSubscriber
+        get() = activityCompositionRoot.eventSubscriber
 
-    val coroutineScopeProvider get() = activityCompositionRoot.coroutineScopeProvider
+    val containerLayoutDelegate
+        get() = activityCompositionRoot.containerLayoutDelegate
 
-    val eventPublisher get() = activityCompositionRoot.eventPublisher
+    val messagesManager
+        get() = MessagesManager(activityCompositionRoot.application)
 
-    val eventSubscriber get() = activityCompositionRoot.eventSubscriber
+    val permissionsHelper
+        get() = activityCompositionRoot.permissionsHelper
 
-    val fetchApodUseCase get() = FetchApodsUseCase(apodEndpoint)
+    val preferencesManager
+        get() = activityCompositionRoot.preferencesManager
 
-    val fetchRandomApodUseCase get() = FetchRandomApodUseCase(apodEndpoint)
+    val snackBarManager
+        get() = SnackBarManager(activityCompositionRoot.application)
 
-    val fetchApodBasedOnDateUseCase get() = FetchApodBasedOnDateUseCase(apodEndpoint)
+    val statusBarDelegate
+        get() = activityCompositionRoot.statusBarDelegate
 
-    val fetchFavoriteApodUseCase get() = FetchFavoriteApodUseCase(favoriteApodEndpoint)
+    val systemUIDelegate
+        get() = activityCompositionRoot.systemUIDelegate
 
-    val hostLayoutHelper get() = activityCompositionRoot.hostLayoutHelper
+    val tapGestureHelper
+        get() = activityCompositionRoot.tapGestureHelper
 
-    val messagesManager get() = MessagesManager(application)
+    val addFavoriteApodUseCase
+        get() = AddFavoriteApodUseCase(favoriteApodEndpoint)
 
-    val permissionsHelper get() = activityCompositionRoot.permissionsHelper
+    val deleteFavoriteApodUseCase
+        get() = DeleteFavoriteApodUseCase(favoriteApodEndpoint)
 
-    val preferencesManager get() = activityCompositionRoot.preferencesManager
+    val fetchApodUseCase
+        get() = FetchApodsUseCase(apodEndpoint)
 
-    val snackBarManager get() = SnackBarManager(application)
+    val fetchRandomApodUseCase
+        get() = FetchRandomApodUseCase(apodEndpoint)
 
-    val statusBarManager get() = activityCompositionRoot.statusBarManager
+    val fetchApodBasedOnDateUseCase
+        get() = FetchApodBasedOnDateUseCase(apodEndpoint)
 
-    val systemUIManager get() = activityCompositionRoot.systemUIManager
+    val fetchFavoriteApodUseCase
+        get() = FetchFavoriteApodsUseCase(favoriteApodEndpoint)
 
-    val tapGestureHelper get() = activityCompositionRoot.tapGestureHelper
+    val fetchApodFavoriteStateUseCase
+        get() = FetchApodFavoriteStateUseCase(favoriteApodEndpoint)
+
+    val fetchApodsBasedOnSearchQueryUseCase
+        get() = FetchApodsBasedOnSearchQueryUseCase(favoriteApodEndpoint)
 }

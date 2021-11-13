@@ -24,11 +24,11 @@ import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.*
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
-import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
 import br.com.mathsemilio.simpleapodbrowser.data.manager.PreferencesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.event.PromptDialogEvent
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialogEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
@@ -37,11 +37,10 @@ class SettingsFragment : BasePreferenceFragment(), EventListener {
 
     private lateinit var preferencesManager: PreferencesManager
     private lateinit var messagesManager: MessagesManager
+    private lateinit var coroutineScope: CoroutineScope
     private lateinit var dialogManager: DialogManager
 
     private lateinit var eventSubscriber: EventSubscriber
-
-    private lateinit var coroutineScope: CoroutineScope
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,11 +79,13 @@ class SettingsFragment : BasePreferenceFragment(), EventListener {
 
     private fun handleClearImageCachePromptDialogEvent(event: PromptDialogEvent) {
         when (event) {
-            PromptDialogEvent.PositiveButtonClicked -> coroutineScope.launch {
-                GlideProvider.clearLocallyCachedImages(requireContext())
-                messagesManager.showImageCacheClearedSuccessfully()
+            PromptDialogEvent.PositiveButtonClicked -> {
+                coroutineScope.launch {
+                    ImageResourceManager.clearLocalCache(requireContext())
+                    messagesManager.showImageCacheClearedSuccessfully()
+                }
             }
-            PromptDialogEvent.NegativeButtonClicked -> { /* no-op -> No action required */ }
+            else -> throw RuntimeException(ILLEGAL_PROMPT_DIALOG_EVENT)
         }
     }
 

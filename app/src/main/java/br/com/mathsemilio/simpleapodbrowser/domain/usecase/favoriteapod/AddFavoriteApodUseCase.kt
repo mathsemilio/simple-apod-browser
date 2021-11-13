@@ -16,56 +16,27 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod
 
-import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
 
-class AddFavoriteApodUseCase(
-    private val endpoint: FavoriteApodEndpoint
-) : BaseObservable<AddFavoriteApodUseCase.Listener>() {
+class AddFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) {
 
-    interface Listener {
-        fun onAddApodToFavoritesCompleted()
-
-        fun onApodIsAlreadyOnFavorites()
-
-        fun onAddApodToFavoritesFailed()
+    sealed class AddFavoriteApodResult {
+        object Completed : AddFavoriteApodResult()
+        object Failed : AddFavoriteApodResult()
     }
 
-    suspend fun addApodToFavorites(apod: Apod) {
-        if (isApodAlreadyOnFavorites(apod)) {
-            notifyListener { listener ->
-                listener.onApodIsAlreadyOnFavorites()
-            }
+    suspend fun addApodToFavorites(apod: Apod): AddFavoriteApodResult {
+        var addFavoriteApodResult: AddFavoriteApodResult
 
-            return
-        }
-
-        endpoint.insert(apod.copy(isFavorite = true)).also { result ->
-            when (result) {
-                is Result.Completed -> notifyListener { listener ->
-                    listener.onAddApodToFavoritesCompleted()
-                }
-                is Result.Failed -> notifyListener { listener ->
-                    listener.onAddApodToFavoritesFailed()
-                }
-            }
-        }
-    }
-
-    private suspend fun isApodAlreadyOnFavorites(currentApod: Apod): Boolean {
-        var isAlreadyOnFavorites = false
-
-        endpoint.getFavoriteApodByDate(currentApod.date).also { result ->
-            when (result) {
-                is Result.Completed -> {
-                    isAlreadyOnFavorites = result.data != null
-                }
-                is Result.Failed -> throw RuntimeException(result.exception)
+        endpoint.add(apod.copy(isFavorite = true)).also { result ->
+            addFavoriteApodResult = when (result) {
+                is Result.Completed -> AddFavoriteApodResult.Completed
+                is Result.Failed -> AddFavoriteApodResult.Failed
             }
         }
 
-        return isAlreadyOnFavorites
+        return addFavoriteApodResult
     }
 }

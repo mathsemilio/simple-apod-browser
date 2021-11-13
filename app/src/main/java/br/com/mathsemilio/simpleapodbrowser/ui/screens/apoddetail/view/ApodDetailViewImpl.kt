@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +25,7 @@ import androidx.core.graphics.drawable.toBitmap
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_VIDEO
-import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
 import br.com.mathsemilio.simpleapodbrowser.common.util.formatDate
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
@@ -34,11 +34,11 @@ class ApodDetailViewImpl(
     container: ViewGroup?
 ) : ApodDetailView() {
 
-    private lateinit var imageViewApodDetailImage: ImageView
+    private lateinit var imageViewApod: ImageView
     private lateinit var imageViewPlayIcon: ImageView
-    private lateinit var textViewApodDetailTitle: TextView
-    private lateinit var textViewApodDetailDate: TextView
-    private lateinit var textViewApodDetailExplanation: TextView
+    private lateinit var textViewApodTitle: TextView
+    private lateinit var textViewApodDDate: TextView
+    private lateinit var textViewApodExplanation: TextView
 
     private lateinit var apod: Apod
 
@@ -51,28 +51,28 @@ class ApodDetailViewImpl(
     }
 
     private fun initializeViews() {
-        imageViewApodDetailImage = rootView.findViewById(R.id.image_view_apod_detail_image)
+        imageViewApod = rootView.findViewById(R.id.image_view_apod)
         imageViewPlayIcon = rootView.findViewById(R.id.image_view_play_icon)
-        textViewApodDetailTitle = rootView.findViewById(R.id.text_view_apod_detail_title)
-        textViewApodDetailDate = rootView.findViewById(R.id.text_view_apod_detail_date)
-        textViewApodDetailExplanation = rootView.findViewById(R.id.text_view_apod_detail_explanation)
+        textViewApodTitle = rootView.findViewById(R.id.text_view_apod_title)
+        textViewApodDDate = rootView.findViewById(R.id.text_view_apod_date)
+        textViewApodExplanation = rootView.findViewById(R.id.text_view_apod_explanation)
     }
 
     private fun attachApodImageViewClickListener() {
-        imageViewApodDetailImage.setOnClickListener {
-            notifyListener { listener ->
-                listener.onApodImageClicked(imageViewApodDetailImage.drawable.toBitmap())
+        imageViewApod.setOnClickListener {
+            notify { listener ->
+                listener.onApodImageClicked(imageViewApod.drawable.toBitmap())
             }
         }
     }
 
-    override fun bindApod(apod: Apod) {
+    override fun bind(apod: Apod) {
         this.apod = apod
         loadResourcesBasedOnMediaType()
 
-        textViewApodDetailTitle.text = apod.title
-        textViewApodDetailDate.text = apod.date.formatDate(context)
-        textViewApodDetailExplanation.text = apod.explanation
+        textViewApodTitle.text = apod.title
+        textViewApodDDate.text = apod.date.formatDate(context)
+        textViewApodExplanation.text = apod.explanation
     }
 
     private fun loadResourcesBasedOnMediaType() {
@@ -83,7 +83,7 @@ class ApodDetailViewImpl(
     }
 
     private fun loadApodImage() {
-        GlideProvider.loadResourceFromUrl(apod.url, imageViewApodDetailImage)
+        ImageResourceManager.loadFrom(apod.url, imageViewApod)
     }
 
     private fun loadApodVideoThumbnail() {
@@ -93,12 +93,12 @@ class ApodDetailViewImpl(
         }
 
         apod.thumbnailUrl?.let { url ->
-            GlideProvider.loadResourceFromUrl(url, imageViewApodDetailImage)
+            ImageResourceManager.loadFrom(url, imageViewApod)
         }
     }
 
     private fun onPlayIconClicked(videoUrl: String) {
-        notifyListener { listener ->
+        notify { listener ->
             listener.onPlayIconClicked(videoUrl)
         }
     }

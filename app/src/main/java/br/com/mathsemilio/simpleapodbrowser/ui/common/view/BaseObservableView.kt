@@ -21,7 +21,9 @@ import br.com.mathsemilio.simpleapodbrowser.common.observable.Observable
 abstract class BaseObservableView<T> : Observable<T>, BaseView() {
 
     private val _listeners = mutableSetOf<T>().toHashSet()
-    protected val listeners get() = _listeners.toSet()
+
+    protected val listeners
+        get() = _listeners.toSet()
 
     override fun addListener(listener: T) {
         _listeners.add(listener)
@@ -31,11 +33,9 @@ abstract class BaseObservableView<T> : Observable<T>, BaseView() {
         _listeners.remove(listener)
     }
 
-    protected inline fun BaseObservableView<T>.notifyListener(
-        onNotifyListener: (T) -> Unit
-    ) {
+    protected inline fun BaseObservableView<T>.notify(crossinline notificationBody: (T) -> Unit) {
         this@BaseObservableView.listeners.forEach { listener ->
-            onNotifyListener(listener)
+            notificationBody(listener)
         }
     }
 }

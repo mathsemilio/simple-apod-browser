@@ -36,7 +36,9 @@ fun ApodSchema.toApod(): Apod {
 fun List<ApodSchema>.toApodList(): List<Apod> {
     val apodList = mutableListOf<Apod>()
 
-    this.forEach { apodSchema -> apodList.add(apodSchema.toApod()) }
+    this.forEach { apodSchema ->
+        apodList.add(apodSchema.toApod())
+    }
 
     return apodList.toList()
 }

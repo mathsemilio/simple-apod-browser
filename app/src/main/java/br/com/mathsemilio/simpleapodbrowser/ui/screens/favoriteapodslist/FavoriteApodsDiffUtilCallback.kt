@@ -14,23 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist
 
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
+import androidx.recyclerview.widget.DiffUtil
+import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
-abstract class PromptDialogView : BaseObservableView<PromptDialogView.Listener>() {
+class FavoriteApodsDiffUtilCallback : DiffUtil.ItemCallback<Apod>() {
 
-    interface Listener {
-        fun onPositiveButtonClicked()
-
-        fun onNegativeButtonClicked()
+    override fun areItemsTheSame(oldItem: Apod, newItem: Apod): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    abstract fun setTitle(title: String)
-
-    abstract fun setMessage(message: String)
-
-    abstract fun setPositiveButtonText(positiveButtonText: String)
-
-    abstract fun setNegativeButtonText(negativeButtonText: String?)
+    override fun areContentsTheSame(oldItem: Apod, newItem: Apod): Boolean {
+        return oldItem == newItem
+    }
 }

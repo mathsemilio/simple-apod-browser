@@ -18,11 +18,11 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.settings
 
 import androidx.preference.PreferenceFragmentCompat
 import br.com.mathsemilio.simpleapodbrowser.common.di.ControllerCompositionRoot
-import br.com.mathsemilio.simpleapodbrowser.ui.MainActivity
+import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseActivity
 
 abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
 
-     val compositionRoot by lazy {
-        ControllerCompositionRoot((requireActivity() as MainActivity).compositionRoot)
+     protected val compositionRoot by lazy {
+        ControllerCompositionRoot((requireActivity() as BaseActivity).compositionRoot)
     }
 }

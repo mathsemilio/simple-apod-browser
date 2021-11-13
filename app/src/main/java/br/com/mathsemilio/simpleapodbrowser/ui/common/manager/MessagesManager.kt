@@ -31,10 +31,6 @@ class MessagesManager(private val context: Context) {
         context.showLongToast(context.getString(R.string.message_unexpected_error_occurred))
     }
 
-    fun showInvalidApodDateErrorMessage() {
-        context.showLongToast(context.getString(R.string.message_invalid_apod_date))
-    }
-
     fun showApodAddedToFavoritesSuccessfullyMessage() {
         context.showLongToast(context.getString(R.string.message_apod_added_to_favorites_completed))
     }

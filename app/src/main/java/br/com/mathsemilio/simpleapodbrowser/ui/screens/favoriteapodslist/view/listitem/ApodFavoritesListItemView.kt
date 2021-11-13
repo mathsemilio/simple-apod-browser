@@ -14,16 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.listitem
 
-import androidx.fragment.app.FragmentContainerView
-import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
+import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-interface HostLayoutHelper {
-    fun getNavHostFragment(): NavHostFragment
+abstract class ApodFavoritesListItemView :
+    BaseObservableView<ApodFavoritesListItemView.Listener>() {
 
-    fun getFragmentContainer(): FragmentContainerView
+    interface Listener {
+        fun onFavoriteApodClicked(favoriteApod: Apod)
+    }
 
-    fun getBottomNavigationView(): BottomNavigationView
+    abstract fun bind(favoriteApod: Apod)
 }

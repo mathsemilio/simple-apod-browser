@@ -24,54 +24,54 @@ import kotlinx.coroutines.withContext
 
 class FavoriteApodEndpoint(private val favoriteApodDao: FavoriteApodDao) {
 
-    suspend fun insert(apod: Apod): Result<Nothing> {
+    suspend fun add(apod: Apod): Result<Nothing> {
         return withContext(Dispatchers.IO) {
             try {
-                favoriteApodDao.insert(apod)
+                favoriteApodDao.add(apod)
                 Result.Completed(data = null)
-            } catch (exception: Exception) {
-                Result.Failed(exception = null)
-            }
-        }
-    }
-
-    suspend fun delete(apod: Apod): Result<Nothing> {
-        return withContext(Dispatchers.IO) {
-            try {
-                favoriteApodDao.delete(apod)
-                Result.Completed(data = null)
-            } catch (exception: Exception) {
-                Result.Failed(exception = null)
-            }
-        }
-    }
-
-    suspend fun getFavoriteApods(): Result<List<Apod>> {
-        return withContext(Dispatchers.IO) {
-            try {
-                Result.Completed(data = favoriteApodDao.getFavoriteApods())
-            } catch (exception: Exception) {
-                Result.Failed(exception = null)
-            }
-        }
-    }
-
-    suspend fun getFavoriteApodByDate(date: String): Result<Apod> {
-        return withContext(Dispatchers.IO) {
-            try {
-                Result.Completed(data = favoriteApodDao.getFavoriteApodByDate(date))
             } catch (exception: Exception) {
                 Result.Failed(exception = exception)
             }
         }
     }
 
-    suspend fun getFavoriteApodsBasedOnSearchQuery(searchQuery: String): Result<List<Apod>> {
+    suspend fun delete(favoriteApod: Apod): Result<Nothing> {
         return withContext(Dispatchers.IO) {
             try {
-                Result.Completed(data = favoriteApodDao.getFavoriteApodsBasedOnSearchQuery(searchQuery))
+                favoriteApodDao.delete(favoriteApod)
+                Result.Completed(data = null)
             } catch (exception: Exception) {
-                Result.Failed(exception = null)
+                Result.Failed(exception = exception)
+            }
+        }
+    }
+
+    suspend fun fetchFavoriteApods(): Result<List<Apod>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Completed(data = favoriteApodDao.fetchFavoriteApods())
+            } catch (exception: Exception) {
+                Result.Failed(exception = exception)
+            }
+        }
+    }
+
+    suspend fun fetchFavoriteApodBy(date: String): Result<Apod> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Completed(data = favoriteApodDao.fetchFavoriteApodBy(date))
+            } catch (exception: Exception) {
+                Result.Failed(exception = exception)
+            }
+        }
+    }
+
+    suspend fun fetchFavoriteApodsBasedOn(searchQuery: String): Result<List<Apod>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Completed(data = favoriteApodDao.fetchFavoriteApodsBasedOn(searchQuery))
+            } catch (exception: Exception) {
+                Result.Failed(exception = exception)
             }
         }
     }

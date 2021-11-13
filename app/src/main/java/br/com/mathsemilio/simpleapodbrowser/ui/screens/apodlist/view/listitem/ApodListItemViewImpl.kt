@@ -24,7 +24,7 @@ import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_VIDEO
 import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_APOD_TYPE_EXCEPTION
-import br.com.mathsemilio.simpleapodbrowser.common.provider.GlideProvider
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
 class ApodListItemViewImpl(
@@ -54,16 +54,16 @@ class ApodListItemViewImpl(
 
     private fun attachApodListItemOnClickListener() {
         rootView.setOnClickListener {
-            notifyListener { listener ->
+            notify { listener ->
                 listener.onApodClicked(apod)
             }
         }
     }
 
-    override fun bindApodDetails(apod: Apod) {
+    override fun bind(apod: Apod) {
         this.apod = apod
 
-        GlideProvider.loadResourceFromUrl(apod.url, imageViewApod)
+        ImageResourceManager.loadFrom(apod.url, imageViewApod)
 
         loadApodVideoThumbnail()
 
@@ -74,7 +74,7 @@ class ApodListItemViewImpl(
 
     private fun loadApodVideoThumbnail() {
         apod.thumbnailUrl?.let { url ->
-            GlideProvider.loadResourceFromUrl(url, imageViewApod)
+            ImageResourceManager.loadFrom(url, imageViewApod)
         }
     }
 

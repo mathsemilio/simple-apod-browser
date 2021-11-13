@@ -34,12 +34,12 @@ class CompositionRoot(val application: Application) {
             .build()
     }
 
-    val apodApi by lazy {
-        retrofit.create(ApodApi::class.java)
-    }
-
     private val eventBus by lazy {
         EventBus()
+    }
+
+    val apodApi: ApodApi by lazy {
+        retrofit.create(ApodApi::class.java)
     }
 
     val eventPublisher by lazy {

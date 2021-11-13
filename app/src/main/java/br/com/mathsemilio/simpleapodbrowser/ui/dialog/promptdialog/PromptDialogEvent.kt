@@ -14,17 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.view.listitem
+package br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog
 
-import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
+sealed class PromptDialogEvent {
+    object PositiveButtonClicked : PromptDialogEvent()
 
-abstract class ApodFavoritesListItemView :
-    BaseObservableView<ApodFavoritesListItemView.Listener>() {
-
-    interface Listener {
-        fun onFavoriteApodClicked(favoriteApod: Apod)
-    }
-
-    abstract fun bindFavoriteApod(favoriteApod: Apod)
+    object NegativeButtonClicked : PromptDialogEvent()
 }

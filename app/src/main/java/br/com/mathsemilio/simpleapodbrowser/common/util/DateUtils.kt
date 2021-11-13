@@ -18,13 +18,23 @@ package br.com.mathsemilio.simpleapodbrowser.common.util
 
 import android.content.Context
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.INVALID_MONTH_EXCEPTION
+import br.com.mathsemilio.simpleapodbrowser.common.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun getDaysInRange(dayRange: Int): String {
+fun getDaysIn(dayRange: Int): String {
     val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -dayRange) }
     return calendar.timeInMillis.formatTimeInMillis()
+}
+
+fun convertDefaultDateRangeFrom(rangeFromPreferences: String): Int {
+    return when (rangeFromPreferences) {
+        DEFAULT_DATE_RANGE_LAST_SEVEN_DAYS -> 6
+        DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS -> 13
+        DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS -> 20
+        DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS -> 29
+        else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION)
+    }
 }
 
 fun Long.formatTimeInMillis(): String {

@@ -24,8 +24,6 @@ const val FAVORITE_APOD_DATABASE = "favorite_apod_database"
 
 const val ARG_APOD = "ARG_APOD"
 const val ARG_APOD_IMAGE = "ARG_APOD_IMAGE"
-const val OUT_STATE_APOD = "OUT_STATE_APOD"
-const val OUT_STATE_APOD_IMAGE = "OUT_STATE_APOD_IMAGE"
 
 const val ARG_DIALOG_TITLE = "ARG_DIALOG_TITLE"
 const val ARG_DIALOG_MESSAGE = "ARG_DIALOG_MESSAGE"
@@ -53,3 +51,4 @@ const val INVALID_MONTH_EXCEPTION = "Invalid month. Must be in the 1 to 12 month
 const val ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION = "Illegal default date range"
 const val COULD_NOT_OPEN_OUTPUT_STREAM_EXCEPTION = "Could not open file output stream"
 const val ILLEGAL_APOD_TYPE_EXCEPTION = "Invalid APoD type: must be either \"Image\" or \"Video\""
+const val ILLEGAL_PROMPT_DIALOG_EVENT = "Illegal prompt dialog event for this controller"

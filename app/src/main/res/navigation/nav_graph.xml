@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/ApodFavoritesScreen"
-        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodfavoriteslist.ApodFavoritesFragment"
+        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.FavoriteApodsFragment"
         android:label="@string/favorites"
         tools:layout="@layout/apod_favorites_list_screen">
 

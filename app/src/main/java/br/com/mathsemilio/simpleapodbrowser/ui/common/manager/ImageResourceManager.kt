@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.common.provider
+package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 
 import android.content.Context
 import android.widget.ImageView
@@ -23,16 +23,16 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-object GlideProvider {
+object ImageResourceManager {
 
-    fun loadResourceFromUrl(url: String, targetImageView: ImageView) {
+    fun loadFrom(url: String, targetImageView: ImageView) {
         Glide.with(targetImageView)
             .load(url)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(targetImageView)
     }
 
-    suspend fun clearLocallyCachedImages(context: Context) {
+    suspend fun clearLocalCache(context: Context) {
         withContext(Dispatchers.IO) {
             Glide.get(context).clearDiskCache()
         }

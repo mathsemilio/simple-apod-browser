@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.view
 
 import android.graphics.Bitmap
 import android.view.LayoutInflater
@@ -29,22 +29,26 @@ class ApodImageDetailViewImpl(
     container: ViewGroup?
 ) : ApodImageDetailView() {
 
-    private var toolbarApodImageDetail: MaterialToolbar
-    private var photoViewApodImageDetail: PhotoView
+    private lateinit var toolbarApodImageDetail: MaterialToolbar
+    private lateinit var photoViewApodImageDetail: PhotoView
 
     init {
         rootView = layoutInflater.inflate(R.layout.apod_image_detail_screen, container, false)
 
-        photoViewApodImageDetail = rootView.findViewById(R.id.photo_view_apod_image_detail)
-        toolbarApodImageDetail = rootView.findViewById(R.id.material_toolbar_apod_image_detail)
+        initializeViews()
 
         setToolbarNavigationIconOnClickListener()
         setToolbarOnMenuItemSelectedListener()
     }
 
+    private fun initializeViews() {
+        photoViewApodImageDetail = rootView.findViewById(R.id.photo_view_apod_image_detail)
+        toolbarApodImageDetail = rootView.findViewById(R.id.material_toolbar_apod_image_detail)
+    }
+
     private fun setToolbarNavigationIconOnClickListener() {
         toolbarApodImageDetail.setNavigationOnClickListener {
-            notifyListener { listener ->
+            notify { listener ->
                 listener.onToolbarNavigationIconClicked()
             }
         }
@@ -54,7 +58,7 @@ class ApodImageDetailViewImpl(
         toolbarApodImageDetail.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.toolbar_action_export_apod_image -> {
-                    notifyListener { listener ->
+                    notify { listener ->
                         listener.onToolbarActionExportApodImageClicked()
                     }
                     true
@@ -64,15 +68,15 @@ class ApodImageDetailViewImpl(
         }
     }
 
+    override fun bind(apodImage: Bitmap) {
+        photoViewApodImageDetail.setImageBitmap(apodImage)
+    }
+
     override fun showToolbar() {
         toolbarApodImageDetail.isVisible = true
     }
 
     override fun hideToolbar() {
         toolbarApodImageDetail.isVisible = false
-    }
-
-    override fun bindApodImage(apodImage: Bitmap) {
-        photoViewApodImageDetail.setImageBitmap(apodImage)
     }
 }

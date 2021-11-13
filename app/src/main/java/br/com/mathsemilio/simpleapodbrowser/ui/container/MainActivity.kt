@@ -5,16 +5,16 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- */
+*/
 
-package br.com.mathsemilio.simpleapodbrowser.ui
+package br.com.mathsemilio.simpleapodbrowser.ui.container
 
 import android.os.Bundle
 import android.view.Menu
@@ -29,16 +29,21 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.util.launchWebPage
+import br.com.mathsemilio.simpleapodbrowser.ui.container.view.MainActivityView
+import br.com.mathsemilio.simpleapodbrowser.ui.container.view.MainActivityViewImpl
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseActivity
+import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.ContainerLayoutDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.StatusBarDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.HostLayoutHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
 
-class MainActivity : BaseActivity(), HostLayoutHelper, StatusBarDelegate, SystemUIDelegate {
+class MainActivity : BaseActivity(),
+    SystemUIDelegate.Listener,
+    ContainerLayoutDelegate,
+    StatusBarDelegate {
 
-    private lateinit var view: MainActivityViewImpl
+    private lateinit var view: MainActivityView
 
     private lateinit var navController: NavController
 
@@ -54,17 +59,37 @@ class MainActivity : BaseActivity(), HostLayoutHelper, StatusBarDelegate, System
 
         permissionsHelper = compositionRoot.permissionsHelper
         tapGestureHelper = compositionRoot.tapGestureHelper
+        gestureDetector = compositionRoot.gestureDetectorCompat
 
         setContentView(view.rootView)
+
+        view.bind(window)
 
         setupNavController()
 
         setupUIComponentsWithNavController()
 
         setOnDestinationChangedListener()
-
-        gestureDetector = GestureDetectorCompat(this, tapGestureHelper)
     }
+
+    override val navHostFragment: NavHostFragment
+        get() {
+            return supportFragmentManager.findFragmentById(
+                R.id.fragment_container_view_app
+            ) as NavHostFragment
+        }
+
+    override val fragmentContainer
+        get() = view.fragmentContainer
+
+    override val bottomNavigationView
+        get() = view.bottomNavigationView
+
+    override var statusBarColor: Int
+        get() = view.statusBarColor
+        set(value) {
+            view.setStatusBarColor(value)
+        }
 
     private fun setupNavController() {
         val navHostFragment = supportFragmentManager.findFragmentById(
@@ -75,7 +100,7 @@ class MainActivity : BaseActivity(), HostLayoutHelper, StatusBarDelegate, System
     }
 
     private fun setupUIComponentsWithNavController() {
-        setSupportActionBar(view.appToolbar)
+        setSupportActionBar(view.toolbar)
 
         setupActionBarWithNavController(
             navController,
@@ -90,48 +115,35 @@ class MainActivity : BaseActivity(), HostLayoutHelper, StatusBarDelegate, System
     private fun setOnDestinationChangedListener() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.ApodDetailScreen -> {
-                    view.showToolbar()
-                    view.hideBottomNavigationView()
-                }
-                R.id.ApodImageDetailScreen -> {
-                    view.hideToolbar()
-                }
-                R.id.SettingsScreen -> {
-                    view.hideBottomNavigationView()
-                }
+                R.id.ApodDetailScreen -> onNavigateToApodDetailScreen()
+                R.id.ApodImageDetailScreen -> view.hideToolbar()
+                R.id.SettingsScreen -> view.hideBottomNavigationView()
                 else -> {
                     view.showToolbar()
+                    view.revertStatusBarColor()
                     view.showBottomNavigationView()
                 }
             }
         }
     }
 
-    override fun getNavHostFragment(): NavHostFragment {
-        return supportFragmentManager.findFragmentById(
-            R.id.fragment_container_view_app
-        ) as NavHostFragment
+    private fun onNavigateToApodDetailScreen() {
+        view.showToolbar()
+        view.revertStatusBarColor()
+        view.hideBottomNavigationView()
     }
 
-    override fun getFragmentContainer() = view.fragmentContainer
-
-    override fun getBottomNavigationView() = view.bottomNavigationView
-
-    override fun onSetStatusBarColor(color: Int) {
-        view.setStatusBarColor(window, color)
+    override fun onShowSystemUIRequested() {
+        view.showSystemUI()
     }
 
-    override fun onRevertStatusBarColor() {
-        view.revertStatusBarColor(window)
+    override fun onHideSystemUIRequested() {
+        view.hideSystemUI()
     }
 
-    override fun onHideSystemUI() {
-        view.hideSystemUI(window)
-    }
-
-    override fun onShowSystemUI() {
-        view.showSystemUI(window)
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        gestureDetector.onTouchEvent(event)
+        return super.onTouchEvent(event)
     }
 
     override fun onRequestPermissionsResult(
@@ -141,11 +153,6 @@ class MainActivity : BaseActivity(), HostLayoutHelper, StatusBarDelegate, System
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        gestureDetector.onTouchEvent(event)
-        return super.onTouchEvent(event)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

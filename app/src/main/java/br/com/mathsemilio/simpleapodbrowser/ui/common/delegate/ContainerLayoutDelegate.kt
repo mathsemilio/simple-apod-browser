@@ -14,19 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail
+package br.com.mathsemilio.simpleapodbrowser.ui.common.delegate
 
-import android.graphics.Bitmap
-import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
+import androidx.fragment.app.FragmentContainerView
+import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-abstract class ApodDetailView : BaseObservableView<ApodDetailView.Listener>() {
+interface ContainerLayoutDelegate {
+    val navHostFragment: NavHostFragment
 
-    interface Listener {
-        fun onApodImageClicked(apodImage: Bitmap)
+    val fragmentContainer: FragmentContainerView
 
-        fun onPlayIconClicked(videoUrl: String)
-    }
-
-    abstract fun bindApod(apod: Apod)
+    val bottomNavigationView: BottomNavigationView
 }
