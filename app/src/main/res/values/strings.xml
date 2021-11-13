@@ -1,6 +1,6 @@
 <resources>
     <!-- App name -->
-    <string name="app_name">Simple APoD Browser</string>
+    <string name="app_name">APoD Browser</string>
 
     <!-- Content Description -->
     <string name="content_description_astronomical_picture_of_the_day">Astronomical Picture of the Day</string>
