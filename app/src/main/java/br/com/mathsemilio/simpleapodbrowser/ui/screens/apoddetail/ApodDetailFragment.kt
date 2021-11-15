@@ -27,8 +27,6 @@ import br.com.mathsemilio.simpleapodbrowser.common.util.toByteArray
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase.AddFavoriteApodResult
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchApodFavoriteStateUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchApodFavoriteStateUseCase.FetchApodFavoriteStateResult
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
@@ -47,7 +45,6 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
     private lateinit var coroutineScope: CoroutineScope
 
     private lateinit var addFavoriteApodUseCase: AddFavoriteApodUseCase
-    private lateinit var fetchApodFavoriteStateUseCase: FetchApodFavoriteStateUseCase
 
     private lateinit var apod: Apod
 
@@ -61,7 +58,6 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
 
         addFavoriteApodUseCase = compositionRoot.addFavoriteApodUseCase
-        fetchApodFavoriteStateUseCase = compositionRoot.fetchApodFavoriteStateUseCase
     }
 
     override fun onCreateView(
@@ -86,31 +82,7 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
     override fun onPlayIconClicked(videoUrl: String) = launchWebPage(videoUrl)
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.toolbar_action_add_to_favorites).isVisible = !isApodFavorite()
-    }
-
-    private fun isApodFavorite(): Boolean {
-        var isFavorite = false
-
-        coroutineScope.launch {
-            val result = fetchApodFavoriteStateUseCase.fetchApodFavoriteState(apod)
-            isFavorite = handleFetchApodFavoriteStateResult(result)
-        }
-
-        return isFavorite
-    }
-
-    private fun handleFetchApodFavoriteStateResult(result: FetchApodFavoriteStateResult): Boolean {
-        return when (result) {
-            is FetchApodFavoriteStateResult.Completed -> {
-                var favoriteState = false
-
-                result.isFavorite?.let { favoriteState = it }
-
-                favoriteState
-            }
-            FetchApodFavoriteStateResult.Failed -> true
-        }
+        menu.findItem(R.id.toolbar_action_add_to_favorites).isVisible = !apod.isFavorite
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -138,6 +110,8 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
         when (result) {
             AddFavoriteApodResult.Completed ->
                 messagesManager.showApodAddedToFavoritesSuccessfullyMessage()
+            AddFavoriteApodResult.AlreadyFavorite ->
+                messagesManager.showApodAlreadyOnFavoritesMessage()
             AddFavoriteApodResult.Failed ->
                 messagesManager.showUnexpectedErrorOccurredMessage()
         }
@@ -155,3 +129,4 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
         coroutineScope.coroutineContext.cancelChildren()
     }
 }
+

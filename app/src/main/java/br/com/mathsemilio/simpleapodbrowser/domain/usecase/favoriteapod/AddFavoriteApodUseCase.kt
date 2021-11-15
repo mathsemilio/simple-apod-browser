@@ -24,19 +24,39 @@ class AddFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) {
 
     sealed class AddFavoriteApodResult {
         object Completed : AddFavoriteApodResult()
+
+        object AlreadyFavorite : AddFavoriteApodResult()
+
         object Failed : AddFavoriteApodResult()
     }
 
     suspend fun addApodToFavorites(apod: Apod): AddFavoriteApodResult {
         var addFavoriteApodResult: AddFavoriteApodResult
 
-        endpoint.add(apod.copy(isFavorite = true)).also { result ->
-            addFavoriteApodResult = when (result) {
-                is Result.Completed -> AddFavoriteApodResult.Completed
-                is Result.Failed -> AddFavoriteApodResult.Failed
+        if (isApodAlreadyFavorite(apod)) {
+            addFavoriteApodResult = AddFavoriteApodResult.AlreadyFavorite
+        } else {
+            endpoint.add(apod).also { result ->
+                addFavoriteApodResult = when (result) {
+                    is Result.Completed -> AddFavoriteApodResult.Completed
+                    is Result.Failed -> AddFavoriteApodResult.Failed
+                }
             }
         }
 
         return addFavoriteApodResult
+    }
+
+    private suspend fun isApodAlreadyFavorite(apod: Apod): Boolean {
+        var isAlreadyFavorite: Boolean
+
+        endpoint.fetchFavoriteApodBy(apod.date).also { result ->
+            isAlreadyFavorite = when (result) {
+                is Result.Completed -> result.data != null
+                is Result.Failed -> throw RuntimeException(result.exception)
+            }
+        }
+
+        return isAlreadyFavorite
     }
 }

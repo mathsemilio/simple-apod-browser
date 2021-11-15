@@ -19,7 +19,10 @@ package br.com.mathsemilio.simpleapodbrowser.common.di
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodBasedOnDateUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodsUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.*
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchApodsBasedOnSearchQueryUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodsUseCase
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ApodImageExporter
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
@@ -92,9 +95,6 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
 
     val fetchFavoriteApodUseCase
         get() = FetchFavoriteApodsUseCase(favoriteApodEndpoint)
-
-    val fetchApodFavoriteStateUseCase
-        get() = FetchApodFavoriteStateUseCase(favoriteApodEndpoint)
 
     val fetchApodsBasedOnSearchQueryUseCase
         get() = FetchApodsBasedOnSearchQueryUseCase(favoriteApodEndpoint)
