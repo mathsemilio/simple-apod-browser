@@ -33,7 +33,6 @@ import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFav
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.ContainerLayoutDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SnackBarManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.FavoriteApodsScreenView
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.FavoriteApodsScreenViewImpl
@@ -49,7 +48,6 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
 
     private lateinit var screensNavigator: ScreensNavigator
     private lateinit var messagesManager: MessagesManager
-    private lateinit var snackBarManager: SnackBarManager
     private lateinit var coroutineScope: CoroutineScope
 
     private lateinit var fetchFavoriteApodUseCase: FetchFavoriteApodsUseCase
@@ -65,7 +63,6 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
 
         screensNavigator = ScreensNavigator(findNavController())
         messagesManager = compositionRoot.messagesManager
-        snackBarManager = compositionRoot.snackBarManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
 
         fetchFavoriteApodUseCase = compositionRoot.fetchFavoriteApodUseCase
@@ -96,19 +93,10 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
     private fun handleDeleteFavoriteApodResult(result: DeleteFavoriteApodResult) {
         when (result) {
             is DeleteFavoriteApodResult.Completed ->
-                showFavoriteApodDeletedSuccessfullySnackBar()
+                TODO("Show confirm deletion dialog")
             DeleteFavoriteApodResult.Failed ->
                 messagesManager.showUnexpectedErrorOccurredMessage()
         }
-    }
-
-    private fun showFavoriteApodDeletedSuccessfullySnackBar() {
-        snackBarManager.showFavoriteApodDeletedSuccessfullySnackBar(
-            view = view.rootView,
-            containerLayoutDelegate.bottomNavigationView,
-            onSnackBarActionClicked = { revertFavoriteApodDeletion() },
-            onSnackBarTimedOut = { fetchFavoriteApods() }
-        )
     }
 
     private fun revertFavoriteApodDeletion() {

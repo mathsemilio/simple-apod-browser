@@ -26,7 +26,6 @@ import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFav
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ApodImageExporter
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.SnackBarManager
 
 class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCompositionRoot) {
 
@@ -65,9 +64,6 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
 
     val preferencesManager
         get() = activityCompositionRoot.preferencesManager
-
-    val snackBarManager
-        get() = SnackBarManager(activityCompositionRoot.application)
 
     val statusBarDelegate
         get() = activityCompositionRoot.statusBarDelegate

@@ -19,14 +19,11 @@ package br.com.mathsemilio.simpleapodbrowser.common.util
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 
 fun Context.showLongToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -34,29 +31,6 @@ fun Context.showLongToast(message: String) {
 
 fun Context.showShortToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-}
-
-inline fun Context.showSnackBarWithAction(
-    view: View,
-    anchorView: View,
-    message: String,
-    actionMessage: String,
-    crossinline onSnackBarActionClicked: () -> Unit,
-    crossinline onSnackBarTimedOut: () -> Unit
-) {
-    Snackbar.make(this, view, message, Snackbar.LENGTH_LONG)
-        .setAnchorView(anchorView)
-        .setAction(actionMessage) { onSnackBarActionClicked() }
-        .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
-            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT)
-                    onSnackBarTimedOut()
-            }
-
-            override fun onShown(transientBottomBar: Snackbar?) {
-                super.onShown(transientBottomBar)
-            }
-        }).show()
 }
 
 fun Context.launchWebPage(url: String) {
