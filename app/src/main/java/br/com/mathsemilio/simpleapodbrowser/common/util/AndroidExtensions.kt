@@ -44,9 +44,7 @@ fun Context.launchWebPage(url: String) {
 fun Fragment.launchWebPage(url: String) {
     val page = Uri.parse(url)
     val intent = Intent(Intent.ACTION_VIEW, page)
-
-    if (intent.resolveActivity(requireContext().packageManager) != null)
-        this.startActivity(intent)
+    startActivity(intent)
 }
 
 inline fun SearchView.onQueryTextChangedListener(
@@ -62,22 +60,4 @@ inline fun SearchView.onQueryTextChangedListener(
             return true
         }
     })
-}
-
-inline fun onRecyclerViewItemSwipedToTheLeft(
-    crossinline onItemSwiped: (RecyclerView.ViewHolder) -> Unit
-): ItemTouchHelper.SimpleCallback {
-    return object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            return false
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            onItemSwiped(viewHolder)
-        }
-    }
 }
