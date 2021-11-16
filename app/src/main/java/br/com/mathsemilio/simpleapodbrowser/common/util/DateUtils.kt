@@ -44,7 +44,7 @@ fun Long.formatTimeInMillis(): String {
 fun String.formatDate(context: Context): String {
     val year = this.substring(0..3)
     val month = this.substring(5..6)
-    val day = this.substring(8..9)
+    val day = this.substring(8..9).removePrefix("0")
     val formattedDate = "${convertMonthNumberToString(month)} $day, $year"
 
     return context.getString(R.string.date, formattedDate)
