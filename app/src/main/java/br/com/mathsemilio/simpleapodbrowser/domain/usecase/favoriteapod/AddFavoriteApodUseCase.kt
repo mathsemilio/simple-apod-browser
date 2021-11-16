@@ -36,7 +36,7 @@ class AddFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) {
         if (isApodAlreadyFavorite(apod)) {
             addFavoriteApodResult = AddFavoriteApodResult.AlreadyFavorite
         } else {
-            endpoint.add(apod).also { result ->
+            endpoint.add(apod.copy(isFavorite = true)).also { result ->
                 addFavoriteApodResult = when (result) {
                     is Result.Completed -> AddFavoriteApodResult.Completed
                     is Result.Failed -> AddFavoriteApodResult.Failed

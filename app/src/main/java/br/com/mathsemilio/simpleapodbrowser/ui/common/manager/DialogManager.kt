@@ -63,4 +63,16 @@ class DialogManager(
 
         promptDialog.show(fragmentManager, null)
     }
+
+    fun showConfirmFavoriteApodDeletionDialog() {
+        val promptDialog = PromptDialogBuilder
+            .withTitle(context.getString(R.string.dialog_title_are_you_sure))
+            .withMessage(context.getString(R.string.dialog_message_confirm_apod_deletion))
+            .withPositiveButtonText(context.getString(R.string.dialog_button_text_delete))
+            .withNegativeButtonText(context.getString(R.string.dialog_button_text_cancel))
+            .setIsCancelable(true)
+            .build()
+
+        promptDialog.show(fragmentManager, null)
+    }
 }

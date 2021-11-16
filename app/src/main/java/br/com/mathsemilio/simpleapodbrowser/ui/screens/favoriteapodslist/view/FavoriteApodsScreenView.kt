@@ -23,8 +23,6 @@ abstract class FavoriteApodsScreenView : BaseObservableView<FavoriteApodsScreenV
 
     interface Listener {
         fun onFavoriteApodClicked(favoriteApod: Apod)
-
-        fun onFavoriteApodSwipedToDelete(favoriteApod: Apod)
     }
 
     abstract fun bind(favoriteApods: List<Apod>)

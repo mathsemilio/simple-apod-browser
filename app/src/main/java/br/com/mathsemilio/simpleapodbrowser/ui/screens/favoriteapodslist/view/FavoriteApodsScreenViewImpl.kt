@@ -21,10 +21,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.util.onRecyclerViewItemSwipedToTheLeft
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.FavoriteApodsListAdapter
 
@@ -39,8 +37,6 @@ class FavoriteApodsScreenViewImpl(
     private lateinit var recyclerViewApodFavorites: RecyclerView
 
     private lateinit var favoriteApodsListAdapter: FavoriteApodsListAdapter
-
-    private lateinit var lastSwipedFavoriteApod: Apod
 
     init {
         rootView = layoutInflater.inflate(R.layout.apod_favorites_list_screen, container, false)
@@ -59,26 +55,11 @@ class FavoriteApodsScreenViewImpl(
     private fun setupRecyclerView() {
         favoriteApodsListAdapter = FavoriteApodsListAdapter(this)
 
-        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerViewApodFavorites)
-
         recyclerViewApodFavorites.apply {
             adapter = favoriteApodsListAdapter
             setHasFixedSize(true)
         }
     }
-
-    private val itemTouchHelperCallback: ItemTouchHelper.SimpleCallback
-        get() = onRecyclerViewItemSwipedToTheLeft { viewHolder ->
-            val apodFavoritesList = favoriteApodsListAdapter.currentList.toMutableList()
-
-            lastSwipedFavoriteApod = apodFavoritesList.removeAt(viewHolder.adapterPosition)
-
-            favoriteApodsListAdapter.submitList(apodFavoritesList)
-
-            notify { listener ->
-                listener.onFavoriteApodSwipedToDelete(lastSwipedFavoriteApod)
-            }
-        }
 
     override fun bind(favoriteApods: List<Apod>) {
         favoriteApodsListAdapter.submitList(favoriteApods)

@@ -23,9 +23,6 @@ import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.util.onQueryTextChangedListener
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.DeleteFavoriteApodResult
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.RevertFavoriteApodDeletionResult
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchApodsBasedOnSearchQueryUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchApodsBasedOnSearchQueryUseCase.FetchApodBasedOnSearchQueryResult
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodsUseCase
@@ -51,7 +48,6 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
     private lateinit var coroutineScope: CoroutineScope
 
     private lateinit var fetchFavoriteApodUseCase: FetchFavoriteApodsUseCase
-    private lateinit var deleteFavoriteApodUseCase: DeleteFavoriteApodUseCase
     private lateinit var fetchApodsBasedOnSearchQueryUseCase: FetchApodsBasedOnSearchQueryUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +62,6 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
 
         fetchFavoriteApodUseCase = compositionRoot.fetchFavoriteApodUseCase
-        deleteFavoriteApodUseCase = compositionRoot.deleteFavoriteApodUseCase
         fetchApodsBasedOnSearchQueryUseCase = compositionRoot.fetchApodsBasedOnSearchQueryUseCase
     }
 
@@ -81,38 +76,6 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
 
     override fun onFavoriteApodClicked(favoriteApod: Apod) {
         screensNavigator.toFavoriteApodDetailsScreen(favoriteApod)
-    }
-
-    override fun onFavoriteApodSwipedToDelete(favoriteApod: Apod) {
-        coroutineScope.launch {
-            val result = deleteFavoriteApodUseCase.deleteFavoriteApod(favoriteApod)
-            handleDeleteFavoriteApodResult(result)
-        }
-    }
-
-    private fun handleDeleteFavoriteApodResult(result: DeleteFavoriteApodResult) {
-        when (result) {
-            is DeleteFavoriteApodResult.Completed ->
-                TODO("Show confirm deletion dialog")
-            DeleteFavoriteApodResult.Failed ->
-                messagesManager.showUnexpectedErrorOccurredMessage()
-        }
-    }
-
-    private fun revertFavoriteApodDeletion() {
-        coroutineScope.launch {
-            val result = deleteFavoriteApodUseCase.revertFavoriteApodDeletion()
-            handleRevertFavoriteApodDeletionResult(result)
-        }
-    }
-
-    private fun handleRevertFavoriteApodDeletionResult(result: RevertFavoriteApodDeletionResult) {
-        when (result) {
-            RevertFavoriteApodDeletionResult.Completed ->
-                fetchFavoriteApods()
-            RevertFavoriteApodDeletionResult.Failed ->
-                messagesManager.showUnexpectedErrorOccurredMessage()
-        }
     }
 
     private fun fetchFavoriteApods() {

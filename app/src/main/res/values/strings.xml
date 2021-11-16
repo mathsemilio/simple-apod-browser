@@ -6,7 +6,6 @@
     <string name="content_description_astronomical_picture_of_the_day">Astronomical Picture of the Day</string>
     <string name="content_description_play_apod_video">Play Astronomical Picture of the Day video</string>
     <string name="content_description_network_request_error">Network request error</string>
-    <string name="content_description_remove_from_favorites">Remove from Favorites</string>
     <string name="content_description_no_favorite_apods_found_illustration">No favorite APoD\'s found illustration</string>
 
     <!-- Common -->
@@ -44,15 +43,18 @@
     <string name="dialog_message_grant_external_storage_permission">In order to export images, we need access to the device\'s external storage.</string>
     <string name="dialog_message_enable_permission_manually">To enable this feature, turn on the access to external storage in the app info on your device\'s settings.</string>
     <string name="dialog_message_clear_image_cache">Are you sure? APoDs will take more time to load.</string>
+    <string name="dialog_message_confirm_apod_deletion">This action cannot be undone.</string>
 
     <!-- Dialog title -->
     <string name="dialog_title_grant_permission">Grant permission</string>
     <string name="dialog_title_default_date_range">Default date range</string>
     <string name="dialog_title_clear_image_cache">Clear image cache</string>
+    <string name="dialog_title_are_you_sure">Are you sure?</string>
 
     <!-- Dialog button text -->
     <string name="dialog_button_text_ok">OK</string>
     <string name="dialog_button_text_cancel">Cancel</string>
+    <string name="dialog_button_text_delete">Delete</string>
 
     <!-- Misc. -->
     <string name="apod_website_url">https://apod.nasa.gov/apod/astropix.html</string>
