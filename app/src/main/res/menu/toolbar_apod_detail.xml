@@ -8,4 +8,10 @@
         android:title="@string/toolbar_action_title_add_to_favorites"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/toolbar_action_delete_favorite_apod"
+        android:icon="@drawable/ic_outline_delete"
+        android:title="@string/toolbar_action_title_delete"
+        app:showAsAction="ifRoom" />
+
 </menu>

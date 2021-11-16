@@ -27,6 +27,8 @@ import br.com.mathsemilio.simpleapodbrowser.common.util.toByteArray
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase.AddFavoriteApodResult
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.*
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
@@ -45,6 +47,7 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
     private lateinit var coroutineScope: CoroutineScope
 
     private lateinit var addFavoriteApodUseCase: AddFavoriteApodUseCase
+    private lateinit var deleteFavoriteApodUseCase: DeleteFavoriteApodUseCase
 
     private lateinit var apod: Apod
 
@@ -58,6 +61,7 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
 
         addFavoriteApodUseCase = compositionRoot.addFavoriteApodUseCase
+        deleteFavoriteApodUseCase = compositionRoot.deleteFavoriteApodUseCase
     }
 
     override fun onCreateView(
@@ -82,7 +86,13 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
     override fun onPlayIconClicked(videoUrl: String) = launchWebPage(videoUrl)
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.toolbar_action_add_to_favorites).isVisible = !apod.isFavorite
+        if (apod.isFavorite) {
+            menu.findItem(R.id.toolbar_action_delete_favorite_apod).isVisible = true
+            menu.findItem(R.id.toolbar_action_add_to_favorites).isVisible = false
+        } else {
+            menu.findItem(R.id.toolbar_action_delete_favorite_apod).isVisible = false
+            menu.findItem(R.id.toolbar_action_add_to_favorites).isVisible = true
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -93,6 +103,10 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
         return when (item.itemId) {
             R.id.toolbar_action_add_to_favorites -> {
                 addApodToFavorites()
+                true
+            }
+            R.id.toolbar_action_delete_favorite_apod -> {
+                deleteFavoriteApod()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -117,6 +131,22 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
         }
     }
 
+    private fun deleteFavoriteApod() {
+        coroutineScope.launch {
+            val result = deleteFavoriteApodUseCase.deleteFavoriteApod(apod)
+            handleDeleteFavoriteApodResult(result)
+        }
+    }
+
+    private fun handleDeleteFavoriteApodResult(result: DeleteFavoriteApodResult) {
+        when (result) {
+            DeleteFavoriteApodResult.Completed ->
+                TODO("Show confirm deletion dialog")
+            DeleteFavoriteApodResult.Failed ->
+                messagesManager.showUnexpectedErrorOccurredMessage()
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         view.addListener(this)
@@ -129,4 +159,3 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener {
         coroutineScope.coroutineContext.cancelChildren()
     }
 }
-

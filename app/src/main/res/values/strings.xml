@@ -22,6 +22,7 @@
     <string name="toolbar_action_title_pick_apod_by_date">Pick APoD by date</string>
     <string name="toolbar_action_title_get_random_apod">Felling lucky…</string>
     <string name="toolbar_action_title_add_to_favorites">Add to favorites</string>
+    <string name="toolbar_action_title_delete">Delete</string>
     <string name="toolbar_action_title_search">Search</string>
     <string name="toolbar_action_title_visit_apod_website">Visit APoD website</string>
     <string name="toolbar_action_title_export_apod_image">Export image</string>
