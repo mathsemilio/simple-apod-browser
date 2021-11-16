@@ -29,10 +29,10 @@ fun getDaysIn(dayRange: Int): String {
 
 fun convertDefaultDateRangeFrom(rangeFromPreferences: String): Int {
     return when (rangeFromPreferences) {
-        DEFAULT_DATE_RANGE_LAST_SEVEN_DAYS -> 6
-        DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS -> 13
-        DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS -> 20
-        DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS -> 29
+        DEFAULT_DATE_RANGE_LAST_SEVEN_DAYS -> 7
+        DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS -> 14
+        DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS -> 21
+        DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS -> 31
         else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION)
     }
 }
