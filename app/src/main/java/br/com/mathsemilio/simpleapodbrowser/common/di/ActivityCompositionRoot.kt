@@ -26,7 +26,6 @@ import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteApodDatabas
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesEndpoint
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.ContainerLayoutDelegate
-import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.StatusBarDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
@@ -72,9 +71,6 @@ class ActivityCompositionRoot(
 
     val preferencesManager
         get() = PreferencesManager(PreferencesEndpoint(application))
-
-    val statusBarDelegate
-        get() = activity as StatusBarDelegate
 
     val systemUIDelegate
         get() = SystemUIDelegate()

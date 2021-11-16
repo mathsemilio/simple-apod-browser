@@ -65,9 +65,6 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
     val preferencesManager
         get() = activityCompositionRoot.preferencesManager
 
-    val statusBarDelegate
-        get() = activityCompositionRoot.statusBarDelegate
-
     val systemUIDelegate
         get() = activityCompositionRoot.systemUIDelegate
 

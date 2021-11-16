@@ -16,6 +16,7 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.container
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -29,19 +30,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.util.launchWebPage
-import br.com.mathsemilio.simpleapodbrowser.ui.container.view.MainActivityView
-import br.com.mathsemilio.simpleapodbrowser.ui.container.view.MainActivityViewImpl
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseActivity
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.ContainerLayoutDelegate
-import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.StatusBarDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
+import br.com.mathsemilio.simpleapodbrowser.ui.container.view.MainActivityView
+import br.com.mathsemilio.simpleapodbrowser.ui.container.view.MainActivityViewImpl
 
-class MainActivity : BaseActivity(),
-    SystemUIDelegate.Listener,
-    ContainerLayoutDelegate,
-    StatusBarDelegate {
+class MainActivity : BaseActivity(), SystemUIDelegate.Listener, ContainerLayoutDelegate {
 
     private lateinit var view: MainActivityView
 
@@ -85,12 +82,6 @@ class MainActivity : BaseActivity(),
     override val bottomNavigationView
         get() = view.bottomNavigationView
 
-    override var statusBarColor: Int
-        get() = view.statusBarColor
-        set(value) {
-            view.setStatusBarColor(value)
-        }
-
     private fun setupNavController() {
         val navHostFragment = supportFragmentManager.findFragmentById(
             R.id.fragment_container_view_app
@@ -116,7 +107,7 @@ class MainActivity : BaseActivity(),
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.ApodDetailScreen -> onNavigateToApodDetailScreen()
-                R.id.ApodImageDetailScreen -> view.hideToolbar()
+                R.id.ApodImageDetailScreen -> onNavigateToImageDetailScreen()
                 R.id.SettingsScreen -> view.hideBottomNavigationView()
                 else -> {
                     view.showToolbar()
@@ -131,6 +122,12 @@ class MainActivity : BaseActivity(),
         view.showToolbar()
         view.revertStatusBarColor()
         view.hideBottomNavigationView()
+    }
+
+    private fun onNavigateToImageDetailScreen() {
+        view.hideToolbar()
+        view.hideBottomNavigationView()
+        view.setStatusBarColor(Color.BLACK)
     }
 
     override fun onShowSystemUIRequested() {

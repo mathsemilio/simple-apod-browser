@@ -64,6 +64,7 @@ class MainActivityViewImpl(
 
     override fun bind(window: Window) {
         this.window = window
+        previousStatusBarColor = window.statusBarColor
     }
 
     override fun showToolbar() {

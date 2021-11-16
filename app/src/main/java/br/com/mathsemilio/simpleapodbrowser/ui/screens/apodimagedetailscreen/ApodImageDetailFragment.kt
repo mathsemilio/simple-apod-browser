@@ -18,7 +18,6 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen
 
 import android.Manifest
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +27,6 @@ import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.WRITE_EXTERNAL_STORAGE_REQUEST_CODE
 import br.com.mathsemilio.simpleapodbrowser.common.util.toBitmap
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.StatusBarDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ApodImageExporter
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
@@ -50,7 +48,6 @@ class ApodImageDetailFragment : BaseFragment(),
     private lateinit var permissionsHelper: PermissionsHelper
     private lateinit var apodImageExporter: ApodImageExporter
 
-    private lateinit var statusBarDelegate: StatusBarDelegate
     private lateinit var systemUIDelegate: SystemUIDelegate
 
     private lateinit var tapGestureHelper: TapGestureHelper
@@ -69,7 +66,6 @@ class ApodImageDetailFragment : BaseFragment(),
         permissionsHelper = compositionRoot.permissionsHelper
         apodImageExporter = compositionRoot.apodImageExporter
 
-        statusBarDelegate = compositionRoot.statusBarDelegate
         systemUIDelegate = compositionRoot.systemUIDelegate
 
         tapGestureHelper = compositionRoot.tapGestureHelper
@@ -153,8 +149,6 @@ class ApodImageDetailFragment : BaseFragment(),
         tapGestureHelper.addListener(this)
         apodImageExporter.addListener(this)
         permissionsHelper.addListener(this)
-
-        statusBarDelegate.statusBarColor = Color.BLACK
 
         view.bind(apodImage)
     }
