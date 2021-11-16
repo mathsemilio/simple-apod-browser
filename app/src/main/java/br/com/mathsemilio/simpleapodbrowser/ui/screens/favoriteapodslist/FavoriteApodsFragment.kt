@@ -23,10 +23,9 @@ import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.util.onQueryTextChangedListener
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase.AddFavoriteApodResult
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.DeleteFavoriteApodResult
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.RevertFavoriteApodDeletionResult
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchApodsBasedOnSearchQueryUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchApodsBasedOnSearchQueryUseCase.FetchApodBasedOnSearchQueryResult
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodsUseCase
@@ -53,7 +52,6 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
     private lateinit var snackBarManager: SnackBarManager
     private lateinit var coroutineScope: CoroutineScope
 
-    private lateinit var addFavoriteApodUseCase: AddFavoriteApodUseCase
     private lateinit var fetchFavoriteApodUseCase: FetchFavoriteApodsUseCase
     private lateinit var deleteFavoriteApodUseCase: DeleteFavoriteApodUseCase
     private lateinit var fetchApodsBasedOnSearchQueryUseCase: FetchApodsBasedOnSearchQueryUseCase
@@ -70,7 +68,6 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
         snackBarManager = compositionRoot.snackBarManager
         coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
 
-        addFavoriteApodUseCase = compositionRoot.addFavoriteApodUseCase
         fetchFavoriteApodUseCase = compositionRoot.fetchFavoriteApodUseCase
         deleteFavoriteApodUseCase = compositionRoot.deleteFavoriteApodUseCase
         fetchApodsBasedOnSearchQueryUseCase = compositionRoot.fetchApodsBasedOnSearchQueryUseCase
@@ -99,32 +96,34 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
     private fun handleDeleteFavoriteApodResult(result: DeleteFavoriteApodResult) {
         when (result) {
             is DeleteFavoriteApodResult.Completed ->
-                showFavoriteApodDeletedSuccessfullySnackBar(result.deletedApod)
+                showFavoriteApodDeletedSuccessfullySnackBar()
             DeleteFavoriteApodResult.Failed ->
                 messagesManager.showUnexpectedErrorOccurredMessage()
         }
     }
 
-    private fun showFavoriteApodDeletedSuccessfullySnackBar(deletedApod: Apod) {
+    private fun showFavoriteApodDeletedSuccessfullySnackBar() {
         snackBarManager.showFavoriteApodDeletedSuccessfullySnackBar(
-            containerLayoutDelegate.fragmentContainer,
+            view = view.rootView,
             containerLayoutDelegate.bottomNavigationView,
-            onSnackBarActionClicked = { revertFavoriteApodDeletion(deletedApod) },
+            onSnackBarActionClicked = { revertFavoriteApodDeletion() },
             onSnackBarTimedOut = { fetchFavoriteApods() }
         )
     }
 
-    private fun revertFavoriteApodDeletion(deletedApod: Apod) {
+    private fun revertFavoriteApodDeletion() {
         coroutineScope.launch {
-            val result = addFavoriteApodUseCase.addApodToFavorites(deletedApod)
-            handleAddApodToFavoritesResult(result)
+            val result = deleteFavoriteApodUseCase.revertFavoriteApodDeletion()
+            handleRevertFavoriteApodDeletionResult(result)
         }
     }
 
-    private fun handleAddApodToFavoritesResult(result: AddFavoriteApodResult) {
+    private fun handleRevertFavoriteApodDeletionResult(result: RevertFavoriteApodDeletionResult) {
         when (result) {
-            AddFavoriteApodResult.Completed -> fetchFavoriteApods()
-            AddFavoriteApodResult.Failed -> messagesManager.showUnexpectedErrorOccurredMessage()
+            RevertFavoriteApodDeletionResult.Completed ->
+                fetchFavoriteApods()
+            RevertFavoriteApodDeletionResult.Failed ->
+                messagesManager.showUnexpectedErrorOccurredMessage()
         }
     }
 

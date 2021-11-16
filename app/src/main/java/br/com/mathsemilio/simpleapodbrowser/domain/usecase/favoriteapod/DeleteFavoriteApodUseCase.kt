@@ -16,6 +16,7 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod
 
+import br.com.mathsemilio.simpleapodbrowser.common.NO_FAVORITE_APOD_DELETED_EXCEPETION
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
@@ -23,20 +24,49 @@ import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoin
 class DeleteFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) {
 
     sealed class DeleteFavoriteApodResult {
-        data class Completed(val deletedApod: Apod) : DeleteFavoriteApodResult()
+        object Completed : DeleteFavoriteApodResult()
+
         object Failed : DeleteFavoriteApodResult()
     }
+
+    sealed class RevertFavoriteApodDeletionResult {
+        object Completed : RevertFavoriteApodDeletionResult()
+
+        object Failed : RevertFavoriteApodDeletionResult()
+    }
+
+    private var deletedFavoriteApod: Apod? = null
 
     suspend fun deleteFavoriteApod(favoriteApod: Apod): DeleteFavoriteApodResult {
         var deleteFavoriteApodResult: DeleteFavoriteApodResult
 
         endpoint.delete(favoriteApod).also { result ->
             deleteFavoriteApodResult = when (result) {
-                is Result.Completed -> DeleteFavoriteApodResult.Completed(deletedApod = favoriteApod)
+                is Result.Completed -> {
+                    deletedFavoriteApod = favoriteApod
+                    DeleteFavoriteApodResult.Completed
+                }
                 is Result.Failed -> DeleteFavoriteApodResult.Failed
             }
         }
 
         return deleteFavoriteApodResult
+    }
+
+    suspend fun revertFavoriteApodDeletion(): RevertFavoriteApodDeletionResult {
+        var revertFavoriteApodDeletionResult: RevertFavoriteApodDeletionResult
+
+        if (deletedFavoriteApod == null) {
+            throw RuntimeException(NO_FAVORITE_APOD_DELETED_EXCEPETION)
+        } else {
+            endpoint.add(deletedFavoriteApod ?: throw NullPointerException()).also { result ->
+                revertFavoriteApodDeletionResult = when (result) {
+                    is Result.Completed -> RevertFavoriteApodDeletionResult.Completed
+                    is Result.Failed -> RevertFavoriteApodDeletionResult.Failed
+                }
+            }
+        }
+
+        return revertFavoriteApodDeletionResult
     }
 }
