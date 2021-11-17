@@ -38,7 +38,7 @@ class ApodImageExporter(
     }
 
     private val exportedApodImageFileNameFormat
-        get() = "APoD_${System.currentTimeMillis()}.png"
+        get() = "APOD_${System.currentTimeMillis()}.png"
 
     private val imageCollectionUri: Uri
         get() {

@@ -17,7 +17,7 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.ui.common
 
 import androidx.appcompat.app.AppCompatActivity
-import br.com.mathsemilio.simpleapodbrowser.SimpleAPoDBrowserApplication
+import br.com.mathsemilio.simpleapodbrowser.SimpleApodBrowserApplication
 import br.com.mathsemilio.simpleapodbrowser.common.di.ActivityCompositionRoot
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -25,7 +25,7 @@ abstract class BaseActivity : AppCompatActivity() {
     val compositionRoot by lazy {
         ActivityCompositionRoot(
             activity = this,
-            (application as SimpleAPoDBrowserApplication).compositionRoot
+            (application as SimpleApodBrowserApplication).compositionRoot
         )
     }
 }

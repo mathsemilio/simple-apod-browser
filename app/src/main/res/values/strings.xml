@@ -1,40 +1,38 @@
 <resources>
     <!-- App name -->
-    <string name="app_name">APoD Browser</string>
+    <string name="app_name">APOD Browser</string>
 
     <!-- Content Description -->
     <string name="content_description_astronomical_picture_of_the_day">Astronomical Picture of the Day</string>
     <string name="content_description_play_apod_video">Play Astronomical Picture of the Day video</string>
     <string name="content_description_network_request_error">Network request error</string>
-    <string name="content_description_no_favorite_apods_found_illustration">No favorite APoD\'s found illustration</string>
+    <string name="content_description_no_favorite_apods_found_illustration">No favorite APOD\'s found illustration</string>
 
     <!-- Common -->
     <string name="latest">Latest</string>
     <string name="details">Details</string>
     <string name="favorites">Favorites</string>
     <string name="settings">Settings</string>
-    <string name="undo">Undo</string>
     <string name="apod_type_image">Image</string>
     <string name="apod_type_video">Video</string>
 
     <!-- Toolbar Actions -->
-    <string name="toolbar_action_title_pick_apod_by_date">Pick APoD by date</string>
+    <string name="toolbar_action_title_pick_apod_by_date">Pick APOD by date</string>
     <string name="toolbar_action_title_get_random_apod">Felling lucky…</string>
     <string name="toolbar_action_title_add_to_favorites">Add to favorites</string>
     <string name="toolbar_action_title_delete">Delete</string>
     <string name="toolbar_action_title_search">Search</string>
-    <string name="toolbar_action_title_visit_apod_website">Visit APoD website</string>
+    <string name="toolbar_action_title_visit_apod_website">Visit APOD website</string>
     <string name="toolbar_action_title_export_apod_image">Export image</string>
 
     <!-- Messages -->
-    <string name="message_invalid_apod_date">Invalid date set! Please select a date that is between June 16, 1995 and today</string>
     <string name="message_nothing_found">Nothing found</string>
     <string name="message_click_on_add_to_favorites">Add favorites or try to search for something different.</string>
     <string name="message_something_went_wrong">Something went wrong…</string>
     <string name="message_check_your_connection_and_try_again">Check your connection and try again.</string>
-    <string name="message_apod_added_to_favorites_completed">Added to favorites!</string>
+    <string name="message_apod_added_to_favorites_completed">Added to favorites</string>
     <string name="message_apod_removed_from_favorites">Removed from favorites</string>
-    <string name="message_apod_already_on_favorites">This APoD already on favorites!</string>
+    <string name="message_apod_already_on_favorites">This APOD already on favorites</string>
     <string name="message_unexpected_error_occurred">Unexpected error occurred. Please try again later.</string>
     <string name="message_apod_image_exported_successfully">Image exported to device\'s gallery</string>
     <string name="message_cached_images_removed_successfully">Cached images removed successfully</string>
@@ -42,7 +40,7 @@
     <!-- Dialog messages -->
     <string name="dialog_message_grant_external_storage_permission">In order to export images, we need access to the device\'s external storage.</string>
     <string name="dialog_message_enable_permission_manually">To enable this feature, turn on the access to external storage in the app info on your device\'s settings.</string>
-    <string name="dialog_message_clear_image_cache">Are you sure? APoDs will take more time to load.</string>
+    <string name="dialog_message_clear_image_cache">Are you sure? APODs will take more time to load next time.</string>
     <string name="dialog_message_confirm_apod_deletion">This action cannot be undone.</string>
 
     <!-- Dialog title -->
@@ -52,7 +50,7 @@
     <string name="dialog_title_are_you_sure">Are you sure?</string>
 
     <!-- Dialog button text -->
-    <string name="dialog_button_text_ok">OK</string>
+    <string name="dialog_button_text_ok">Ok</string>
     <string name="dialog_button_text_cancel">Cancel</string>
     <string name="dialog_button_text_delete">Delete</string>
 

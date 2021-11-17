@@ -16,7 +16,7 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod
 
-import br.com.mathsemilio.simpleapodbrowser.common.NO_FAVORITE_APOD_DELETED_EXCEPETION
+import br.com.mathsemilio.simpleapodbrowser.common.NO_FAVORITE_APOD_DELETED_EXCEPTION
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
@@ -57,7 +57,7 @@ class DeleteFavoriteApodUseCase(private val endpoint: FavoriteApodEndpoint) {
         var revertFavoriteApodDeletionResult: RevertFavoriteApodDeletionResult
 
         if (deletedFavoriteApod == null) {
-            throw RuntimeException(NO_FAVORITE_APOD_DELETED_EXCEPETION)
+            throw RuntimeException(NO_FAVORITE_APOD_DELETED_EXCEPTION)
         } else {
             endpoint.add(deletedFavoriteApod ?: throw NullPointerException()).also { result ->
                 revertFavoriteApodDeletionResult = when (result) {

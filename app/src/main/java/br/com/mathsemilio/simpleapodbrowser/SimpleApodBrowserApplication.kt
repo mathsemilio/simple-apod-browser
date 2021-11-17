@@ -20,7 +20,7 @@ import android.app.Application
 import br.com.mathsemilio.simpleapodbrowser.common.di.CompositionRoot
 import kotlinx.coroutines.IO_PARALLELISM_PROPERTY_NAME
 
-class SimpleAPoDBrowserApplication : Application() {
+class SimpleApodBrowserApplication : Application() {
 
     lateinit var compositionRoot: CompositionRoot
 
