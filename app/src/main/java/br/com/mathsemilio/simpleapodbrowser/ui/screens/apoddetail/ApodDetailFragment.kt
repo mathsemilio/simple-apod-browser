@@ -112,7 +112,7 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     private fun deleteFavoriteApod() {
         coroutineScope.launch {
-            val result = deleteFavoriteApodUseCase.deleteFavoriteApod(apod)
+            val result = deleteFavoriteApodUseCase.delete(apod)
             handleDeleteFavoriteApodResult(result)
         }
     }
