@@ -36,7 +36,7 @@ class DialogManager(
         val infoDialog = InfoDialogBuilder
             .withTitle(context.getString(R.string.dialog_title_grant_permission))
             .withMessage(context.getString(R.string.dialog_message_grant_external_storage_permission))
-            .withPositiveButtonText(context.getString(R.string.dialog_button_text_ok))
+            .withPositiveButtonText(context.getString(android.R.string.ok))
             .build()
 
         infoDialog.show(fragmentManager, null)
@@ -46,7 +46,7 @@ class DialogManager(
         val infoDialog = InfoDialogBuilder
             .withTitle(context.getString(R.string.dialog_title_grant_permission))
             .withMessage(context.getString(R.string.dialog_message_enable_permission_manually))
-            .withPositiveButtonText(context.getString(R.string.dialog_button_text_ok))
+            .withPositiveButtonText(context.getString(android.R.string.ok))
             .build()
 
         infoDialog.show(fragmentManager, null)
@@ -56,7 +56,7 @@ class DialogManager(
         val promptDialog = PromptDialogBuilder
             .withTitle(context.getString(R.string.dialog_title_clear_image_cache))
             .withMessage(context.getString(R.string.dialog_message_clear_image_cache))
-            .withPositiveButtonText(context.getString(R.string.dialog_button_text_ok))
+            .withPositiveButtonText(context.getString(android.R.string.ok))
             .withNegativeButtonText(context.getString(R.string.dialog_button_text_cancel))
             .setIsCancelable(true)
             .build()

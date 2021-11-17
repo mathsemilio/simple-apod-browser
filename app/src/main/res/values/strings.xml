@@ -18,7 +18,7 @@
 
     <!-- Toolbar Actions -->
     <string name="toolbar_action_title_pick_apod_by_date">Pick APOD by date</string>
-    <string name="toolbar_action_title_get_random_apod">Felling lucky…</string>
+    <string name="toolbar_action_title_get_random_apod">Feeling lucky…</string>
     <string name="toolbar_action_title_add_to_favorites">Add to favorites</string>
     <string name="toolbar_action_title_delete">Delete</string>
     <string name="toolbar_action_title_search">Search</string>
@@ -50,7 +50,6 @@
     <string name="dialog_title_are_you_sure">Are you sure?</string>
 
     <!-- Dialog button text -->
-    <string name="dialog_button_text_ok">Ok</string>
     <string name="dialog_button_text_cancel">Cancel</string>
     <string name="dialog_button_text_delete">Delete</string>
 
