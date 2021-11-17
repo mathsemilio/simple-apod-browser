@@ -1,7 +1,7 @@
-# Simple APoD Browser
+# Simple APOD Browser
 Astronomical Picture of the Day client application for Android.
 
-## What is APoD?
+## What is APOD?
 APoD is short for Astronomical Picture of the Day, which is a website provided by NASA and 
 the Michigan Technological University. According to the website, "Each day a different image or
 photograph of our universe is featured, along with a brief explanation written by a professional
@@ -12,12 +12,12 @@ astronomer."
 <p><a href="https://apod.nasa.gov/apod/astropix.html">Astronomical Picture of the Day - Official Website</a></p>
 
 ## Application Objective
-This application makes it easy to found and see the latest APoDs. It also enables the user to 
+This application makes it easy to found and see the latest APODs. It also enables the user to 
 bookmark their favorite ones for easy future access. The app also features other interesting 
-features, like "Pick APoD by Date" and "Get Random APoD".
+features, like "Pick APOD by Date" and "Get Random APOD".
 
 **Important:** 
-This application makes use of the APoD API, which is part of the open APIs provided by NASA.
+This application makes use of the APOD API, which is part of the open APIs provided by NASA.
 For more info, please refer to this <a href="https://api.nasa.gov/">link.</a>
 
 ## Points to be fixed
@@ -25,7 +25,7 @@ For more info, please refer to this <a href="https://api.nasa.gov/">link.</a>
 
 ## Build instructions
 Before building the project, you either need to provide your API key or use the "DEMO_KEY".
-Open the APoDEndpoint.kt file and replace all occurrences of ```apiKeyProvider.getAPoDKey()``` with your key or with "DEMO_KEY".
+Open the APoDEndpoint.kt file and replace all occurrences of ```apiKeyProvider.apiKey``` with your key or with "DEMO_KEY".
 
 **Note:** You can generate a API key at the <a href="https://api.nasa.gov/">NASA Open APIs website.</a>
 
