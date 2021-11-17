@@ -19,21 +19,22 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.ApodListAdapter
+import com.facebook.shimmer.ShimmerFrameLayout
 
 class ApodListScreenViewImpl(
     layoutInflater: LayoutInflater,
     container: ViewGroup?
-) : ApodListScreenView(), ApodListAdapter.Listener {
+) : ApodListScreenView(),
+    ApodListAdapter.Listener {
 
-    private lateinit var progressBarApods: ProgressBar
     private lateinit var linearLayoutScreenErrorState: LinearLayout
+    private lateinit var shimmerFrameLayoutApods: ShimmerFrameLayout
     private lateinit var swipeRefreshLayoutApods: SwipeRefreshLayout
     private lateinit var recyclerViewApods: RecyclerView
 
@@ -50,9 +51,9 @@ class ApodListScreenViewImpl(
     }
 
     private fun initializeViews() {
-        progressBarApods = rootView.findViewById(R.id.progress_bar_apod_list)
         linearLayoutScreenErrorState = rootView.findViewById(R.id.linear_layout_screen_error_state)
-        swipeRefreshLayoutApods = rootView.findViewById(R.id.swipe_refresh_layout_apod_list)
+        shimmerFrameLayoutApods = rootView.findViewById(R.id.shimmer_frame_layout_apods)
+        swipeRefreshLayoutApods = rootView.findViewById(R.id.swipe_refresh_layout_apods)
         recyclerViewApods = rootView.findViewById(R.id.recycler_view_apods)
     }
 
@@ -78,13 +79,14 @@ class ApodListScreenViewImpl(
     }
 
     override fun showProgressIndicator() {
-        progressBarApods.isVisible = true
+        shimmerFrameLayoutApods.isVisible = true
         linearLayoutScreenErrorState.isVisible = false
         swipeRefreshLayoutApods.isVisible = false
     }
 
     override fun hideProgressIndicator() {
-        progressBarApods.isVisible = false
+        shimmerFrameLayoutApods.stopShimmer()
+        shimmerFrameLayoutApods.isVisible = false
         swipeRefreshLayoutApods.isVisible = true
     }
 

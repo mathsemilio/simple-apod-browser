@@ -19,12 +19,12 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.FavoriteApodsListAdapter
+import com.facebook.shimmer.ShimmerFrameLayout
 
 class FavoriteApodsScreenViewImpl(
     layoutInflater: LayoutInflater,
@@ -32,8 +32,8 @@ class FavoriteApodsScreenViewImpl(
 ) : FavoriteApodsScreenView(),
     FavoriteApodsListAdapter.Listener {
 
-    private lateinit var progressBarApodFavorites: ProgressBar
     private lateinit var linearLayoutScreenEmptyState: LinearLayout
+    private lateinit var shimmerFrameLayoutFavoriteApods: ShimmerFrameLayout
     private lateinit var recyclerViewApodFavorites: RecyclerView
 
     private lateinit var favoriteApodsListAdapter: FavoriteApodsListAdapter
@@ -47,9 +47,12 @@ class FavoriteApodsScreenViewImpl(
     }
 
     private fun initializeViews() {
-        progressBarApodFavorites = rootView.findViewById(R.id.progress_bar_apod_favorites)
-        linearLayoutScreenEmptyState = rootView.findViewById(R.id.linear_layout_screen_empty_state)
-        recyclerViewApodFavorites = rootView.findViewById(R.id.recycler_view_apod_favorites)
+        linearLayoutScreenEmptyState =
+            rootView.findViewById(R.id.linear_layout_screen_empty_state)
+        shimmerFrameLayoutFavoriteApods =
+            rootView.findViewById(R.id.shimmer_frame_layout_favorite_apods)
+        recyclerViewApodFavorites =
+            rootView.findViewById(R.id.recycler_view_favorite_apods)
     }
 
     private fun setupRecyclerView() {
@@ -81,11 +84,12 @@ class FavoriteApodsScreenViewImpl(
     }
 
     override fun showProgressIndicator() {
-        progressBarApodFavorites.isVisible = true
+        shimmerFrameLayoutFavoriteApods.isVisible = true
     }
 
     override fun hideProgressIndicator() {
-        progressBarApodFavorites.isVisible = false
+        shimmerFrameLayoutFavoriteApods.stopShimmer()
+        shimmerFrameLayoutFavoriteApods.isVisible = false
     }
 
     override fun onFavoriteApodClicked(favoriteApod: Apod) {

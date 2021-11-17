@@ -37,7 +37,8 @@ Open the ApodEndpoint.kt file and replace all occurrences of ```apiKeyProvider.a
 5. Swipe-Refresh Layout;
 6. PhotoView;
 7. Jetpack Navigation Component;
-8. Preferences (PreferenceX)
+8. Preferences (PreferenceX);
+9. Facebook Shimmer.
 
 *For more info on the libraries used, refer to these links:*
 <p><a href="https://developer.android.com/training/data-storage/room/">Room</a></p>
@@ -48,6 +49,7 @@ Open the ApodEndpoint.kt file and replace all occurrences of ```apiKeyProvider.a
 <p><a href="https://github.com/Baseflow/PhotoView">PhotoView</a></p>
 <p><a href="https://developer.android.com/guide/navigation/navigation-getting-started">Jetpack Navigation Component</a></p>
 <p><a href="https://developer.android.com/jetpack/androidx/releases/preference/">Preferences (PreferenceX)</a></p>
+<p><a href="https://facebook.github.io/shimmer-android/">Facebook Shimmer</a></p>
 
 ## License
 ```
