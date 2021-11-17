@@ -25,7 +25,7 @@ For more info, please refer to this <a href="https://api.nasa.gov/">link.</a>
 
 ## Build instructions
 Before building the project, you either need to provide your API key or use the "DEMO_KEY".
-Open the APoDEndpoint.kt file and replace all occurrences of ```apiKeyProvider.getAPoDKey()``` with your key or with "DEMO_KEY".
+Open the APoDEndpoint.kt file and replace all occurrences of ```apiKeyProvider.apiKey``` with your key or with "DEMO_KEY".
 
 **Note:** You can generate a API key at the <a href="https://api.nasa.gov/">NASA Open APIs website.</a>
 
