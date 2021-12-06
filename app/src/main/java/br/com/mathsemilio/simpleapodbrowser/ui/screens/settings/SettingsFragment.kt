@@ -85,7 +85,7 @@ class SettingsFragment : BasePreferenceFragment(), EventListener {
                     messagesManager.showImageCacheClearedSuccessfully()
                 }
             }
-            else -> throw RuntimeException(ILLEGAL_PROMPT_DIALOG_EVENT)
+            else -> throw RuntimeException(ILLEGAL_PROMPT_DIALOG_EVENT_EXCEPTION)
         }
     }
 

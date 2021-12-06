@@ -46,7 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_view_apod"
-            tools:text="APoD Title" />
+            tools:text="APOD Title" />
 
         <TextView
             android:id="@+id/text_view_apod_date"

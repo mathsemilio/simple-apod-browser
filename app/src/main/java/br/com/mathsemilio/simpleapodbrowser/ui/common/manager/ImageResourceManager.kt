@@ -17,9 +17,12 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -28,7 +31,17 @@ object ImageResourceManager {
     fun loadFrom(url: String, targetImageView: ImageView) {
         Glide.with(targetImageView)
             .load(url)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+            .into(targetImageView)
+    }
+
+    fun loadWithPlaceholderFrom(url: String, targetImageView: ImageView) {
+        Glide.with(targetImageView)
+            .load(url)
+            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+            .placeholder(ColorDrawable(Color.BLACK))
+            .error(ColorDrawable(Color.BLACK))
+            .transition(DrawableTransitionOptions.withCrossFade())
             .into(targetImageView)
     }
 

@@ -47,9 +47,8 @@ const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1000
 
 const val FIRST_APOD_DATE_IN_MILLIS = 803271600000L
 
-const val INVALID_MONTH_EXCEPTION = "Invalid month. Must be in the 1 to 12 month range"
-const val ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION = "Illegal default date range"
 const val COULD_NOT_OPEN_OUTPUT_STREAM_EXCEPTION = "Could not open file output stream"
-const val ILLEGAL_APOD_TYPE_EXCEPTION = "Invalid APoD type: must be either \"Image\" or \"Video\""
-const val ILLEGAL_PROMPT_DIALOG_EVENT = "Illegal prompt dialog event for this controller"
-const val NO_FAVORITE_APOD_DELETED_EXCEPTION = "Invalid operation. No favorite APoD was previously deleted."
+const val ILLEGAL_PROMPT_DIALOG_EVENT_EXCEPTION = "Illegal prompt dialog event for this controller"
+const val ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION = "Illegal default date range"
+const val ILLEGAL_APOD_TYPE_EXCEPTION = "Invalid APOD type: must be either \"image\" or \"video\""
+const val INVALID_MONTH_EXCEPTION = "Invalid month. Must be in the 1 to 12 month range"
