@@ -25,9 +25,9 @@ import androidx.core.graphics.drawable.toBitmap
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_IMAGE
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_VIDEO
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
 import br.com.mathsemilio.simpleapodbrowser.common.util.formatDate
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
 
 class ApodDetailViewImpl(
     layoutInflater: LayoutInflater,
@@ -36,8 +36,9 @@ class ApodDetailViewImpl(
 
     private lateinit var imageViewApod: ImageView
     private lateinit var imageViewPlayIcon: ImageView
+
     private lateinit var textViewApodTitle: TextView
-    private lateinit var textViewApodDDate: TextView
+    private lateinit var textViewApodDate: TextView
     private lateinit var textViewApodExplanation: TextView
 
     private lateinit var apod: Apod
@@ -53,8 +54,9 @@ class ApodDetailViewImpl(
     private fun initializeViews() {
         imageViewApod = rootView.findViewById(R.id.image_view_apod)
         imageViewPlayIcon = rootView.findViewById(R.id.image_view_play_icon)
+
         textViewApodTitle = rootView.findViewById(R.id.text_view_apod_title)
-        textViewApodDDate = rootView.findViewById(R.id.text_view_apod_date)
+        textViewApodDate = rootView.findViewById(R.id.text_view_apod_date)
         textViewApodExplanation = rootView.findViewById(R.id.text_view_apod_explanation)
     }
 
@@ -71,7 +73,7 @@ class ApodDetailViewImpl(
         loadResourcesBasedOnMediaType()
 
         textViewApodTitle.text = apod.title
-        textViewApodDDate.text = apod.date.formatDate(context)
+        textViewApodDate.text = apod.date.formatDate(context)
         textViewApodExplanation.text = apod.explanation
     }
 
@@ -83,7 +85,7 @@ class ApodDetailViewImpl(
     }
 
     private fun loadApodImage() {
-        ImageResourceManager.loadFrom(apod.url, imageViewApod)
+        ImageResourceManager.loadWithPlaceholderFrom(apod.url, imageViewApod)
     }
 
     private fun loadApodVideoThumbnail() {
@@ -93,7 +95,7 @@ class ApodDetailViewImpl(
         }
 
         apod.thumbnailUrl?.let { url ->
-            ImageResourceManager.loadFrom(url, imageViewApod)
+            ImageResourceManager.loadWithPlaceholderFrom(url, imageViewApod)
         }
     }
 
