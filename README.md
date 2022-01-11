@@ -17,8 +17,7 @@ Open the ApodEndpoint.kt file and replace all occurrences of ```apiKeyProvider.a
 
 **Note:** You can generate an API key at the <a href="https://api.nasa.gov/">NASA Open APIs website</a>.
 
-## Development Technologies
-Third-party Libraries used:
+## External Libraries Used
 1. <a href="https://developer.android.com/training/data-storage/room/">Room</a>;
 2. <a href="https://square.github.io/retrofit/">Retrofit</a>;
 3. <a href="https://github.com/bumptech/glide">Glide</a>;
@@ -26,8 +25,7 @@ Third-party Libraries used:
 5. <a href="https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout">Swipe-Refresh Layout</a>;
 6. <a href="https://github.com/Baseflow/PhotoView">PhotoView</a>;
 7. <a href="https://developer.android.com/guide/navigation/navigation-getting-started">Jetpack Navigation Component</a>;
-8. <a href="https://developer.android.com/jetpack/androidx/releases/preference/">Preferences (PreferenceX)</a>;
-9. <a href="https://facebook.github.io/shimmer-android/">Facebook Shimmer</a>.
+8. <a href="https://developer.android.com/jetpack/androidx/releases/preference/">Preferences (PreferenceX)</a>.
 
 ## License
 ```
