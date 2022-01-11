@@ -16,16 +16,14 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.*
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import br.com.mathsemilio.simpleapodbrowser.R
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.ApodListAdapter
-import com.facebook.shimmer.ShimmerFrameLayout
 
 class ApodListScreenViewImpl(
     layoutInflater: LayoutInflater,
@@ -34,11 +32,10 @@ class ApodListScreenViewImpl(
     ApodListAdapter.Listener {
 
     private lateinit var linearLayoutScreenErrorState: LinearLayout
-    private lateinit var shimmerFrameLayoutApods: ShimmerFrameLayout
     private lateinit var swipeRefreshLayoutApods: SwipeRefreshLayout
     private lateinit var recyclerViewApods: RecyclerView
 
-    private lateinit var apodListScreenListAdapter: ApodListAdapter
+    private lateinit var apodListAdapter: ApodListAdapter
 
     init {
         rootView = layoutInflater.inflate(R.layout.apod_list_screen, container, false)
@@ -51,62 +48,51 @@ class ApodListScreenViewImpl(
     }
 
     private fun initializeViews() {
-        linearLayoutScreenErrorState = rootView.findViewById(R.id.linear_layout_screen_error_state)
-        shimmerFrameLayoutApods = rootView.findViewById(R.id.shimmer_frame_layout_apods)
-        swipeRefreshLayoutApods = rootView.findViewById(R.id.swipe_refresh_layout_apods)
-        recyclerViewApods = rootView.findViewById(R.id.recycler_view_apods)
+        linearLayoutScreenErrorState = findViewById(R.id.linear_layout_screen_error_state)
+        swipeRefreshLayoutApods = findViewById(R.id.swipe_refresh_layout_apods)
+        recyclerViewApods = findViewById(R.id.recycler_view_apods)
     }
 
     private fun setupRecyclerView() {
-        apodListScreenListAdapter = ApodListAdapter(this)
+        apodListAdapter = ApodListAdapter(this)
 
-        recyclerViewApods.apply {
-            adapter = apodListScreenListAdapter
-            setHasFixedSize(true)
-        }
+        recyclerViewApods.adapter = apodListAdapter
+        recyclerViewApods.setHasFixedSize(true)
     }
 
     private fun attachOnSwipeRefreshListener() {
         swipeRefreshLayoutApods.setOnRefreshListener {
-            notify { listener ->
-                listener.onScreenSwipedToRefresh()
-            }
+            notify { listener -> listener.onScreenSwipedToRefresh() }
         }
     }
 
     override fun bind(apods: List<Apod>) {
-        apodListScreenListAdapter.submitList(apods)
+        apodListAdapter.submitList(apods)
     }
 
     override fun showProgressIndicator() {
-        shimmerFrameLayoutApods.isVisible = true
         linearLayoutScreenErrorState.isVisible = false
-        swipeRefreshLayoutApods.isVisible = false
+        swipeRefreshLayoutApods.isRefreshing = true
+        recyclerViewApods.isVisible = false
     }
 
     override fun hideProgressIndicator() {
-        shimmerFrameLayoutApods.stopShimmer()
-        shimmerFrameLayoutApods.isVisible = false
-        swipeRefreshLayoutApods.isVisible = true
-    }
-
-    override fun onRefreshCompleted() {
+        linearLayoutScreenErrorState.isVisible = false
         swipeRefreshLayoutApods.isRefreshing = false
+        recyclerViewApods.isVisible = true
     }
 
     override fun showNetworkRequestErrorState() {
-        recyclerViewApods.isVisible = false
         linearLayoutScreenErrorState.isVisible = true
+        recyclerViewApods.isVisible = false
     }
 
     override fun hideNetworkRequestErrorState() {
-        recyclerViewApods.isVisible = true
         linearLayoutScreenErrorState.isVisible = false
+        recyclerViewApods.isVisible = true
     }
 
     override fun onApodClicked(apod: Apod) {
-        notify { listener ->
-            listener.onApodClicked(apod)
-        }
+        notify { listener -> listener.onApodClicked(apod) }
     }
 }

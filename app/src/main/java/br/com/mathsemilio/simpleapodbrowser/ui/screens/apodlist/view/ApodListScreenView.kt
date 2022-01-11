@@ -33,8 +33,6 @@ abstract class ApodListScreenView : BaseObservableView<ApodListScreenView.Listen
 
     abstract fun hideProgressIndicator()
 
-    abstract fun onRefreshCompleted()
-
     abstract fun showNetworkRequestErrorState()
 
     abstract fun hideNetworkRequestErrorState()

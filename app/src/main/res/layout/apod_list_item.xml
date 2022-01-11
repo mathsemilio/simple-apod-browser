@@ -47,7 +47,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAppearance="?textAppearanceBodyMedium"
-                tools:text="APoD Title" />
+                tools:text="APOD Title" />
 
             <TextView
                 android:id="@+id/text_view_apod_type"

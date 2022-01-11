@@ -16,15 +16,14 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.*
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
 import br.com.mathsemilio.simpleapodbrowser.R
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.FavoriteApodsListAdapter
-import com.facebook.shimmer.ShimmerFrameLayout
 
 class FavoriteApodsScreenViewImpl(
     layoutInflater: LayoutInflater,
@@ -33,7 +32,7 @@ class FavoriteApodsScreenViewImpl(
     FavoriteApodsListAdapter.Listener {
 
     private lateinit var linearLayoutScreenEmptyState: LinearLayout
-    private lateinit var shimmerFrameLayoutFavoriteApods: ShimmerFrameLayout
+    private lateinit var swipeRefreshLayoutFavoriteApods: SwipeRefreshLayout
     private lateinit var recyclerViewApodFavorites: RecyclerView
 
     private lateinit var favoriteApodsListAdapter: FavoriteApodsListAdapter
@@ -44,24 +43,21 @@ class FavoriteApodsScreenViewImpl(
         initializeViews()
 
         setupRecyclerView()
+
+        swipeRefreshLayoutFavoriteApods.isEnabled = false
     }
 
     private fun initializeViews() {
-        linearLayoutScreenEmptyState =
-            rootView.findViewById(R.id.linear_layout_screen_empty_state)
-        shimmerFrameLayoutFavoriteApods =
-            rootView.findViewById(R.id.shimmer_frame_layout_favorite_apods)
-        recyclerViewApodFavorites =
-            rootView.findViewById(R.id.recycler_view_favorite_apods)
+        linearLayoutScreenEmptyState = findViewById(R.id.linear_layout_screen_empty_state)
+        swipeRefreshLayoutFavoriteApods = findViewById(R.id.swipe_refresh_layout_favorite_apods)
+        recyclerViewApodFavorites = findViewById(R.id.recycler_view_favorite_apods)
     }
 
     private fun setupRecyclerView() {
         favoriteApodsListAdapter = FavoriteApodsListAdapter(this)
 
-        recyclerViewApodFavorites.apply {
-            adapter = favoriteApodsListAdapter
-            setHasFixedSize(true)
-        }
+        recyclerViewApodFavorites.adapter = favoriteApodsListAdapter
+        recyclerViewApodFavorites.setHasFixedSize(true)
     }
 
     override fun bind(favoriteApods: List<Apod>) {
@@ -75,26 +71,27 @@ class FavoriteApodsScreenViewImpl(
 
     private fun showScreenEmptyState() {
         recyclerViewApodFavorites.isVisible = false
+        swipeRefreshLayoutFavoriteApods.isVisible = false
         linearLayoutScreenEmptyState.isVisible = true
     }
 
     private fun hideScreenEmptyState() {
         recyclerViewApodFavorites.isVisible = true
+        swipeRefreshLayoutFavoriteApods.isVisible = false
         linearLayoutScreenEmptyState.isVisible = false
     }
 
     override fun showProgressIndicator() {
-        shimmerFrameLayoutFavoriteApods.isVisible = true
+        swipeRefreshLayoutFavoriteApods.isVisible = true
+        recyclerViewApodFavorites.isVisible = false
     }
 
     override fun hideProgressIndicator() {
-        shimmerFrameLayoutFavoriteApods.stopShimmer()
-        shimmerFrameLayoutFavoriteApods.isVisible = false
+        swipeRefreshLayoutFavoriteApods.isVisible = false
+        recyclerViewApodFavorites.isVisible = true
     }
 
     override fun onFavoriteApodClicked(favoriteApod: Apod) {
-        notify { listener ->
-            listener.onFavoriteApodClicked(favoriteApod)
-        }
+        notify { listener -> listener.onFavoriteApodClicked(favoriteApod) }
     }
 }

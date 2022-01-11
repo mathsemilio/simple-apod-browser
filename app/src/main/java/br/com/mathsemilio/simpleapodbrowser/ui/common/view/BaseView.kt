@@ -16,8 +16,8 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.common.view
 
+import androidx.annotation.*
 import android.content.Context
-import androidx.annotation.StringRes
 
 abstract class BaseView : View {
 
@@ -29,7 +29,12 @@ abstract class BaseView : View {
             _rootView = value
         }
 
-    protected val context: Context get() = _rootView.context
+    protected val context: Context
+        get() = _rootView.context
+
+    protected fun <T : android.view.View> findViewById(@IdRes id: Int): T {
+        return _rootView.findViewById(id)
+    }
 
     protected fun getString(@StringRes id: Int) = context.getString(id)
 }
