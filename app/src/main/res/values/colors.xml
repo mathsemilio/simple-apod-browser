@@ -56,9 +56,4 @@
     <color name="seed">#6750A4</color>
     <color name="error">#B3261E</color>
 
-    <!-- Other colors -->
-    <color name="grey_400">#BDBDBD</color>
-    <color name="grey_700">#616161</color>
-    <color name="grey_800">#424242</color>
-
 </resources>

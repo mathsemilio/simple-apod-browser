@@ -109,16 +109,14 @@ class ApodListFragment : BaseFragment(), ApodListScreenView.Listener, EventListe
     }
 
     private fun onFetchApodsCompleted(apods: List<Apod>?) {
-        view.hideNetworkRequestErrorState()
         view.hideProgressIndicator()
-        view.onRefreshCompleted()
+        view.hideNetworkRequestErrorState()
 
         apods?.let { view.bind(it) }
     }
 
     private fun onFetchApodsFailed() {
         view.hideProgressIndicator()
-        view.onRefreshCompleted()
         view.showNetworkRequestErrorState()
     }
 
