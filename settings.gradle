@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "Simple APoD Browser"
+rootProject.name = "Simple APOD Browser"
