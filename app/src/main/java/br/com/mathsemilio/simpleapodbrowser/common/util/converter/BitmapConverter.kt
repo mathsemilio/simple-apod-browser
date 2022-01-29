@@ -14,11 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.common.provider
+package br.com.mathsemilio.simpleapodbrowser.common.util.converter
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import android.graphics.*
+import java.io.ByteArrayOutputStream
 
-object CoroutineScopeProvider {
-    val UIBoundScope get() = CoroutineScope(Dispatchers.Main.immediate)
+fun Bitmap.toByteArray(): ByteArray {
+    val byteArrayOutputStream = ByteArrayOutputStream()
+    this.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
+    return byteArrayOutputStream.toByteArray()
+}
+
+fun ByteArray.toBitmap(): Bitmap {
+    return BitmapFactory.decodeByteArray(this, 0, this.size)
 }

@@ -16,13 +16,10 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import android.view.*
+import androidx.recyclerview.widget.*
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem.ApodListItemView
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem.ApodListItemViewImpl
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem.*
 
 class ApodListAdapter(
     private val listener: Listener
@@ -44,9 +41,7 @@ class ApodListAdapter(
         return ViewHolder(ApodListItemViewImpl(
             LayoutInflater.from(parent.context),
             parent
-        ).also { view ->
-            view.addListener(this)
-        })
+        ).also { view -> view.addObserver(this) })
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

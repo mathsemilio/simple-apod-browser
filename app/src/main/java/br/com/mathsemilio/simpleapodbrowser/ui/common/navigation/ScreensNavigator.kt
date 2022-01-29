@@ -19,41 +19,33 @@ package br.com.mathsemilio.simpleapodbrowser.ui.common.navigation
 import android.os.Bundle
 import androidx.navigation.NavController
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
-import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD_IMAGE
+import br.com.mathsemilio.simpleapodbrowser.common.*
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 
 class ScreensNavigator(private val navController: NavController) {
 
     fun toApodDetailsScreen(apod: Apod) {
-        val argApod = Bundle(1).apply {
-            putSerializable(ARG_APOD, apod)
-        }
+        val argumentBundle = Bundle(1)
+        argumentBundle.putSerializable(ARG_APOD, apod)
 
-        navController.navigate(R.id.action_apod_list_to_apod_detail_screen, argApod)
+        navController.navigate(R.id.action_apod_list_to_apod_detail_screen, argumentBundle)
     }
 
     fun toFavoriteApodDetailsScreen(favoriteApod: Apod) {
-        val argFavoriteApod = Bundle(1).apply {
-            putSerializable(ARG_APOD, favoriteApod)
-        }
+        val argumentBundle = Bundle(1)
+        argumentBundle.putSerializable(ARG_APOD, favoriteApod)
 
-        navController.navigate(R.id.action_apod_favorites_to_apod_detail_screen, argFavoriteApod)
+        navController.navigate(R.id.action_apod_favorites_to_apod_detail_screen, argumentBundle)
     }
 
     fun toApodImageDetail(apodImage: ByteArray) {
-        val argApodImage = Bundle(1).apply {
-            putByteArray(ARG_APOD_IMAGE, apodImage)
-        }
+        val argumentBundle = Bundle(1)
+        argumentBundle.putByteArray(ARG_APOD_IMAGE, apodImage)
 
-        navController.navigate(R.id.action_apod_detail_to_apod_image_detail_screen, argApodImage)
+        navController.navigate(R.id.action_apod_detail_to_apod_image_detail_screen, argumentBundle)
     }
 
-    fun toSettingsScreen() {
-        navController.navigate(R.id.action_global_settings)
-    }
+    fun toSettingsScreen() = navController.navigate(R.id.action_global_settings)
 
-    fun navigateUp() {
-        navController.navigateUp()
-    }
+    fun navigateUp() = navController.navigateUp()
 }

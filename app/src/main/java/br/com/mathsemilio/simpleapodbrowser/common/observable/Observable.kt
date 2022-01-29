@@ -17,7 +17,7 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.common.observable
 
 interface Observable<T> {
-    fun addListener(listener: T)
+    fun addObserver(observer: T)
 
-    fun removeListener(listener: T)
+    fun removeObserver(observer: T)
 }

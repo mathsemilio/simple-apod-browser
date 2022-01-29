@@ -16,13 +16,14 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.container.view
 
-import android.graphics.Color
 import android.view.*
-import androidx.core.view.doOnLayout
+import android.os.Build
+import android.graphics.Color
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentContainerView
 import br.com.mathsemilio.simpleapodbrowser.R
+import androidx.fragment.app.FragmentContainerView
 import com.google.android.material.appbar.MaterialToolbar
+import br.com.mathsemilio.simpleapodbrowser.ui.common.util.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivityViewImpl(
@@ -97,27 +98,16 @@ class MainActivityViewImpl(
     }
 
     override fun hideSystemUI() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
-            rootView.doOnLayout { view ->
-                view.windowInsetsController?.hide(
-                    WindowInsets.Type.statusBars() and WindowInsets.Type.navigationBars()
-                )
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            rootView.hideSystemUI()
         else
-            window.decorView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_IMMERSIVE or
-                        View.SYSTEM_UI_FLAG_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            window.hideSystemUI()
     }
 
     override fun showSystemUI() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
-            rootView.doOnLayout { view ->
-                view.windowInsetsController?.show(
-                    WindowInsets.Type.statusBars() and WindowInsets.Type.navigationBars()
-                )
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            rootView.showSystemUI()
         else
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            window.showSystemUI()
     }
 }

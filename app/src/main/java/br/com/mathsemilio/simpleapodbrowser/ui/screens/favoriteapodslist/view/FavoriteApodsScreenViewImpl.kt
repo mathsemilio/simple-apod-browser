@@ -23,19 +23,19 @@ import br.com.mathsemilio.simpleapodbrowser.R
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.FavoriteApodsListAdapter
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.ApodListAdapter
 
 class FavoriteApodsScreenViewImpl(
     layoutInflater: LayoutInflater,
     container: ViewGroup?
 ) : FavoriteApodsScreenView(),
-    FavoriteApodsListAdapter.Listener {
+    ApodListAdapter.Listener {
 
     private lateinit var linearLayoutScreenEmptyState: LinearLayout
     private lateinit var swipeRefreshLayoutFavoriteApods: SwipeRefreshLayout
     private lateinit var recyclerViewApodFavorites: RecyclerView
 
-    private lateinit var favoriteApodsListAdapter: FavoriteApodsListAdapter
+    private lateinit var apodListAdapter: ApodListAdapter
 
     init {
         rootView = layoutInflater.inflate(R.layout.apod_favorites_list_screen, container, false)
@@ -54,14 +54,14 @@ class FavoriteApodsScreenViewImpl(
     }
 
     private fun setupRecyclerView() {
-        favoriteApodsListAdapter = FavoriteApodsListAdapter(this)
+        apodListAdapter = ApodListAdapter(this)
 
-        recyclerViewApodFavorites.adapter = favoriteApodsListAdapter
+        recyclerViewApodFavorites.adapter = apodListAdapter
         recyclerViewApodFavorites.setHasFixedSize(true)
     }
 
     override fun bind(favoriteApods: List<Apod>) {
-        favoriteApodsListAdapter.submitList(favoriteApods)
+        apodListAdapter.submitList(favoriteApods)
 
         if (favoriteApods.isEmpty())
             showScreenEmptyState()
@@ -91,7 +91,7 @@ class FavoriteApodsScreenViewImpl(
         recyclerViewApodFavorites.isVisible = true
     }
 
-    override fun onFavoriteApodClicked(favoriteApod: Apod) {
-        notify { listener -> listener.onFavoriteApodClicked(favoriteApod) }
+    override fun onApodClicked(apod: Apod) {
+        notify { listener -> listener.onFavoriteApodClicked(apod) }
     }
 }

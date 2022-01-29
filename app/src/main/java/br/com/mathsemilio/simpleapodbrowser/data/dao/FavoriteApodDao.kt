@@ -35,8 +35,8 @@ interface FavoriteApodDao {
     suspend fun fetchFavoriteApods(): List<Apod>
 
     @Query("SELECT * FROM favorite_apod_table WHERE date = :date")
-    suspend fun fetchFavoriteApodBy(date: String): Apod
+    suspend fun fetchFavoriteApodFrom(date: String): Apod
 
     @Query("SELECT * FROM favorite_apod_table WHERE title LIKE '%' || :searchQuery || '%'")
-    suspend fun fetchFavoriteApodsBasedOn(searchQuery: String): List<Apod>
+    suspend fun fetchFavoriteApodsFrom(searchQuery: String): List<Apod>
 }

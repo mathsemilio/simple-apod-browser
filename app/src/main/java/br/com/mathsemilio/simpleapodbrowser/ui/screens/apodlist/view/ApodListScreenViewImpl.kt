@@ -68,6 +68,11 @@ class ApodListScreenViewImpl(
 
     override fun bind(apods: List<Apod>) {
         apodListAdapter.submitList(apods)
+
+        if (apods.isEmpty())
+            showNetworkRequestErrorState()
+        else
+            hideNetworkRequestErrorState()
     }
 
     override fun showProgressIndicator() {

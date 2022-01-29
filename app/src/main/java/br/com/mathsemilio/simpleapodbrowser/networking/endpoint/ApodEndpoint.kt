@@ -16,39 +16,29 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.networking.endpoint
 
-import br.com.mathsemilio.simpleapodbrowser.common.provider.APIKeyProvider
-import br.com.mathsemilio.simpleapodbrowser.domain.model.ApodSchema
-import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
+import kotlinx.coroutines.*
+import br.com.mathsemilio.simpleapodbrowser.domain.model.*
 import br.com.mathsemilio.simpleapodbrowser.networking.api.ApodApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-class ApodEndpoint(
-    private val apodApi: ApodApi,
-    private val apiKeyProvider: APIKeyProvider
-) {
-    suspend fun fetchApodsBasedOnDateRange(startDate: String): Result<List<ApodSchema>?> {
+class ApodEndpoint(private val apodApi: ApodApi) {
+
+    suspend fun fetchApodsFromDateRange(formattedStartDate: String): Result<List<ApodSchema>?> {
         return withContext(Dispatchers.IO) {
             try {
-                Result.Completed(
-                    data = apodApi.fetchApodsBasedOnDateRange(apiKeyProvider.apiKey, startDate)
-                        .body()
-                        ?.reversed()
-                )
+                val response = apodApi.fetchApodsFromDateRange(startDate = formattedStartDate)
+                Result.Completed(response.body()?.reversed())
             } catch (exception: Exception) {
-                Result.Failed(exception = exception)
+                Result.Failed(exception)
             }
         }
     }
 
-    suspend fun fetchApodsBasedOn(date: String): Result<ApodSchema?> {
+    suspend fun fetchApodFrom(formattedDate: String): Result<ApodSchema?> {
         return withContext(Dispatchers.IO) {
             try {
-                Result.Completed(
-                    data = apodApi.fetchApodBasedOnDate(apiKeyProvider.apiKey, date).body()
-                )
+                Result.Completed(apodApi.fetchApodFromDate(date = formattedDate).body())
             } catch (exception: Exception) {
-                Result.Failed(exception = exception)
+                Result.Failed(exception)
             }
         }
     }
@@ -56,11 +46,9 @@ class ApodEndpoint(
     suspend fun fetchRandomApod(): Result<ApodSchema?> {
         return withContext(Dispatchers.IO) {
             try {
-                Result.Completed(
-                    data = apodApi.fetchRandomApod(apiKeyProvider.apiKey, count = 1).body()?.first()
-                )
+                Result.Completed(apodApi.fetchRandomApod().body()?.first())
             } catch (exception: Exception) {
-                Result.Failed(exception = exception)
+                Result.Failed(exception)
             }
         }
     }

@@ -16,37 +16,30 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen
 
+import android.view.*
 import android.Manifest
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.graphics.Bitmap
+import br.com.mathsemilio.simpleapodbrowser.common.*
 import androidx.navigation.fragment.findNavController
-import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD_IMAGE
-import br.com.mathsemilio.simpleapodbrowser.common.WRITE_EXTERNAL_STORAGE_REQUEST_CODE
-import br.com.mathsemilio.simpleapodbrowser.common.util.toBitmap
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.*
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
+import br.com.mathsemilio.simpleapodbrowser.common.util.converter.toBitmap
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ApodImageExporter
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.view.ApodImageDetailView
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.view.ApodImageDetailViewImpl
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.view.*
 
 class ApodImageDetailFragment : BaseFragment(),
     ApodImageDetailView.Listener,
     PermissionsHelper.Listener,
-    ApodImageExporter.Listener,
-    TapGestureHelper.Listener {
+    TapGestureHelper.Listener,
+    ImageExporter.Listener {
 
     private lateinit var view: ApodImageDetailView
 
     private lateinit var permissionsHelper: PermissionsHelper
-    private lateinit var apodImageExporter: ApodImageExporter
+    private lateinit var imageExporter: ImageExporter
 
     private lateinit var systemUIDelegate: SystemUIDelegate
 
@@ -64,7 +57,7 @@ class ApodImageDetailFragment : BaseFragment(),
         super.onCreate(savedInstanceState)
 
         permissionsHelper = compositionRoot.permissionsHelper
-        apodImageExporter = compositionRoot.apodImageExporter
+        imageExporter = compositionRoot.imageExporter
 
         systemUIDelegate = compositionRoot.systemUIDelegate
 
@@ -98,20 +91,23 @@ class ApodImageDetailFragment : BaseFragment(),
     }
 
     override fun onToolbarActionExportApodImageClicked() {
-        if (permissionsHelper.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            apodImageExporter.export(apodImage)
-        } else {
-            permissionsHelper.requestPermission(
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                WRITE_EXTERNAL_STORAGE_REQUEST_CODE
-            )
-        }
+        if (permissionsHelper.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            imageExporter.export(apodImage)
+        else
+            requestWriteToExternalStoragePermission()
+    }
+
+    private fun requestWriteToExternalStoragePermission() {
+        permissionsHelper.requestPermission(
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            WRITE_EXTERNAL_STORAGE_REQUEST_CODE
+        )
     }
 
     override fun onPermissionRequestResult(result: PermissionsHelper.PermissionResult) {
         when (result) {
             PermissionsHelper.PermissionResult.GRANTED ->
-                apodImageExporter.export(apodImage)
+                imageExporter.export(apodImage)
             PermissionsHelper.PermissionResult.DENIED ->
                 dialogManager.showGrantExternalStoragePermissionDialog()
             PermissionsHelper.PermissionResult.DENIED_PERMANENTLY ->
@@ -119,48 +115,54 @@ class ApodImageDetailFragment : BaseFragment(),
         }
     }
 
-    override fun onApodImageExportedSuccessfully() {
-        messagesManager.showApodImageExportedSuccessfullyMessage()
-    }
-
-    override fun onExportApodImageFailed() {
-        messagesManager.showUnexpectedErrorOccurredMessage()
-    }
-
     override fun onScreenTapped() {
-        screenHasBeenTapped = when (screenHasBeenTapped) {
-            true -> {
-                systemUIDelegate.showSystemUI()
-                view.showToolbar()
-                false
-            }
-            false -> {
-                systemUIDelegate.hideSystemUI()
-                view.hideToolbar()
-                true
-            }
-        }
+        if (screenHasBeenTapped)
+            onScreenPreviouslyTapped()
+        else
+            onScreenNotPreviouslyTapped()
     }
+
+    private fun onScreenPreviouslyTapped() {
+        systemUIDelegate.showSystemUI()
+        view.showToolbar()
+
+        screenHasBeenTapped = false
+    }
+
+    private fun onScreenNotPreviouslyTapped() {
+        systemUIDelegate.hideSystemUI()
+        view.hideToolbar()
+
+        screenHasBeenTapped = true
+    }
+
+    override fun onApodImageExportedSuccessfully() = messagesManager.showApodImageExportedMessage()
+
+    override fun onExportApodImageFailed() = messagesManager.showUnexpectedErrorOccurredMessage()
 
     override fun onStart() {
         super.onStart()
-
-        view.addListener(this)
-        tapGestureHelper.addListener(this)
-        apodImageExporter.addListener(this)
-        permissionsHelper.addListener(this)
-
+        attachObservers()
         view.bind(apodImage)
+    }
+
+    private fun attachObservers() {
+        view.addObserver(this)
+        tapGestureHelper.addObserver(this)
+        imageExporter.addObserver(this)
+        permissionsHelper.addObserver(this)
     }
 
     override fun onStop() {
         super.onStop()
-
-        view.removeListener(this)
-        tapGestureHelper.removeListener(this)
-        permissionsHelper.removeListener(this)
-        apodImageExporter.removeListener(this)
-
+        removeObservers()
         systemUIDelegate.showSystemUI()
+    }
+
+    private fun removeObservers() {
+        view.removeObserver(this)
+        tapGestureHelper.removeObserver(this)
+        permissionsHelper.removeObserver(this)
+        imageExporter.removeObserver(this)
     }
 }

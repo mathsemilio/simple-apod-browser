@@ -16,26 +16,22 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist
 
-import android.os.Bundle
 import android.view.*
+import android.os.Bundle
+import kotlinx.coroutines.*
 import androidx.appcompat.widget.SearchView
-import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.util.onQueryTextChangedListener
+import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchApodsBasedOnSearchQueryUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchApodsBasedOnSearchQueryUseCase.FetchApodBasedOnSearchQueryResult
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodsUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodsUseCase.FetchFavoriteApodsResult
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.ContainerLayoutDelegate
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.*
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.*
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.FavoriteApodsScreenView
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.FavoriteApodsScreenViewImpl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.launch
+import br.com.mathsemilio.simpleapodbrowser.ui.common.util.onQueryTextChangedListener
+import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.ContainerLayoutDelegate
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodsUseCase.*
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodsFromSearchQueryUseCase.*
 
 class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
 
@@ -45,10 +41,11 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
 
     private lateinit var screensNavigator: ScreensNavigator
     private lateinit var messagesManager: MessagesManager
-    private lateinit var coroutineScope: CoroutineScope
 
     private lateinit var fetchFavoriteApodUseCase: FetchFavoriteApodsUseCase
-    private lateinit var fetchApodsBasedOnSearchQueryUseCase: FetchApodsBasedOnSearchQueryUseCase
+    private lateinit var fetchFavoriteApodsFromSearchQueryUseCase: FetchFavoriteApodsFromSearchQueryUseCase
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Main.immediate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,10 +56,9 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
 
         screensNavigator = ScreensNavigator(findNavController())
         messagesManager = compositionRoot.messagesManager
-        coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
 
-        fetchFavoriteApodUseCase = compositionRoot.fetchFavoriteApodUseCase
-        fetchApodsBasedOnSearchQueryUseCase = compositionRoot.fetchApodsBasedOnSearchQueryUseCase
+        fetchFavoriteApodUseCase = compositionRoot.fetchFavoriteApodsUseCase
+        fetchFavoriteApodsFromSearchQueryUseCase = compositionRoot.fetchFavoriteApodsFromSearchQueryUseCase
     }
 
     override fun onCreateView(
@@ -81,54 +77,62 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
     private fun fetchFavoriteApods() {
         coroutineScope.launch {
             view.showProgressIndicator()
-            val result = fetchFavoriteApodUseCase.fetchFavoriteApods()
-            handleFetchFavoriteApodsResult(result)
+            handleFetchFavoriteApodsResult(fetchFavoriteApodUseCase.fetchFavoriteApods())
         }
     }
 
     private fun handleFetchFavoriteApodsResult(result: FetchFavoriteApodsResult) {
         when (result) {
-            is FetchFavoriteApodsResult.Completed -> {
-                view.hideProgressIndicator()
-                result.apods?.let { view.bind(it) }
-            }
-            FetchFavoriteApodsResult.Failed -> {
-                view.hideProgressIndicator()
-                messagesManager.showUnexpectedErrorOccurredMessage()
-            }
+            is FetchFavoriteApodsResult.Completed ->
+                onFetchFavoriteApodsCompleted(result.favoriteApods)
+            FetchFavoriteApodsResult.Failed ->
+                onFetchFavoriteApodsFailed()
         }
+    }
+
+    private fun onFetchFavoriteApodsCompleted(favoriteApods: List<Apod>) {
+        view.hideProgressIndicator()
+        view.bind(favoriteApods)
+    }
+
+    private fun onFetchFavoriteApodsFailed() {
+        view.hideProgressIndicator()
+        messagesManager.showUnexpectedErrorOccurredMessage()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.toolbar_apod_favorites, menu)
 
-        val searchViewMenuItem = menu.findItem(R.id.toolbar_action_search_favorites)
-        val searchView = searchViewMenuItem.actionView as SearchView
+        val searchFavoritesMenuItem = menu.findItem(R.id.toolbar_action_search_favorites)
+        val searchFavoritesSearchView = searchFavoritesMenuItem.actionView as SearchView
 
-        searchView.onQueryTextChangedListener { searchQuery ->
-            fetchFavoriteApodsBasedOnSearchQuery(searchQuery)
+        searchFavoritesSearchView.onQueryTextChangedListener { searchQuery ->
+            fetchFavoriteApodsBasedOn(searchQuery)
         }
     }
 
-    private fun fetchFavoriteApodsBasedOnSearchQuery(searchQuery: String) {
+    private fun fetchFavoriteApodsBasedOn(searchQuery: String) {
         coroutineScope.launch {
-            val result = fetchApodsBasedOnSearchQueryUseCase.fetchApodsBasedOn(searchQuery)
-            handleFetchApodsBasedOnSearchQueryResult(result)
+            handleFetchFavoriteApodsFromSearchQueryResult(
+                fetchFavoriteApodsFromSearchQueryUseCase.fetchFrom(searchQuery)
+            )
         }
     }
 
-    private fun handleFetchApodsBasedOnSearchQueryResult(
-        result: FetchApodBasedOnSearchQueryResult
+    private fun handleFetchFavoriteApodsFromSearchQueryResult(
+        result: FetchFavoriteApodsFromSearchQueryResult
     ) {
         when (result) {
-            is FetchApodBasedOnSearchQueryResult.Completed -> {
+            is FetchFavoriteApodsFromSearchQueryResult.Completed ->
+                onFetchFavoriteApodsFromSearchQueryCompleted(result.matchingApods)
+            FetchFavoriteApodsFromSearchQueryResult.Failed ->
                 view.hideProgressIndicator()
-                result.matchingApods?.let { view.bind(it) }
-            }
-            FetchApodBasedOnSearchQueryResult.Failed -> {
-                view.hideProgressIndicator()
-            }
         }
+    }
+
+    private fun onFetchFavoriteApodsFromSearchQueryCompleted(matchingApods: List<Apod>) {
+        view.hideProgressIndicator()
+        view.bind(matchingApods)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -143,13 +147,13 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
 
     override fun onStart() {
         super.onStart()
-        view.addListener(this)
+        view.addObserver(this)
         fetchFavoriteApods()
     }
 
     override fun onStop() {
         super.onStop()
-        view.removeListener(this)
+        view.removeObserver(this)
         coroutineScope.coroutineContext.cancelChildren()
     }
 }

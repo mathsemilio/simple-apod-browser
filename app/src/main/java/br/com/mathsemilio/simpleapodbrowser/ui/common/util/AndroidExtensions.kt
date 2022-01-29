@@ -14,16 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.common.util
+package br.com.mathsemilio.simpleapodbrowser.ui.common.util
 
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
+import android.content.*
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.SearchView
 
 fun Context.showLongToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -51,9 +48,7 @@ inline fun SearchView.onQueryTextChangedListener(
     crossinline onQueryTextChanged: (String) -> Unit
 ) {
     this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-        override fun onQueryTextSubmit(query: String?): Boolean {
-            return false
-        }
+        override fun onQueryTextSubmit(query: String?) = false
 
         override fun onQueryTextChange(newText: String?): Boolean {
             onQueryTextChanged(newText.orEmpty())

@@ -14,12 +14,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.data.manager
+package br.com.mathsemilio.simpleapodbrowser.common.util.converter
 
-import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesEndpoint
+import br.com.mathsemilio.simpleapodbrowser.domain.model.*
 
-class PreferencesManager(private val endpoint: PreferencesEndpoint) {
+fun ApodSchema.toApod(): Apod {
+    return Apod(
+        title = this.title,
+        url = this.url,
+        date = this.date,
+        mediaType = this.mediaType,
+        explanation = this.explanation,
+        thumbnailUrl = this.thumbnailUrl
+    )
+}
 
-    val defaultDateRange
-        get() = endpoint.defaultDateRange
+fun List<ApodSchema>.toApodList(): List<Apod> {
+    val apodList = mutableListOf<Apod>()
+
+    this.forEach { apodSchema -> apodList.add(apodSchema.toApod()) }
+
+    return apodList.toList()
 }

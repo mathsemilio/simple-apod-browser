@@ -18,8 +18,8 @@ package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 
 import android.content.Context
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.util.showLongToast
-import br.com.mathsemilio.simpleapodbrowser.common.util.showShortToast
+import br.com.mathsemilio.simpleapodbrowser.ui.common.util.showLongToast
+import br.com.mathsemilio.simpleapodbrowser.ui.common.util.showShortToast
 
 class MessagesManager(private val context: Context) {
 
@@ -31,7 +31,7 @@ class MessagesManager(private val context: Context) {
         context.showLongToast(context.getString(R.string.message_unexpected_error_occurred))
     }
 
-    fun showApodAddedToFavoritesSuccessfullyMessage() {
+    fun showApodAddedToFavoritesMessage() {
         context.showLongToast(context.getString(R.string.message_apod_added_to_favorites_completed))
     }
 
@@ -39,11 +39,11 @@ class MessagesManager(private val context: Context) {
         context.showShortToast(context.getString(R.string.message_apod_already_on_favorites))
     }
 
-    fun showApodImageExportedSuccessfullyMessage() {
+    fun showApodImageExportedMessage() {
         context.showShortToast(context.getString(R.string.message_apod_image_exported_successfully))
     }
 
-    fun showImageCacheClearedSuccessfully() {
+    fun showImageCacheClearedMessage() {
         context.showShortToast(context.getString(R.string.message_cached_images_removed_successfully))
     }
 }

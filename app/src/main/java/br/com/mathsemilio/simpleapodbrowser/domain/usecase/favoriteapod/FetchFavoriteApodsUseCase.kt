@@ -16,27 +16,29 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod
 
-import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.domain.model.Result
+import br.com.mathsemilio.simpleapodbrowser.domain.model.*
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
 
 class FetchFavoriteApodsUseCase(private val endpoint: FavoriteApodEndpoint) {
 
     sealed class FetchFavoriteApodsResult {
-        data class Completed(val apods: List<Apod>?) : FetchFavoriteApodsResult()
+        data class Completed(val favoriteApods: List<Apod>) : FetchFavoriteApodsResult()
+
         object Failed : FetchFavoriteApodsResult()
     }
 
     suspend fun fetchFavoriteApods(): FetchFavoriteApodsResult {
-        var fetchFavoriteApodsResult: FetchFavoriteApodsResult
+        var result: FetchFavoriteApodsResult
 
-        endpoint.fetchFavoriteApods().also { result ->
-            fetchFavoriteApodsResult = when (result) {
-                is Result.Completed -> FetchFavoriteApodsResult.Completed(apods = result.data)
-                is Result.Failed -> FetchFavoriteApodsResult.Failed
+        endpoint.fetchFavoriteApods().also { endpointResult ->
+            result = when (endpointResult) {
+                is Result.Completed ->
+                    FetchFavoriteApodsResult.Completed(endpointResult.data ?: emptyList())
+                is Result.Failed ->
+                    FetchFavoriteApodsResult.Failed
             }
         }
 
-        return fetchFavoriteApodsResult
+        return result
     }
 }

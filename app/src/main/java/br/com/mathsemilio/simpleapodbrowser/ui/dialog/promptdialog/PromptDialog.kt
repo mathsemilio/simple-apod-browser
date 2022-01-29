@@ -20,11 +20,10 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import br.com.mathsemilio.simpleapodbrowser.common.*
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
-import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.view.PromptDialogView
-import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.view.PromptDialogViewImpl
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.view.*
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
 
 class PromptDialog : BaseDialogFragment(), PromptDialogView.Listener {
 
@@ -58,12 +57,7 @@ class PromptDialog : BaseDialogFragment(), PromptDialogView.Listener {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         dialogView = PromptDialogViewImpl(LayoutInflater.from(requireContext()), container = null)
 
-        dialogView.apply {
-            setTitle(requireArguments().getString(ARG_DIALOG_TITLE, ""))
-            setMessage(requireArguments().getString(ARG_DIALOG_MESSAGE, ""))
-            setPositiveButtonText(requireArguments().getString(ARG_POSITIVE_BUTTON_TEXT, ""))
-            setNegativeButtonText(requireArguments().getString(ARG_NEGATIVE_BUTTON_TEXT))
-        }
+        configureDialogView()
 
         val dialogBuilder = MaterialAlertDialogBuilder(requireContext()).apply {
             setView(dialogView.rootView)
@@ -71,6 +65,15 @@ class PromptDialog : BaseDialogFragment(), PromptDialogView.Listener {
         }
 
         return dialogBuilder.create()
+    }
+
+    private fun configureDialogView() {
+        dialogView.apply {
+            setTitle(requireArguments().getString(ARG_DIALOG_TITLE, ""))
+            setMessage(requireArguments().getString(ARG_DIALOG_MESSAGE, ""))
+            setPositiveButtonText(requireArguments().getString(ARG_POSITIVE_BUTTON_TEXT, ""))
+            setNegativeButtonText(requireArguments().getString(ARG_NEGATIVE_BUTTON_TEXT))
+        }
     }
 
     override fun onPositiveButtonClicked() {
@@ -85,11 +88,11 @@ class PromptDialog : BaseDialogFragment(), PromptDialogView.Listener {
 
     override fun onStart() {
         super.onStart()
-        dialogView.addListener(this)
+        dialogView.addObserver(this)
     }
 
     override fun onStop() {
         super.onStop()
-        dialogView.removeListener(this)
+        dialogView.removeObserver(this)
     }
 }

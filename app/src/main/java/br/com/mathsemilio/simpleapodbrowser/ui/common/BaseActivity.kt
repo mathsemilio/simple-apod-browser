@@ -25,7 +25,7 @@ abstract class BaseActivity : AppCompatActivity() {
     val compositionRoot by lazy {
         ActivityCompositionRoot(
             activity = this,
-            (application as SimpleApodBrowserApplication).compositionRoot
+            (application as SimpleApodBrowserApplication).getCompositionRoot()
         )
     }
 }

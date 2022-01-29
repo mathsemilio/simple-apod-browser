@@ -21,8 +21,6 @@ import br.com.mathsemilio.simpleapodbrowser.common.observable.BaseObservable
 class EventBus : BaseObservable<EventListener>() {
 
     fun postEvent(event: Any) {
-        notify { listener ->
-            listener.onEvent(event)
-        }
+        notify { listener -> listener.onEvent(event) }
     }
 }

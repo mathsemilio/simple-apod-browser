@@ -16,10 +16,9 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.domain.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import br.com.mathsemilio.simpleapodbrowser.common.FAVORITE_APOD_TABLE
+import androidx.room.*
 import java.io.Serializable
+import br.com.mathsemilio.simpleapodbrowser.common.FAVORITE_APOD_TABLE
 
 @Entity(tableName = FAVORITE_APOD_TABLE)
 data class Apod(
