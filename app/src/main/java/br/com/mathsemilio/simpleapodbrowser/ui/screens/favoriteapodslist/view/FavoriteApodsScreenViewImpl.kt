@@ -23,19 +23,19 @@ import br.com.mathsemilio.simpleapodbrowser.R
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.ApodListAdapter
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.FavoriteApodsListAdapter
 
 class FavoriteApodsScreenViewImpl(
     layoutInflater: LayoutInflater,
     container: ViewGroup?
 ) : FavoriteApodsScreenView(),
-    ApodListAdapter.Listener {
+    FavoriteApodsListAdapter.Listener {
 
     private lateinit var linearLayoutScreenEmptyState: LinearLayout
     private lateinit var swipeRefreshLayoutFavoriteApods: SwipeRefreshLayout
     private lateinit var recyclerViewApodFavorites: RecyclerView
 
-    private lateinit var apodListAdapter: ApodListAdapter
+    private lateinit var favoriteApodsListAdapter: FavoriteApodsListAdapter
 
     init {
         rootView = layoutInflater.inflate(R.layout.apod_favorites_list_screen, container, false)
@@ -54,14 +54,14 @@ class FavoriteApodsScreenViewImpl(
     }
 
     private fun setupRecyclerView() {
-        apodListAdapter = ApodListAdapter(this)
+        favoriteApodsListAdapter = FavoriteApodsListAdapter(this)
 
-        recyclerViewApodFavorites.adapter = apodListAdapter
+        recyclerViewApodFavorites.adapter = favoriteApodsListAdapter
         recyclerViewApodFavorites.setHasFixedSize(true)
     }
 
     override fun bind(favoriteApods: List<Apod>) {
-        apodListAdapter.submitList(favoriteApods)
+        favoriteApodsListAdapter.submitList(favoriteApods)
 
         if (favoriteApods.isEmpty())
             showScreenEmptyState()
@@ -77,7 +77,7 @@ class FavoriteApodsScreenViewImpl(
 
     private fun hideScreenEmptyState() {
         recyclerViewApodFavorites.isVisible = true
-        swipeRefreshLayoutFavoriteApods.isVisible = false
+        swipeRefreshLayoutFavoriteApods.isVisible = true
         linearLayoutScreenEmptyState.isVisible = false
     }
 
@@ -91,7 +91,7 @@ class FavoriteApodsScreenViewImpl(
         recyclerViewApodFavorites.isVisible = true
     }
 
-    override fun onApodClicked(apod: Apod) {
-        notify { listener -> listener.onFavoriteApodClicked(apod) }
+    override fun onFavoriteApodClicked(favoriteApod: Apod) {
+        notify { listener -> listener.onFavoriteApodClicked(favoriteApod) }
     }
 }
