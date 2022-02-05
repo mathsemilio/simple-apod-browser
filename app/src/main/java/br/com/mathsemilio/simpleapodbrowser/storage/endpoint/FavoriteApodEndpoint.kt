@@ -30,7 +30,7 @@ class FavoriteApodEndpoint(private val favoriteApodDao: FavoriteApodDao) {
                 favoriteApodDao.add(apod)
                 Result.Completed(data = null)
             } catch (exception: Exception) {
-                Result.Failed(exception = exception)
+                Result.Failed(exception)
             }
         }
     }
@@ -41,7 +41,7 @@ class FavoriteApodEndpoint(private val favoriteApodDao: FavoriteApodDao) {
                 favoriteApodDao.delete(favoriteApod)
                 Result.Completed(data = null)
             } catch (exception: Exception) {
-                Result.Failed(exception = exception)
+                Result.Failed(exception)
             }
         }
     }
@@ -49,29 +49,29 @@ class FavoriteApodEndpoint(private val favoriteApodDao: FavoriteApodDao) {
     suspend fun fetchFavoriteApods(): Result<List<Apod>> {
         return withContext(Dispatchers.IO) {
             try {
-                Result.Completed(data = favoriteApodDao.fetchFavoriteApods())
+                Result.Completed(favoriteApodDao.fetchFavoriteApods())
             } catch (exception: Exception) {
-                Result.Failed(exception = exception)
+                Result.Failed(exception)
             }
         }
     }
 
-    suspend fun fetchFavoriteApodBy(date: String): Result<Apod> {
+    suspend fun fetchFavoriteApodFrom(date: String): Result<Apod> {
         return withContext(Dispatchers.IO) {
             try {
-                Result.Completed(data = favoriteApodDao.fetchFavoriteApodBy(date))
+                Result.Completed(favoriteApodDao.fetchFavoriteApodFrom(date))
             } catch (exception: Exception) {
-                Result.Failed(exception = exception)
+                Result.Failed(exception)
             }
         }
     }
 
-    suspend fun fetchFavoriteApodsBasedOn(searchQuery: String): Result<List<Apod>> {
+    suspend fun fetchFavoriteApodsFrom(searchQuery: String): Result<List<Apod>> {
         return withContext(Dispatchers.IO) {
             try {
-                Result.Completed(data = favoriteApodDao.fetchFavoriteApodsBasedOn(searchQuery))
+                Result.Completed(favoriteApodDao.fetchFavoriteApodsFrom(searchQuery))
             } catch (exception: Exception) {
-                Result.Failed(exception = exception)
+                Result.Failed(exception)
             }
         }
     }

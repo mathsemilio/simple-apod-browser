@@ -14,44 +14,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.common.util
+package br.com.mathsemilio.simpleapodbrowser.common.util.date
 
+import java.util.*
 import android.content.Context
+import java.text.SimpleDateFormat
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.*
-import java.text.SimpleDateFormat
-import java.util.*
 
-fun getDaysIn(dayRange: Int): String {
-    val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -dayRange) }
-    return calendar.timeInMillis.formatTimeInMillis()
-}
-
-fun convertDefaultDateRangeFrom(rangeFromPreferences: String): Int {
-    return when (rangeFromPreferences) {
-        DEFAULT_DATE_RANGE_LAST_SEVEN_DAYS -> 7
-        DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS -> 14
-        DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS -> 21
-        DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS -> 31
-        else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION)
-    }
-}
-
-fun Long.formatTimeInMillis(): String {
+fun Long.formatMillisDate(): String {
     return SimpleDateFormat("yyyy-MM-dd", Locale.US).format(this)
 }
 
 fun String.formatDate(context: Context): String {
     val year = this.substring(0..3)
-    val month = this.substring(5..6)
+    val monthNumber = this.substring(5..6)
     val day = this.substring(8..9).removePrefix("0")
-    val formattedDate = "${convertMonthNumberToString(month)} $day, $year"
+
+    val formattedDate = "${convertMonthNumberToName(monthNumber)} $day, $year"
 
     return context.getString(R.string.date, formattedDate)
 }
 
-fun convertMonthNumberToString(month: String): String {
-    return when (month) {
+private fun convertMonthNumberToName(monthNumber: String): String {
+    return when (monthNumber) {
         "01" -> "January"
         "02" -> "February"
         "03" -> "March"
@@ -64,6 +50,6 @@ fun convertMonthNumberToString(month: String): String {
         "10" -> "October"
         "11" -> "November"
         "12" -> "December"
-        else -> throw IllegalArgumentException(INVALID_MONTH_EXCEPTION)
+        else -> throw IllegalArgumentException(INVALID_MONTH_NUMBER)
     }
 }

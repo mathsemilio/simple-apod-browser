@@ -16,8 +16,7 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.view
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.core.view.isVisible
 import br.com.mathsemilio.simpleapodbrowser.R
@@ -40,10 +39,10 @@ class PromptDialogViewImpl(
     }
 
     private fun initializeViews() {
-        textViewPromptDialogTitle = rootView.findViewById(R.id.text_view_prompt_dialog_title)
-        textViewPromptDialogMessage = rootView.findViewById(R.id.text_view_prompt_dialog_message)
-        buttonPromptDialogPositive = rootView.findViewById(R.id.button_prompt_dialog_positive)
-        buttonPromptDialogNegative = rootView.findViewById(R.id.button_prompt_dialog_negative)
+        textViewPromptDialogTitle = findViewById(R.id.text_view_prompt_dialog_title)
+        textViewPromptDialogMessage = findViewById(R.id.text_view_prompt_dialog_message)
+        buttonPromptDialogPositive = findViewById(R.id.button_prompt_dialog_positive)
+        buttonPromptDialogNegative = findViewById(R.id.button_prompt_dialog_negative)
     }
 
     override fun setTitle(title: String) {
@@ -57,33 +56,21 @@ class PromptDialogViewImpl(
     override fun setPositiveButtonText(positiveButtonText: String) {
         buttonPromptDialogPositive.apply {
             text = positiveButtonText
-            setOnClickListener {
-                notifyListenerOnPositiveButtonClick()
-            }
+            setOnClickListener { notify { listener -> listener.onPositiveButtonClicked() } }
         }
     }
 
     override fun setNegativeButtonText(negativeButtonText: String?) {
         if (negativeButtonText != null)
-            buttonPromptDialogNegative.apply {
-                text = negativeButtonText
-                setOnClickListener {
-                    notifyListenerOnNegativeButtonClick()
-                }
-            }
+            showNegativeButtonWith(negativeButtonText)
         else
             buttonPromptDialogNegative.isVisible = false
     }
 
-    private fun notifyListenerOnPositiveButtonClick() {
-        notify { listener ->
-            listener.onPositiveButtonClicked()
-        }
-    }
-
-    private fun notifyListenerOnNegativeButtonClick() {
-        notify { listener ->
-            listener.onNegativeButtonClicked()
+    private fun showNegativeButtonWith(negativeButtonText: String) {
+        buttonPromptDialogNegative.apply {
+            text = negativeButtonText
+            setOnClickListener { notify { listener -> listener.onNegativeButtonClicked() } }
         }
     }
 }

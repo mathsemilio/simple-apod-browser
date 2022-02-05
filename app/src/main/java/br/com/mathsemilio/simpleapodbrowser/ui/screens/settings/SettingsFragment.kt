@@ -17,38 +17,34 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.settings
 
 import android.os.Bundle
-import androidx.preference.ListPreference
-import androidx.preference.Preference
-import br.com.mathsemilio.simpleapodbrowser.BuildConfig
+import kotlinx.coroutines.*
+import androidx.preference.*
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.*
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
-import br.com.mathsemilio.simpleapodbrowser.data.manager.PreferencesManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.BuildConfig
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.*
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialogEvent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.launch
+import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesRepository
 
 class SettingsFragment : BasePreferenceFragment(), EventListener {
 
-    private lateinit var preferencesManager: PreferencesManager
+    private lateinit var preferencesRepository: PreferencesRepository
     private lateinit var messagesManager: MessagesManager
-    private lateinit var coroutineScope: CoroutineScope
     private lateinit var dialogManager: DialogManager
 
     private lateinit var eventSubscriber: EventSubscriber
 
+    private val coroutineScope = CoroutineScope(Dispatchers.Main.immediate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        preferencesManager = compositionRoot.preferencesManager
+
+        preferencesRepository = compositionRoot.preferencesRepository
         messagesManager = compositionRoot.messagesManager
         dialogManager = compositionRoot.dialogManager
+
         eventSubscriber = compositionRoot.eventSubscriber
-        coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -61,38 +57,39 @@ class SettingsFragment : BasePreferenceFragment(), EventListener {
 
     private fun setupDefaultDateRangePreference() {
         findPreference<ListPreference>(DEFAULT_DATE_RANGE_PREFERENCE_KEY)?.setSummaryProvider {
-            return@setSummaryProvider when (preferencesManager.defaultDateRange) {
+            return@setSummaryProvider when (preferencesRepository.defaultDateRange) {
                 DEFAULT_DATE_RANGE_LAST_SEVEN_DAYS -> getString(R.string.last_seven_days)
                 DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS -> getString(R.string.last_fourteen_days)
                 DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS -> getString(R.string.last_twenty_one_days)
                 DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS -> getString(R.string.last_thirty_days)
-                else -> throw IllegalArgumentException(ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION)
+                else -> throw IllegalArgumentException(UNKNOWN_DEFAULT_DATE_RANGE)
             }
         }
     }
 
     override fun onEvent(event: Any) {
-        when (event) {
-            is PromptDialogEvent -> handleClearImageCachePromptDialogEvent(event)
-        }
+        if (event is PromptDialogEvent)
+            handleClearImageCachePromptDialogEvent(event)
     }
 
     private fun handleClearImageCachePromptDialogEvent(event: PromptDialogEvent) {
         when (event) {
-            PromptDialogEvent.PositiveButtonClicked -> {
-                coroutineScope.launch {
-                    ImageResourceManager.clearLocalCache(requireContext())
-                    messagesManager.showImageCacheClearedSuccessfully()
-                }
-            }
-            else -> throw RuntimeException(ILLEGAL_PROMPT_DIALOG_EVENT_EXCEPTION)
+            PromptDialogEvent.PositiveButtonClicked -> onClearImageCacheDialogPositiveButtonClicked()
+            PromptDialogEvent.NegativeButtonClicked -> { /* no-op required for this event */ }
+        }
+    }
+
+    private fun onClearImageCacheDialogPositiveButtonClicked() {
+        coroutineScope.launch {
+            ImageResourceManager.clearLocalCache(requireContext())
+            messagesManager.showImageCacheClearedMessage()
         }
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
-        when (preference?.key) {
-            CLEAR_IMAGE_CACHE_PREFERENCE_KEY -> dialogManager.showClearImageCacheDialog()
-        }
+        if (preference?.key == CLEAR_IMAGE_CACHE_PREFERENCE_KEY)
+            dialogManager.showClearImageCacheDialog()
+
         return super.onPreferenceTreeClick(preference)
     }
 

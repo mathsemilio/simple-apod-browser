@@ -16,9 +16,8 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.view
 
+import android.view.*
 import android.graphics.Bitmap
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import br.com.mathsemilio.simpleapodbrowser.R
 import com.github.chrisbanes.photoview.PhotoView
@@ -42,15 +41,13 @@ class ApodImageDetailViewImpl(
     }
 
     private fun initializeViews() {
-        photoViewApodImageDetail = rootView.findViewById(R.id.photo_view_apod_image_detail)
-        toolbarApodImageDetail = rootView.findViewById(R.id.material_toolbar_apod_image_detail)
+        photoViewApodImageDetail = findViewById(R.id.photo_view_apod_image_detail)
+        toolbarApodImageDetail = findViewById(R.id.material_toolbar_apod_image_detail)
     }
 
     private fun setToolbarNavigationIconOnClickListener() {
         toolbarApodImageDetail.setNavigationOnClickListener {
-            notify { listener ->
-                listener.onToolbarNavigationIconClicked()
-            }
+            notify { listener -> listener.onToolbarNavigationIconClicked() }
         }
     }
 
@@ -58,9 +55,7 @@ class ApodImageDetailViewImpl(
         toolbarApodImageDetail.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.toolbar_action_export_apod_image -> {
-                    notify { listener ->
-                        listener.onToolbarActionExportApodImageClicked()
-                    }
+                    notify { listener -> listener.onToolbarActionExportApodImageClicked() }
                     true
                 }
                 else -> false

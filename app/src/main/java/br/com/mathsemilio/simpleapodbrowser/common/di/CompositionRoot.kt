@@ -16,14 +16,14 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.common.di
 
+import retrofit2.Retrofit
 import android.app.Application
+import retrofit2.converter.gson.GsonConverterFactory
 import br.com.mathsemilio.simpleapodbrowser.common.BASE_URL
+import br.com.mathsemilio.simpleapodbrowser.networking.api.ApodApi
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventBus
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
-import br.com.mathsemilio.simpleapodbrowser.networking.api.ApodApi
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class CompositionRoot(val application: Application) {
 

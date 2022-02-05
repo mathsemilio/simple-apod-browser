@@ -77,7 +77,7 @@ class FavoriteApodsScreenViewImpl(
 
     private fun hideScreenEmptyState() {
         recyclerViewApodFavorites.isVisible = true
-        swipeRefreshLayoutFavoriteApods.isVisible = false
+        swipeRefreshLayoutFavoriteApods.isVisible = true
         linearLayoutScreenEmptyState.isVisible = false
     }
 

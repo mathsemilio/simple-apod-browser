@@ -16,36 +16,18 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.common.di
 
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodBasedOnDateUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodsUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchApodsBasedOnSearchQueryUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodsUseCase
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ApodImageExporter
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.*
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.*
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.ImageExporter
 
 class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCompositionRoot) {
 
-    private val apodEndpoint
-        get() = activityCompositionRoot.apodEndpoint
-
-    private val favoriteApodEndpoint
-        get() = activityCompositionRoot.favoriteApodEndpoint
-
-    private val fragmentManager
-        get() = activityCompositionRoot.fragmentManager
-
-    val apodImageExporter
-        get() = ApodImageExporter(activityCompositionRoot.application)
-
     val dialogManager
-        get() = DialogManager(fragmentManager, activityCompositionRoot.application)
-
-    val coroutineScopeProvider
-        get() = activityCompositionRoot.coroutineScopeProvider
+        get() = DialogManager(
+            activityCompositionRoot.fragmentManager,
+            activityCompositionRoot.application
+        )
 
     val eventPublisher
         get() = activityCompositionRoot.eventPublisher
@@ -59,11 +41,14 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
     val messagesManager
         get() = MessagesManager(activityCompositionRoot.application)
 
+    val imageExporter
+        get() = ImageExporter(activityCompositionRoot.application)
+
     val permissionsHelper
         get() = activityCompositionRoot.permissionsHelper
 
-    val preferencesManager
-        get() = activityCompositionRoot.preferencesManager
+    val preferencesRepository
+        get() = activityCompositionRoot.preferencesRepository
 
     val systemUIDelegate
         get() = activityCompositionRoot.systemUIDelegate
@@ -71,24 +56,24 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
     val tapGestureHelper
         get() = activityCompositionRoot.tapGestureHelper
 
-    val addFavoriteApodUseCase
-        get() = AddFavoriteApodUseCase(favoriteApodEndpoint)
+    val fetchApodFromDateUseCase
+        get() = FetchApodFromDateUseCase(activityCompositionRoot.apodEndpoint)
 
-    val deleteFavoriteApodUseCase
-        get() = DeleteFavoriteApodUseCase(favoriteApodEndpoint)
-
-    val fetchApodUseCase
-        get() = FetchApodsUseCase(apodEndpoint)
+    val fetchApodsFromDateRangeUseCase
+        get() = FetchApodsFromDateRangeUseCase(activityCompositionRoot.apodEndpoint)
 
     val fetchRandomApodUseCase
-        get() = FetchRandomApodUseCase(apodEndpoint)
+        get() = FetchRandomApodUseCase(activityCompositionRoot.apodEndpoint)
 
-    val fetchApodBasedOnDateUseCase
-        get() = FetchApodBasedOnDateUseCase(apodEndpoint)
+    val addFavoriteApodUseCase
+        get() = AddApodToFavoritesUseCase(activityCompositionRoot.favoriteApodEndpoint)
 
-    val fetchFavoriteApodUseCase
-        get() = FetchFavoriteApodsUseCase(favoriteApodEndpoint)
+    val deleteFavoriteApodUseCase
+        get() = DeleteFavoriteApodUseCase(activityCompositionRoot.favoriteApodEndpoint)
 
-    val fetchApodsBasedOnSearchQueryUseCase
-        get() = FetchApodsBasedOnSearchQueryUseCase(favoriteApodEndpoint)
+    val fetchFavoriteApodsFromSearchQueryUseCase
+        get() = FetchFavoriteApodsFromSearchQueryUseCase(activityCompositionRoot.favoriteApodEndpoint)
+
+    val fetchFavoriteApodsUseCase
+        get() = FetchFavoriteApodsUseCase(activityCompositionRoot.favoriteApodEndpoint)
 }

@@ -16,8 +16,7 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.common.helper
 
-import android.view.GestureDetector
-import android.view.MotionEvent
+import android.view.*
 import br.com.mathsemilio.simpleapodbrowser.common.observable.Observable
 
 class TapGestureHelper : Observable<TapGestureHelper.Listener>,
@@ -27,25 +26,20 @@ class TapGestureHelper : Observable<TapGestureHelper.Listener>,
         fun onScreenTapped()
     }
 
-    private val listeners = mutableSetOf<Listener>().toHashSet()
+    private val listeners = HashSet<Listener>()
 
-    override fun onDown(e: MotionEvent?): Boolean {
-        return true
-    }
+    override fun onDown(e: MotionEvent?): Boolean = true
 
     override fun onSingleTapUp(e: MotionEvent?): Boolean {
-        listeners.forEach { listener ->
-            listener.onScreenTapped()
-        }
-
+        listeners.forEach { listener -> listener.onScreenTapped() }
         return true
     }
 
-    override fun addListener(listener: Listener) {
-        listeners.add(listener)
+    override fun addObserver(observer: Listener) {
+        listeners.add(observer)
     }
 
-    override fun removeListener(listener: Listener) {
-        listeners.remove(listener)
+    override fun removeObserver(observer: Listener) {
+        listeners.remove(observer)
     }
 }

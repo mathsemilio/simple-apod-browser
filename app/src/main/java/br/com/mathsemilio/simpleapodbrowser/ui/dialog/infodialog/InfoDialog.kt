@@ -16,17 +16,15 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.dialog.infodialog
 
-import android.app.Dialog
 import android.os.Bundle
-import android.view.View
+import android.app.Dialog
+import android.view.LayoutInflater
 import android.widget.TextView
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.ARG_DIALOG_MESSAGE
-import br.com.mathsemilio.simpleapodbrowser.common.ARG_DIALOG_TITLE
-import br.com.mathsemilio.simpleapodbrowser.common.ARG_POSITIVE_BUTTON_TEXT
-import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
+import br.com.mathsemilio.simpleapodbrowser.common.*
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
 
 class InfoDialog : BaseDialogFragment() {
 
@@ -54,32 +52,28 @@ class InfoDialog : BaseDialogFragment() {
         get() = requireArguments().getString(ARG_POSITIVE_BUTTON_TEXT, "")
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return requireActivity().let { activity ->
-            val dialogBuilder = MaterialAlertDialogBuilder(activity)
-            val layoutInflater = requireActivity().layoutInflater
+        val dialogBuilder = MaterialAlertDialogBuilder(requireContext())
+        val layoutInflater = LayoutInflater.from(requireContext())
 
-            val dialogView = layoutInflater.inflate(R.layout.layout_info_dialog, null)
-            dialogBuilder.setView(dialogView)
+        val dialogView = layoutInflater.inflate(R.layout.layout_info_dialog, null)
+        dialogBuilder.setView(dialogView)
 
-            setupDialogViews(dialogView)
+        setupDialogViews()
 
-            dialogBuilder.create()
-        }
+        return dialogBuilder.create()
     }
 
-    private fun setupDialogViews(dialogView: View?) {
-        dialogView?.let { view ->
-            val titleTextView = view.findViewById<TextView>(R.id.text_view_info_dialog_title)
-            val messageTextView = view.findViewById<TextView>(R.id.text_view_info_dialog_message)
-            val positiveButton = view.findViewById<MaterialButton>(R.id.button_info_dialog_positive)
+    private fun setupDialogViews() {
+        val titleTextView = requireView().findViewById<TextView>(R.id.text_view_info_dialog_title)
+        val messageTextView = requireView().findViewById<TextView>(R.id.text_view_info_dialog_message)
+        val positiveButton = requireActivity().findViewById<MaterialButton>(R.id.button_info_dialog_positive)
 
-            titleTextView.text = title
-            messageTextView.text = message
+        titleTextView.text = title
+        messageTextView.text = message
 
-            positiveButton.apply {
-                text = positiveButtonText
-                setOnClickListener { dismiss() }
-            }
+        positiveButton.apply {
+            text = positiveButtonText
+            setOnClickListener { dismiss() }
         }
     }
 }

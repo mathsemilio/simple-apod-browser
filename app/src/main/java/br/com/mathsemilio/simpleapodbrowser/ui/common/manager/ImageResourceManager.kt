@@ -16,15 +16,14 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.common.manager
 
-import android.content.Context
+import kotlinx.coroutines.*
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.widget.ImageView
+import android.content.Context
 import com.bumptech.glide.Glide
+import android.widget.ImageView
+import android.graphics.drawable.ColorDrawable
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 object ImageResourceManager {
 

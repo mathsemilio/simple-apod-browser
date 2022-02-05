@@ -27,14 +27,10 @@ class SystemUIDelegate : BaseObservable<SystemUIDelegate.Listener>() {
     }
 
     fun showSystemUI() {
-        notify { listener ->
-            listener.onShowSystemUIRequested()
-        }
+        notify { listener -> listener.onShowSystemUIRequested() }
     }
 
     fun hideSystemUI() {
-        notify { listener ->
-            listener.onHideSystemUIRequested()
-        }
+        notify { listener -> listener.onHideSystemUIRequested() }
     }
 }

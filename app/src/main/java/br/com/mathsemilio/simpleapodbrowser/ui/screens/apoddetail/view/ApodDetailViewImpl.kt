@@ -16,17 +16,14 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.view
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.graphics.drawable.toBitmap
+import android.view.*
+import android.widget.*
+import android.view.View.VISIBLE
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_IMAGE
-import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_VIDEO
-import br.com.mathsemilio.simpleapodbrowser.common.util.formatDate
+import androidx.core.graphics.drawable.toBitmap
+import br.com.mathsemilio.simpleapodbrowser.common.*
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
+import br.com.mathsemilio.simpleapodbrowser.common.util.date.formatDate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
 
 class ApodDetailViewImpl(
@@ -48,28 +45,23 @@ class ApodDetailViewImpl(
 
         initializeViews()
 
-        attachApodImageViewClickListener()
+        imageViewApod.setOnClickListener {
+            notify { listener -> listener.onApodImageClicked(imageViewApod.drawable.toBitmap()) }
+        }
     }
 
     private fun initializeViews() {
-        imageViewApod = rootView.findViewById(R.id.image_view_apod)
-        imageViewPlayIcon = rootView.findViewById(R.id.image_view_play_icon)
+        imageViewApod = findViewById(R.id.image_view_apod)
+        imageViewPlayIcon = findViewById(R.id.image_view_play_icon)
 
-        textViewApodTitle = rootView.findViewById(R.id.text_view_apod_title)
-        textViewApodDate = rootView.findViewById(R.id.text_view_apod_date)
-        textViewApodExplanation = rootView.findViewById(R.id.text_view_apod_explanation)
-    }
-
-    private fun attachApodImageViewClickListener() {
-        imageViewApod.setOnClickListener {
-            notify { listener ->
-                listener.onApodImageClicked(imageViewApod.drawable.toBitmap())
-            }
-        }
+        textViewApodTitle = findViewById(R.id.text_view_apod_title)
+        textViewApodDate = findViewById(R.id.text_view_apod_date)
+        textViewApodExplanation = findViewById(R.id.text_view_apod_explanation)
     }
 
     override fun bind(apod: Apod) {
         this.apod = apod
+
         loadResourcesBasedOnMediaType()
 
         textViewApodTitle.text = apod.title
@@ -79,29 +71,21 @@ class ApodDetailViewImpl(
 
     private fun loadResourcesBasedOnMediaType() {
         when (apod.mediaType) {
-            APOD_TYPE_IMAGE -> loadApodImage()
-            APOD_TYPE_VIDEO -> loadApodVideoThumbnail()
+            APOD_TYPE_IMAGE -> loadImage()
+            APOD_TYPE_VIDEO -> setupVideoThumbnail()
         }
     }
 
-    private fun loadApodImage() {
+    private fun loadImage() {
         ImageResourceManager.loadWithPlaceholderFrom(apod.url, imageViewApod)
     }
 
-    private fun loadApodVideoThumbnail() {
+    private fun setupVideoThumbnail() {
+        ImageResourceManager.loadWithPlaceholderFrom(apod.thumbnailUrl!!, imageViewApod)
+
         imageViewPlayIcon.apply {
-            visibility = View.VISIBLE
-            setOnClickListener { onPlayIconClicked(apod.url) }
-        }
-
-        apod.thumbnailUrl?.let { url ->
-            ImageResourceManager.loadWithPlaceholderFrom(url, imageViewApod)
-        }
-    }
-
-    private fun onPlayIconClicked(videoUrl: String) {
-        notify { listener ->
-            listener.onPlayIconClicked(videoUrl)
+            visibility = VISIBLE
+            setOnClickListener { notify { listener -> listener.onPlayIconClicked(apod.url) } }
         }
     }
 }

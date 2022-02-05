@@ -16,31 +16,25 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail
 
-import android.graphics.Bitmap
-import android.os.Bundle
 import android.view.*
-import androidx.navigation.fragment.findNavController
+import android.os.Bundle
+import kotlinx.coroutines.*
+import android.graphics.Bitmap
 import br.com.mathsemilio.simpleapodbrowser.R
+import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventListener
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventSubscriber
-import br.com.mathsemilio.simpleapodbrowser.common.util.launchWebPage
-import br.com.mathsemilio.simpleapodbrowser.common.util.toByteArray
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.*
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddFavoriteApodUseCase.AddFavoriteApodResult
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.DeleteFavoriteApodResult
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.DialogManager
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.MessagesManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.util.launchWebPage
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.view.*
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.*
+import br.com.mathsemilio.simpleapodbrowser.common.util.converter.toByteArray
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialogEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.view.ApodDetailView
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.view.ApodDetailViewImpl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.launch
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.*
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddApodToFavoritesUseCase.*
 
 class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListener {
 
@@ -50,14 +44,17 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
     private lateinit var messagesManager: MessagesManager
     private lateinit var dialogManager: DialogManager
 
-    private lateinit var coroutineScope: CoroutineScope
-
     private lateinit var eventSubscriber: EventSubscriber
 
-    private lateinit var addFavoriteApodUseCase: AddFavoriteApodUseCase
+    private lateinit var addFavoriteApodUseCase: AddApodToFavoritesUseCase
     private lateinit var deleteFavoriteApodUseCase: DeleteFavoriteApodUseCase
 
     private lateinit var apod: Apod
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Main.immediate)
+
+    private lateinit var toolbarActionDeleteFavoriteApod: MenuItem
+    private lateinit var toolbarActionAddApodToFavorites: MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,8 +64,6 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
         screensNavigator = ScreensNavigator(findNavController())
         messagesManager = compositionRoot.messagesManager
         dialogManager = compositionRoot.dialogManager
-
-        coroutineScope = compositionRoot.coroutineScopeProvider.UIBoundScope
 
         eventSubscriber = compositionRoot.eventSubscriber
 
@@ -87,7 +82,6 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         apod = requireArguments().getSerializable(ARG_APOD) as Apod
     }
 
@@ -112,31 +106,35 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     private fun deleteFavoriteApod() {
         coroutineScope.launch {
-            val result = deleteFavoriteApodUseCase.delete(apod)
-            handleDeleteFavoriteApodResult(result)
+            handleDeleteFavoriteApodResult(deleteFavoriteApodUseCase.delete(apod))
         }
     }
 
     private fun handleDeleteFavoriteApodResult(result: DeleteFavoriteApodResult) {
         when (result) {
-            DeleteFavoriteApodResult.Completed ->
-                screensNavigator.navigateUp()
-            DeleteFavoriteApodResult.Failed ->
-                messagesManager.showUnexpectedErrorOccurredMessage()
+            DeleteFavoriteApodResult.Completed -> screensNavigator.navigateUp()
+            DeleteFavoriteApodResult.Failed -> messagesManager.showUnexpectedErrorOccurredMessage()
         }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        val actionDeleteFavoriteApod = menu.findItem(R.id.toolbar_action_delete_favorite_apod)
-        val actionAddToFavorites = menu.findItem(R.id.toolbar_action_add_to_favorites)
+        toolbarActionDeleteFavoriteApod = menu.findItem(R.id.toolbar_action_delete_favorite_apod)
+        toolbarActionAddApodToFavorites = menu.findItem(R.id.toolbar_action_add_to_favorites)
 
-        if (apod.isFavorite) {
-            actionDeleteFavoriteApod.isVisible = true
-            actionAddToFavorites.isVisible = false
-        } else {
-            actionDeleteFavoriteApod.isVisible = false
-            actionAddToFavorites.isVisible = true
-        }
+        if (apod.isFavorite)
+            setupToolbarActionsForFavoriteApod()
+        else
+            setupToolbarActionsForRegularApod()
+    }
+
+    private fun setupToolbarActionsForFavoriteApod() {
+        toolbarActionDeleteFavoriteApod.isVisible = true
+        toolbarActionAddApodToFavorites.isVisible = false
+    }
+
+    private fun setupToolbarActionsForRegularApod() {
+        toolbarActionDeleteFavoriteApod.isVisible = false
+        toolbarActionAddApodToFavorites.isVisible = true
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -159,32 +157,31 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     private fun addApodToFavorites() {
         coroutineScope.launch {
-            val result = addFavoriteApodUseCase.addApodToFavorites(apod)
-            handleAddApodToFavoritesResult(result)
+            handleAddApodToFavoritesResult(addFavoriteApodUseCase.addToFavorites(apod))
         }
     }
 
-    private fun handleAddApodToFavoritesResult(result: AddFavoriteApodResult) {
+    private fun handleAddApodToFavoritesResult(result: AddApodToFavoritesResult) {
         when (result) {
-            AddFavoriteApodResult.Completed ->
-                messagesManager.showApodAddedToFavoritesSuccessfullyMessage()
-            AddFavoriteApodResult.AlreadyFavorite ->
+            AddApodToFavoritesResult.Completed ->
+                messagesManager.showApodAddedToFavoritesMessage()
+            AddApodToFavoritesResult.AlreadyFavorite ->
                 messagesManager.showApodAlreadyOnFavoritesMessage()
-            AddFavoriteApodResult.Failed ->
+            AddApodToFavoritesResult.Failed ->
                 messagesManager.showUnexpectedErrorOccurredMessage()
         }
     }
 
     override fun onStart() {
         super.onStart()
-        view.addListener(this)
+        view.addObserver(this)
         eventSubscriber.subscribe(this)
         view.bind(apod)
     }
 
     override fun onStop() {
         super.onStop()
-        view.removeListener(this)
+        view.removeObserver(this)
         eventSubscriber.unsubscribe(this)
         coroutineScope.coroutineContext.cancelChildren()
     }

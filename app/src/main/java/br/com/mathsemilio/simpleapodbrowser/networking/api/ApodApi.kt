@@ -16,32 +16,32 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.networking.api
 
+import retrofit2.http.*
+import retrofit2.Response
 import br.com.mathsemilio.simpleapodbrowser.common.APOD_ENDPOINT
 import br.com.mathsemilio.simpleapodbrowser.domain.model.ApodSchema
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
+import br.com.mathsemilio.simpleapodbrowser.networking.keyprovider.APIKeyProvider
 
 interface ApodApi {
 
     @GET(APOD_ENDPOINT)
-    suspend fun fetchApodsBasedOnDateRange(
-        @Query("api_key") key: String,
+    suspend fun fetchApodsFromDateRange(
+        @Query("api_key") key: String = APIKeyProvider.key,
         @Query("start_date") startDate: String,
         @Query("thumbs") includeThumbnail: Boolean = true
     ): Response<List<ApodSchema>>
 
     @GET(APOD_ENDPOINT)
-    suspend fun fetchApodBasedOnDate(
-        @Query("api_key") key: String,
+    suspend fun fetchApodFromDate(
+        @Query("api_key") key: String = APIKeyProvider.key,
         @Query("date") date: String,
         @Query("thumbs") includeThumbnail: Boolean = true
     ): Response<ApodSchema>
 
     @GET(APOD_ENDPOINT)
     suspend fun fetchRandomApod(
-        @Query("api_key") key: String,
-        @Query("count") count: Int,
+        @Query("api_key") key: String = APIKeyProvider.key,
+        @Query("count") count: Int = 1,
         @Query("thumbs") includeThumbnail: Boolean = true
     ): Response<List<ApodSchema>>
 }

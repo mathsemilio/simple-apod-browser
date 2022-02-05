@@ -18,11 +18,9 @@ package br.com.mathsemilio.simpleapodbrowser.storage.preferences
 
 import android.content.Context
 import androidx.preference.PreferenceManager
-import br.com.mathsemilio.simpleapodbrowser.common.DEFAULT_DATE_RANGE_LAST_SEVEN_DAYS
-import br.com.mathsemilio.simpleapodbrowser.common.DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS
-import br.com.mathsemilio.simpleapodbrowser.common.DEFAULT_DATE_RANGE_PREFERENCE_KEY
+import br.com.mathsemilio.simpleapodbrowser.common.*
 
-class PreferencesEndpoint(context: Context) {
+class PreferencesRepository(context: Context) {
 
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 

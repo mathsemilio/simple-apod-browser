@@ -16,14 +16,14 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.dialog.datepicker
 
-import android.app.DatePickerDialog
-import android.app.Dialog
-import android.os.Bundle
-import android.widget.DatePicker
-import br.com.mathsemilio.simpleapodbrowser.common.FIRST_APOD_DATE_IN_MILLIS
-import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
-import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
 import java.util.*
+import android.os.Bundle
+import android.app.Dialog
+import android.widget.DatePicker
+import android.app.DatePickerDialog
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.BaseDialogFragment
+import br.com.mathsemilio.simpleapodbrowser.common.FIRST_APOD_DATE_MILLIS
+import br.com.mathsemilio.simpleapodbrowser.common.eventbus.EventPublisher
 
 class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListener {
 
@@ -48,15 +48,16 @@ class DatePickerDialog : BaseDialogFragment(), DatePickerDialog.OnDateSetListene
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
-        return DatePickerDialog(requireContext(), this, year, month, dayOfMonth).apply {
-            datePicker.apply {
-                minDate = FIRST_APOD_DATE_IN_MILLIS
-                maxDate = System.currentTimeMillis()
-            }
+        return DatePickerDialog(
+            requireContext(),
+            this,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).apply {
+            datePicker.minDate = FIRST_APOD_DATE_MILLIS
+            datePicker.maxDate = System.currentTimeMillis()
         }
     }
 }

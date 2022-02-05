@@ -18,28 +18,17 @@ package br.com.mathsemilio.simpleapodbrowser.common.di
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
-import br.com.mathsemilio.simpleapodbrowser.common.provider.APIKeyProvider
-import br.com.mathsemilio.simpleapodbrowser.common.provider.CoroutineScopeProvider
-import br.com.mathsemilio.simpleapodbrowser.data.manager.PreferencesManager
+import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.*
+import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.*
 import br.com.mathsemilio.simpleapodbrowser.networking.endpoint.ApodEndpoint
 import br.com.mathsemilio.simpleapodbrowser.storage.database.FavoriteApodDatabase
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
-import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesEndpoint
-import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.ContainerLayoutDelegate
-import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.PermissionsHelper
-import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.TapGestureHelper
+import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesRepository
 
 class ActivityCompositionRoot(
     private val activity: AppCompatActivity,
     private val compositionRoot: CompositionRoot
 ) {
-    private val appDatabase
-        get() = FavoriteApodDatabase.getDatabase(application)
-
-    private val favoriteApodDao
-        get() = appDatabase.favoriteApodDao
-
     val tapGestureHelper by lazy {
         TapGestureHelper()
     }
@@ -50,9 +39,6 @@ class ActivityCompositionRoot(
 
     val application
         get() = compositionRoot.application
-
-    val coroutineScopeProvider
-        get() = CoroutineScopeProvider
 
     val containerLayoutDelegate
         get() = activity as ContainerLayoutDelegate
@@ -69,15 +55,15 @@ class ActivityCompositionRoot(
     val gestureDetectorCompat
         get() = GestureDetectorCompat(application, tapGestureHelper)
 
-    val preferencesManager
-        get() = PreferencesManager(PreferencesEndpoint(application))
+    val preferencesRepository
+        get() = PreferencesRepository(application)
 
     val systemUIDelegate
         get() = SystemUIDelegate()
 
     val apodEndpoint
-        get() = ApodEndpoint(compositionRoot.apodApi, APIKeyProvider)
+        get() = ApodEndpoint(compositionRoot.apodApi)
 
     val favoriteApodEndpoint
-        get() = FavoriteApodEndpoint(favoriteApodDao)
+        get() = FavoriteApodEndpoint(FavoriteApodDatabase.getDatabase(application).favoriteApodDao)
 }

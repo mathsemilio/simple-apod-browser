@@ -16,16 +16,12 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.listitem
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.*
+import android.widget.*
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_IMAGE
-import br.com.mathsemilio.simpleapodbrowser.common.APOD_TYPE_VIDEO
-import br.com.mathsemilio.simpleapodbrowser.common.ILLEGAL_APOD_TYPE_EXCEPTION
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
+import br.com.mathsemilio.simpleapodbrowser.common.*
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
 
 class ApodFavoritesListItemViewImpl(
     layoutInflater: LayoutInflater,
@@ -43,46 +39,43 @@ class ApodFavoritesListItemViewImpl(
 
         initializeViews()
 
-        attachApodListItemOnClickListener()
+        rootView.setOnClickListener {
+            notify { listener -> listener.onFavoriteApodClicked(favoriteApod) }
+        }
     }
 
     private fun initializeViews() {
-        imageViewApod = rootView.findViewById(R.id.image_view_apod)
-        textViewApodTitle = rootView.findViewById(R.id.text_view_apod_title)
-        textViewApodType = rootView.findViewById(R.id.text_view_apod_type)
-    }
-
-    private fun attachApodListItemOnClickListener() {
-        rootView.setOnClickListener {
-            notify { listener ->
-                listener.onFavoriteApodClicked(favoriteApod)
-            }
-        }
+        imageViewApod = findViewById(R.id.image_view_apod)
+        textViewApodTitle = findViewById(R.id.text_view_apod_title)
+        textViewApodType = findViewById(R.id.text_view_apod_type)
     }
 
     override fun bind(favoriteApod: Apod) {
         this.favoriteApod = favoriteApod
 
-        ImageResourceManager.loadFrom(favoriteApod.url, imageViewApod)
-
-        loadApodVideoThumbnail()
+        loadApodImageBasedOnMediaType()
 
         textViewApodTitle.text = favoriteApod.title
 
-        setApodType(favoriteApod.mediaType)
+        configureApodTypeFrom(favoriteApod.mediaType)
     }
 
-    private fun loadApodVideoThumbnail() {
-        favoriteApod.thumbnailUrl?.let { url ->
-            ImageResourceManager.loadFrom(url, imageViewApod)
+    private fun loadApodImageBasedOnMediaType() {
+        when (favoriteApod.mediaType) {
+            APOD_TYPE_IMAGE -> ImageResourceManager.loadFrom(favoriteApod.url, imageViewApod)
+            APOD_TYPE_VIDEO -> loadApodVideoThumbnail()
         }
     }
 
-    private fun setApodType(mediaType: String) {
+    private fun loadApodVideoThumbnail() {
+        ImageResourceManager.loadWithPlaceholderFrom(favoriteApod.thumbnailUrl!!, imageViewApod)
+    }
+
+    private fun configureApodTypeFrom(mediaType: String) {
         textViewApodType.text = when (mediaType) {
             APOD_TYPE_IMAGE -> getString(R.string.apod_type_image)
             APOD_TYPE_VIDEO -> getString(R.string.apod_type_video)
-            else -> throw IllegalArgumentException(ILLEGAL_APOD_TYPE_EXCEPTION)
+            else -> throw IllegalArgumentException(UNKNOWN_APOD_TYPE)
         }
     }
 }

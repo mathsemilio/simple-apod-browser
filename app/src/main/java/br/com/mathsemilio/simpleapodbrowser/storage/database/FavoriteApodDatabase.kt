@@ -16,13 +16,11 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.storage.database
 
+import androidx.room.*
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import br.com.mathsemilio.simpleapodbrowser.common.FAVORITE_APOD_DATABASE
-import br.com.mathsemilio.simpleapodbrowser.data.dao.FavoriteApodDao
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
+import br.com.mathsemilio.simpleapodbrowser.data.dao.FavoriteApodDao
+import br.com.mathsemilio.simpleapodbrowser.common.FAVORITE_APOD_DATABASE
 
 @Database(entities = [Apod::class], version = 1, exportSchema = false)
 abstract class FavoriteApodDatabase : RoomDatabase() {

@@ -29,7 +29,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import br.com.mathsemilio.simpleapodbrowser.R
-import br.com.mathsemilio.simpleapodbrowser.common.util.launchWebPage
+import br.com.mathsemilio.simpleapodbrowser.ui.common.util.launchWebPage
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseActivity
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.ContainerLayoutDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
@@ -70,11 +70,7 @@ class MainActivity : BaseActivity(), SystemUIDelegate.Listener, ContainerLayoutD
     }
 
     override val navHostFragment: NavHostFragment
-        get() {
-            return supportFragmentManager.findFragmentById(
-                R.id.fragment_container_view_app
-            ) as NavHostFragment
-        }
+        get() = getNavHostFragmentFromContainer()
 
     override val fragmentContainer
         get() = view.fragmentContainer
@@ -83,11 +79,14 @@ class MainActivity : BaseActivity(), SystemUIDelegate.Listener, ContainerLayoutD
         get() = view.bottomNavigationView
 
     private fun setupNavController() {
-        val navHostFragment = supportFragmentManager.findFragmentById(
+        val navHostFragment = getNavHostFragmentFromContainer()
+        navController = navHostFragment.findNavController()
+    }
+
+    private fun getNavHostFragmentFromContainer(): NavHostFragment {
+        return supportFragmentManager.findFragmentById(
             R.id.fragment_container_view_app
         ) as NavHostFragment
-
-        navController = navHostFragment.findNavController()
     }
 
     private fun setupUIComponentsWithNavController() {
@@ -109,11 +108,7 @@ class MainActivity : BaseActivity(), SystemUIDelegate.Listener, ContainerLayoutD
                 R.id.ApodDetailScreen -> onNavigateToApodDetailScreen()
                 R.id.ApodImageDetailScreen -> onNavigateToImageDetailScreen()
                 R.id.SettingsScreen -> view.hideBottomNavigationView()
-                else -> {
-                    view.showToolbar()
-                    view.revertStatusBarColor()
-                    view.showBottomNavigationView()
-                }
+                else -> resetTopLevelViews()
             }
         }
     }
@@ -130,13 +125,15 @@ class MainActivity : BaseActivity(), SystemUIDelegate.Listener, ContainerLayoutD
         view.setStatusBarColor(Color.BLACK)
     }
 
-    override fun onShowSystemUIRequested() {
-        view.showSystemUI()
+    private fun resetTopLevelViews() {
+        view.showToolbar()
+        view.revertStatusBarColor()
+        view.showBottomNavigationView()
     }
 
-    override fun onHideSystemUIRequested() {
-        view.hideSystemUI()
-    }
+    override fun onShowSystemUIRequested() = view.showSystemUI()
+
+    override fun onHideSystemUIRequested() = view.hideSystemUI()
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         gestureDetector.onTouchEvent(event)
@@ -167,7 +164,5 @@ class MainActivity : BaseActivity(), SystemUIDelegate.Listener, ContainerLayoutD
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
-    }
+    override fun onSupportNavigateUp() = navController.navigateUp() || super.onSupportNavigateUp()
 }

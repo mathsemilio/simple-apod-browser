@@ -45,10 +45,11 @@ const val DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS = "3"
 
 const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1000
 
-const val FIRST_APOD_DATE_IN_MILLIS = 803271600000L
+const val FIRST_APOD_DATE_MILLIS = 803271600000L
 
-const val COULD_NOT_OPEN_OUTPUT_STREAM_EXCEPTION = "Could not open file output stream"
-const val ILLEGAL_PROMPT_DIALOG_EVENT_EXCEPTION = "Illegal prompt dialog event for this controller"
-const val ILLEGAL_DEFAULT_DATE_RANGE_EXCEPTION = "Illegal default date range"
-const val ILLEGAL_APOD_TYPE_EXCEPTION = "Invalid APOD type: must be either \"image\" or \"video\""
-const val INVALID_MONTH_EXCEPTION = "Invalid month. Must be in the 1 to 12 month range"
+const val NULL_IMAGE_URI = "Image Uri cannot be null"
+const val UNKNOWN_APOD_TYPE = "Invalid APOD type: must be either \"image\" or \"video\""
+const val INVALID_MONTH_NUMBER = "Invalid month number. It must be inside the 01 to 12 range"
+const val UNKNOWN_DEFAULT_DATE_RANGE = "Unknown default date range"
+const val INVALID_PROMPT_DIALOG_EVENT = "Invalid prompt dialog event for this controller"
+const val COULD_NOT_OPEN_OUTPUT_STREAM = "Could not open file output stream"
