@@ -86,7 +86,7 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
     }
 
     override fun onApodImageClicked(apodImage: Bitmap) {
-        screensNavigator.toApodImageDetail(apodImage.toByteArray())
+        screensNavigator.toApodImageDetail(apodImage.toByteArray(), view.apodImageView)
     }
 
     override fun onPlayIconClicked(videoUrl: String) = launchWebPage(videoUrl)

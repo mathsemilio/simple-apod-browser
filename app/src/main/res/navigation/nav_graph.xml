@@ -12,7 +12,11 @@
 
         <action
             android:id="@+id/action_apod_list_to_apod_detail_screen"
-            app:destination="@id/ApodDetailScreen" />
+            app:destination="@id/ApodDetailScreen"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
     </fragment>
 
@@ -24,7 +28,11 @@
 
         <action
             android:id="@+id/action_apod_favorites_to_apod_detail_screen"
-            app:destination="@id/ApodDetailScreen" />
+            app:destination="@id/ApodDetailScreen"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
     </fragment>
 
@@ -36,11 +44,7 @@
 
         <action
             android:id="@+id/action_apod_detail_to_apod_image_detail_screen"
-            app:destination="@id/ApodImageDetailScreen"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
+            app:destination="@id/ApodImageDetailScreen" />
 
     </fragment>
 
@@ -56,6 +60,10 @@
 
     <action
         android:id="@+id/action_global_settings"
-        app:destination="@id/SettingsScreen" />
+        app:destination="@id/SettingsScreen"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
 </navigation>

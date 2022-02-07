@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@android:color/black">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -23,6 +24,7 @@
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/content_description_astronomical_picture_of_the_day"
+        android:transitionName="apodDetailToImageDetail"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

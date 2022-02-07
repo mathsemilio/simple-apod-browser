@@ -20,6 +20,7 @@ import android.view.*
 import android.Manifest
 import android.os.Bundle
 import android.graphics.Bitmap
+import androidx.transition.TransitionInflater
 import br.com.mathsemilio.simpleapodbrowser.common.*
 import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.ui.common.helper.*
@@ -55,6 +56,10 @@ class ApodImageDetailFragment : BaseFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sharedElementEnterTransition = TransitionInflater
+            .from(requireContext())
+            .inflateTransition(android.R.transition.move)
 
         permissionsHelper = compositionRoot.permissionsHelper
         imageExporter = compositionRoot.imageExporter

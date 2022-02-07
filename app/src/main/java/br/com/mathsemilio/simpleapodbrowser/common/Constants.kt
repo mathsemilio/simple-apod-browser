@@ -43,6 +43,8 @@ const val DEFAULT_DATE_RANGE_LAST_FOURTEEN_DAYS = "1"
 const val DEFAULT_DATE_RANGE_LAST_TWENTY_ONE_DAYS = "2"
 const val DEFAULT_DATE_RANGE_LAST_THIRTY_DAYS = "3"
 
+const val TRANSITION_APOD_DETAIL_TO_IMAGE_DETAIL = "apodDetailToImageDetail"
+
 const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1000
 
 const val FIRST_APOD_DATE_MILLIS = 803271600000L
@@ -51,5 +53,4 @@ const val NULL_IMAGE_URI = "Image Uri cannot be null"
 const val UNKNOWN_APOD_TYPE = "Invalid APOD type: must be either \"image\" or \"video\""
 const val INVALID_MONTH_NUMBER = "Invalid month number. It must be inside the 01 to 12 range"
 const val UNKNOWN_DEFAULT_DATE_RANGE = "Unknown default date range"
-const val INVALID_PROMPT_DIALOG_EVENT = "Invalid prompt dialog event for this controller"
 const val COULD_NOT_OPEN_OUTPUT_STREAM = "Could not open file output stream"
