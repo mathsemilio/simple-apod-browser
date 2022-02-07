@@ -50,6 +50,9 @@ class ApodDetailViewImpl(
         }
     }
 
+    override val apodImageView: ImageView
+        get() = imageViewApod
+
     private fun initializeViews() {
         imageViewApod = findViewById(R.id.image_view_apod)
         imageViewPlayIcon = findViewById(R.id.image_view_play_icon)
