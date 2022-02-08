@@ -35,6 +35,7 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigato
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialogEvent
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.*
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddApodToFavoritesUseCase.*
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodStatusUseCase.*
 
 class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListener {
 
@@ -48,13 +49,14 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     private lateinit var addFavoriteApodUseCase: AddApodToFavoritesUseCase
     private lateinit var deleteFavoriteApodUseCase: DeleteFavoriteApodUseCase
-
-    private lateinit var apod: Apod
+    private lateinit var fetchFavoriteApodStatusUseCase: FetchFavoriteApodStatusUseCase
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main.immediate)
 
     private lateinit var toolbarActionDeleteFavoriteApod: MenuItem
     private lateinit var toolbarActionAddApodToFavorites: MenuItem
+
+    private lateinit var apod: Apod
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +71,7 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
         addFavoriteApodUseCase = compositionRoot.addFavoriteApodUseCase
         deleteFavoriteApodUseCase = compositionRoot.deleteFavoriteApodUseCase
+        fetchFavoriteApodStatusUseCase = compositionRoot.fetchFavoriteApodStatusUseCase
     }
 
     override fun onCreateView(
@@ -122,19 +125,50 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
         toolbarActionAddApodToFavorites = menu.findItem(R.id.toolbar_action_add_to_favorites)
 
         if (apod.isFavorite)
-            setupToolbarActionsForFavoriteApod()
+            showToolbarActionsForFavoriteApod()
         else
-            setupToolbarActionsForRegularApod()
+            showToolbarActionsForRegularApod()
+
+        fetchFavoriteApodStatus()
     }
 
-    private fun setupToolbarActionsForFavoriteApod() {
+    private fun showToolbarActionsForFavoriteApod() {
         toolbarActionDeleteFavoriteApod.isVisible = true
         toolbarActionAddApodToFavorites.isVisible = false
     }
 
-    private fun setupToolbarActionsForRegularApod() {
+    private fun showToolbarActionsForRegularApod() {
         toolbarActionDeleteFavoriteApod.isVisible = false
         toolbarActionAddApodToFavorites.isVisible = true
+    }
+
+    private fun fetchFavoriteApodStatus() {
+        coroutineScope.launch {
+            handleFetchFavoriteApodStatusResult(
+                fetchFavoriteApodStatusUseCase.isAlreadyFavorite(apod)
+            )
+        }
+    }
+
+    private fun handleFetchFavoriteApodStatusResult(result: FetchFavoriteApodStatusResult) {
+        when (result) {
+            is FetchFavoriteApodStatusResult.Completed ->
+                setupAddToFavoritesActionIcon(result.isFavorite)
+            FetchFavoriteApodStatusResult.Failed ->
+                messagesManager.showUnexpectedErrorOccurredMessage()
+        }
+    }
+
+    private fun setupAddToFavoritesActionIcon(isFavorite: Boolean) {
+        if (isFavorite)
+            setupAddToFavoritesToolbarActionForApodAlreadyFavorite()
+        else
+            toolbarActionAddApodToFavorites.setIcon(R.drawable.ic_favorite_border)
+    }
+
+    private fun setupAddToFavoritesToolbarActionForApodAlreadyFavorite() {
+        toolbarActionAddApodToFavorites.setIcon(R.drawable.ic_favorite)
+        toolbarActionAddApodToFavorites.isEnabled = false
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -163,13 +197,14 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     private fun handleAddApodToFavoritesResult(result: AddApodToFavoritesResult) {
         when (result) {
-            AddApodToFavoritesResult.Completed ->
-                messagesManager.showApodAddedToFavoritesMessage()
-            AddApodToFavoritesResult.AlreadyFavorite ->
-                messagesManager.showApodAlreadyOnFavoritesMessage()
-            AddApodToFavoritesResult.Failed ->
-                messagesManager.showUnexpectedErrorOccurredMessage()
+            AddApodToFavoritesResult.Completed -> onAddApodToFavoritesCompleted()
+            AddApodToFavoritesResult.Failed -> messagesManager.showUnexpectedErrorOccurredMessage()
         }
+    }
+
+    private fun onAddApodToFavoritesCompleted() {
+        setupAddToFavoritesToolbarActionForApodAlreadyFavorite()
+        messagesManager.showApodAddedToFavoritesMessage()
     }
 
     override fun onStart() {

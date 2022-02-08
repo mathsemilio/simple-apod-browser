@@ -74,6 +74,9 @@ class ControllerCompositionRoot(private val activityCompositionRoot: ActivityCom
     val fetchFavoriteApodsFromSearchQueryUseCase
         get() = FetchFavoriteApodsFromSearchQueryUseCase(activityCompositionRoot.favoriteApodEndpoint)
 
+    val fetchFavoriteApodStatusUseCase
+        get() = FetchFavoriteApodStatusUseCase(activityCompositionRoot.favoriteApodEndpoint)
+
     val fetchFavoriteApodsUseCase
         get() = FetchFavoriteApodsUseCase(activityCompositionRoot.favoriteApodEndpoint)
 }
