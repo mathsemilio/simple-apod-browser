@@ -41,6 +41,7 @@ fun Context.launchWebPage(url: String) {
 fun Fragment.launchWebPage(url: String) {
     val page = Uri.parse(url)
     val intent = Intent(Intent.ACTION_VIEW, page)
+
     startActivity(intent)
 }
 

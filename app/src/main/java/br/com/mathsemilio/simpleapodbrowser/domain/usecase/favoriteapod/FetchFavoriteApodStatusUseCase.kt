@@ -19,21 +19,23 @@ package br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod
 import br.com.mathsemilio.simpleapodbrowser.domain.model.*
 import br.com.mathsemilio.simpleapodbrowser.storage.endpoint.FavoriteApodEndpoint
 
-class AddApodToFavoritesUseCase(private val endpoint: FavoriteApodEndpoint) {
+class FetchFavoriteApodStatusUseCase(private val endpoint: FavoriteApodEndpoint) {
 
-    sealed class AddApodToFavoritesResult {
-        object Completed : AddApodToFavoritesResult()
+    sealed class FetchFavoriteApodStatusResult {
+        data class Completed(val isFavorite: Boolean) : FetchFavoriteApodStatusResult()
 
-        object Failed : AddApodToFavoritesResult()
+        object Failed : FetchFavoriteApodStatusResult()
     }
 
-    suspend fun addToFavorites(apod: Apod): AddApodToFavoritesResult {
-        var result: AddApodToFavoritesResult
+    suspend fun isAlreadyFavorite(apod: Apod): FetchFavoriteApodStatusResult {
+        var result: FetchFavoriteApodStatusResult
 
-        endpoint.add(apod.copy(isFavorite = true)).also { endpointResult ->
+        endpoint.fetchFavoriteApodFrom(apod.date).also { endpointResult ->
             result = when (endpointResult) {
-                is Result.Completed -> AddApodToFavoritesResult.Completed
-                is Result.Failed -> AddApodToFavoritesResult.Failed
+                is Result.Completed ->
+                    FetchFavoriteApodStatusResult.Completed(endpointResult.data != null)
+                is Result.Failed ->
+                    throw RuntimeException(endpointResult.exception)
             }
         }
 

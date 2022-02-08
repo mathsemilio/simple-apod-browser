@@ -30,7 +30,7 @@ object ImageResourceManager {
     fun loadFrom(url: String, targetImageView: ImageView) {
         Glide.with(targetImageView)
             .load(url)
-            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(targetImageView)
     }
 
