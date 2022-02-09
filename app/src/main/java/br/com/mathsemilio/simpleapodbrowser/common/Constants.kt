@@ -23,6 +23,7 @@ const val FAVORITE_APOD_TABLE = "favorite_apod_table"
 const val FAVORITE_APOD_DATABASE = "favorite_apod_database"
 
 const val ARG_APOD = "ARG_APOD"
+const val ARG_IS_RANDOM_APOD = "ARG_IS_RANDOM_APOD"
 const val ARG_APOD_IMAGE = "ARG_APOD_IMAGE"
 
 const val ARG_DIALOG_TITLE = "ARG_DIALOG_TITLE"

@@ -21,8 +21,8 @@ import android.os.Bundle
 import kotlinx.coroutines.*
 import android.graphics.Bitmap
 import br.com.mathsemilio.simpleapodbrowser.R
+import br.com.mathsemilio.simpleapodbrowser.common.*
 import androidx.navigation.fragment.findNavController
-import br.com.mathsemilio.simpleapodbrowser.common.ARG_APOD
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.*
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
@@ -33,6 +33,8 @@ import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.*
 import br.com.mathsemilio.simpleapodbrowser.common.util.converter.toByteArray
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialogEvent
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase.*
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.*
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddApodToFavoritesUseCase.*
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodStatusUseCase.*
@@ -49,14 +51,17 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     private lateinit var addFavoriteApodUseCase: AddApodToFavoritesUseCase
     private lateinit var deleteFavoriteApodUseCase: DeleteFavoriteApodUseCase
+    private lateinit var fetchRandomApodUseCase: FetchRandomApodUseCase
     private lateinit var fetchFavoriteApodStatusUseCase: FetchFavoriteApodStatusUseCase
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main.immediate)
 
-    private lateinit var toolbarActionDeleteFavoriteApod: MenuItem
     private lateinit var toolbarActionAddApodToFavorites: MenuItem
+    private lateinit var toolbarActionGetRandomApod: MenuItem
+    private lateinit var toolbarActionDeleteFavoriteApod: MenuItem
 
     private lateinit var apod: Apod
+    private var isRandomApod = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +76,7 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
         addFavoriteApodUseCase = compositionRoot.addFavoriteApodUseCase
         deleteFavoriteApodUseCase = compositionRoot.deleteFavoriteApodUseCase
+        fetchRandomApodUseCase = compositionRoot.fetchRandomApodUseCase
         fetchFavoriteApodStatusUseCase = compositionRoot.fetchFavoriteApodStatusUseCase
     }
 
@@ -85,7 +91,9 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         apod = requireArguments().getSerializable(ARG_APOD) as Apod
+        isRandomApod = requireArguments().getBoolean(ARG_IS_RANDOM_APOD, false)
     }
 
     override fun onApodImageClicked(apodImage: Bitmap) {
@@ -121,15 +129,22 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        toolbarActionDeleteFavoriteApod = menu.findItem(R.id.toolbar_action_delete_favorite_apod)
         toolbarActionAddApodToFavorites = menu.findItem(R.id.toolbar_action_add_to_favorites)
+        toolbarActionGetRandomApod = menu.findItem(R.id.toolbar_action_get_random_apod)
+        toolbarActionDeleteFavoriteApod = menu.findItem(R.id.toolbar_action_delete_favorite_apod)
 
+        toolbarActionGetRandomApod.isVisible = isRandomApod
+
+        setupToolbarActionsBasedOnApodType()
+
+        fetchFavoriteApodStatus()
+    }
+
+    private fun setupToolbarActionsBasedOnApodType() {
         if (apod.isFavorite)
             showToolbarActionsForFavoriteApod()
         else
             showToolbarActionsForRegularApod()
-
-        fetchFavoriteApodStatus()
     }
 
     private fun showToolbarActionsForFavoriteApod() {
@@ -177,6 +192,10 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.toolbar_action_get_random_apod -> {
+                fetchRandomApod()
+                true
+            }
             R.id.toolbar_action_add_to_favorites -> {
                 addApodToFavorites()
                 true
@@ -187,6 +206,28 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun fetchRandomApod() {
+        coroutineScope.launch {
+            handleFetchRandomApodUseCaseResult(fetchRandomApodUseCase.fetchRandomApod())
+        }
+    }
+
+    private fun handleFetchRandomApodUseCaseResult(result: FetchRandomApodResult) {
+        when (result) {
+            is FetchRandomApodResult.Completed ->
+                onFetchRandomApodCompleted(result.randomApod)
+            FetchRandomApodResult.Failed ->
+                messagesManager.showCheckYourConnectionMessage()
+        }
+    }
+
+    private fun onFetchRandomApodCompleted(randomApod: Apod?) {
+        if (randomApod != null)
+            view.bind(randomApod)
+        else
+            messagesManager.showUnexpectedErrorOccurredMessage()
     }
 
     private fun addApodToFavorites() {

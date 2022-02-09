@@ -27,8 +27,17 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 class ScreensNavigator(private val navController: NavController) {
 
     fun toApodDetailsScreen(apod: Apod) {
-        val argumentBundle = Bundle(1)
+        val argumentBundle = Bundle(2)
         argumentBundle.putSerializable(ARG_APOD, apod)
+        argumentBundle.putBoolean(ARG_IS_RANDOM_APOD, false)
+
+        navController.navigate(R.id.action_apod_list_to_apod_detail_screen, argumentBundle)
+    }
+
+    fun toApodDetailsScreenWith(randomApod: Apod) {
+        val argumentBundle = Bundle(2)
+        argumentBundle.putSerializable(ARG_APOD, randomApod)
+        argumentBundle.putBoolean(ARG_IS_RANDOM_APOD, true)
 
         navController.navigate(R.id.action_apod_list_to_apod_detail_screen, argumentBundle)
     }
