@@ -170,7 +170,7 @@ class ApodListFragment : BaseFragment(), ApodListScreenView.Listener, EventListe
 
     private fun onFetchRandomApodCompleted(randomApod: Apod?) {
         if (randomApod != null)
-            screensNavigator.toApodDetailsScreen(randomApod)
+            screensNavigator.toApodDetailsScreenWith(randomApod)
         else
             messagesManager.showUnexpectedErrorOccurredMessage()
     }
