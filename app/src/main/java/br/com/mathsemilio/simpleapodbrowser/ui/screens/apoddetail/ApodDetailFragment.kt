@@ -216,18 +216,18 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     private fun handleFetchRandomApodUseCaseResult(result: FetchRandomApodResult) {
         when (result) {
-            is FetchRandomApodResult.Completed ->
-                onFetchRandomApodCompleted(result.randomApod)
-            FetchRandomApodResult.Failed ->
-                messagesManager.showCheckYourConnectionMessage()
+            is FetchRandomApodResult.Completed -> onFetchRandomApodCompleted(result.randomApod)
+            FetchRandomApodResult.Failed -> messagesManager.showCheckYourConnectionMessage()
         }
     }
 
     private fun onFetchRandomApodCompleted(randomApod: Apod?) {
-        if (randomApod != null)
-            view.bind(randomApod)
-        else
+        if (randomApod != null) {
+            apod = randomApod
+            view.bind(apod)
+        } else {
             messagesManager.showUnexpectedErrorOccurredMessage()
+        }
     }
 
     private fun addApodToFavorites() {

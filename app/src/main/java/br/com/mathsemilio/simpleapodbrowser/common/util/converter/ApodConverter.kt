@@ -20,12 +20,13 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.*
 
 fun ApodSchema.toApod(): Apod {
     return Apod(
-        title = this.title,
-        url = this.url,
-        date = this.date,
-        mediaType = this.mediaType,
-        explanation = this.explanation,
-        thumbnailUrl = this.thumbnailUrl
+        title = title,
+        url = url,
+        date = date,
+        mediaType = mediaType,
+        explanation = explanation,
+        thumbnailUrl = thumbnailUrl,
+        copyright = copyright
     )
 }
 

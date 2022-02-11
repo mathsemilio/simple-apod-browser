@@ -18,7 +18,7 @@
         <entry key="app/src/main/res/layout-night/apod_list_item_shimmer.xml" value="0.24375" />
         <entry key="app/src/main/res/layout-night/image_shimmer_placeholder.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.18981481481481483" />
-        <entry key="app/src/main/res/layout/apod_detail_screen.xml" value="0.24375" />
+        <entry key="app/src/main/res/layout/apod_detail_screen.xml" value="0.335" />
         <entry key="app/src/main/res/layout/apod_favorites_list_item.xml" value="0.335" />
         <entry key="app/src/main/res/layout/apod_favorites_list_screen.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/apod_image_detail_screen.xml" value="0.24375" />

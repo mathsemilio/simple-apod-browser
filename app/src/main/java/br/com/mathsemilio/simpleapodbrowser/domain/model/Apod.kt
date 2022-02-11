@@ -30,5 +30,6 @@ data class Apod(
     val mediaType: String,
     val explanation: String,
     val thumbnailUrl: String?,
+    val copyright: String?,
     val isFavorite: Boolean = false
 ) : Serializable
