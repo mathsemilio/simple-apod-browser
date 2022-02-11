@@ -53,7 +53,7 @@
 
     <!-- Misc. -->
     <string name="apod_website_url">https://apod.nasa.gov/apod/astropix.html</string>
-    <string name="date">Date: %s</string>
+    <string name="by">By: %s</string>
 
     <!-- Default date range preference entries -->
     <string name="last_seven_days">Last seven days</string>

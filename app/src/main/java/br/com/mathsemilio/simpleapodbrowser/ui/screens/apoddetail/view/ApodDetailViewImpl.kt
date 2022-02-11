@@ -18,7 +18,7 @@ package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.view
 
 import android.view.*
 import android.widget.*
-import android.view.View.VISIBLE
+import androidx.core.view.isVisible
 import br.com.mathsemilio.simpleapodbrowser.R
 import androidx.core.graphics.drawable.toBitmap
 import br.com.mathsemilio.simpleapodbrowser.common.*
@@ -35,6 +35,7 @@ class ApodDetailViewImpl(
     private lateinit var imageViewPlayIcon: ImageView
 
     private lateinit var textViewApodTitle: TextView
+    private lateinit var textViewApodCopyrightInfo: TextView
     private lateinit var textViewApodDate: TextView
     private lateinit var textViewApodExplanation: TextView
 
@@ -58,6 +59,7 @@ class ApodDetailViewImpl(
         imageViewPlayIcon = findViewById(R.id.image_view_play_icon)
 
         textViewApodTitle = findViewById(R.id.text_view_apod_title)
+        textViewApodCopyrightInfo = findViewById(R.id.text_view_apod_copyright_info)
         textViewApodDate = findViewById(R.id.text_view_apod_date)
         textViewApodExplanation = findViewById(R.id.text_view_apod_explanation)
     }
@@ -66,20 +68,22 @@ class ApodDetailViewImpl(
         this.apod = apod
 
         loadResourcesBasedOnMediaType()
+        setupCopyrightInfoTextView()
 
         textViewApodTitle.text = apod.title
-        textViewApodDate.text = apod.date.formatDate(context)
+        textViewApodDate.text = apod.date.formatDate()
         textViewApodExplanation.text = apod.explanation
     }
 
     private fun loadResourcesBasedOnMediaType() {
         when (apod.mediaType) {
-            APOD_TYPE_IMAGE -> loadImage()
+            APOD_TYPE_IMAGE -> setupApodImage()
             APOD_TYPE_VIDEO -> setupVideoThumbnail()
         }
     }
 
-    private fun loadImage() {
+    private fun setupApodImage() {
+        imageViewPlayIcon.isVisible = false
         ImageResourceManager.loadWithPlaceholderFrom(apod.url, imageViewApod)
     }
 
@@ -87,8 +91,15 @@ class ApodDetailViewImpl(
         ImageResourceManager.loadWithPlaceholderFrom(apod.thumbnailUrl!!, imageViewApod)
 
         imageViewPlayIcon.apply {
-            visibility = VISIBLE
+            isVisible = true
             setOnClickListener { notify { listener -> listener.onPlayIconClicked(apod.url) } }
         }
+    }
+
+    private fun setupCopyrightInfoTextView() {
+        if (apod.copyright != null)
+            textViewApodCopyrightInfo.text = context.getString(R.string.by, apod.copyright!!)
+        else
+            textViewApodCopyrightInfo.isVisible = false
     }
 }

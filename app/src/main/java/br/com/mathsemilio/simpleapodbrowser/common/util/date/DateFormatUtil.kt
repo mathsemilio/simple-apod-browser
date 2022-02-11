@@ -17,23 +17,19 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.common.util.date
 
 import java.util.*
-import android.content.Context
 import java.text.SimpleDateFormat
-import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.*
 
 fun Long.formatMillisDate(): String {
     return SimpleDateFormat("yyyy-MM-dd", Locale.US).format(this)
 }
 
-fun String.formatDate(context: Context): String {
+fun String.formatDate(): String {
     val year = this.substring(0..3)
     val monthNumber = this.substring(5..6)
     val day = this.substring(8..9).removePrefix("0")
 
-    val formattedDate = "${convertMonthNumberToName(monthNumber)} $day, $year"
-
-    return context.getString(R.string.date, formattedDate)
+    return "${convertMonthNumberToName(monthNumber)} $day, $year"
 }
 
 private fun convertMonthNumberToName(monthNumber: String): String {
