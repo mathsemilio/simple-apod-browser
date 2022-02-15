@@ -16,28 +16,28 @@ limitations under the License.
 
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail
 
-import android.view.*
-import android.os.Bundle
-import kotlinx.coroutines.*
 import android.graphics.Bitmap
+import android.os.Bundle
+import android.view.*
+import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.*
-import androidx.navigation.fragment.findNavController
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.*
-import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
-import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.common.util.launchWebPage
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.view.*
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.*
 import br.com.mathsemilio.simpleapodbrowser.common.util.converter.toByteArray
-import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
-import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialogEvent
+import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase.*
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.*
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.*
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.AddApodToFavoritesUseCase.*
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.DeleteFavoriteApodUseCase.*
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.FetchFavoriteApodStatusUseCase.*
+import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
+import br.com.mathsemilio.simpleapodbrowser.ui.common.util.launchWebPage
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialogEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apoddetail.view.*
+import kotlinx.coroutines.*
 
 class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListener {
 
@@ -176,14 +176,19 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
 
     private fun setupAddToFavoritesActionIcon(isFavorite: Boolean) {
         if (isFavorite)
-            setupAddToFavoritesToolbarActionForApodAlreadyFavorite()
+            setupAddToFavoritesToolbarActionForFavoriteApod()
         else
-            toolbarActionAddApodToFavorites.setIcon(R.drawable.ic_favorite_border)
+            setupAddToFavoritesToolbarActionForNonFavoriteApod()
     }
 
-    private fun setupAddToFavoritesToolbarActionForApodAlreadyFavorite() {
+    private fun setupAddToFavoritesToolbarActionForFavoriteApod() {
         toolbarActionAddApodToFavorites.setIcon(R.drawable.ic_favorite)
         toolbarActionAddApodToFavorites.isEnabled = false
+    }
+
+    private fun setupAddToFavoritesToolbarActionForNonFavoriteApod() {
+        toolbarActionAddApodToFavorites.setIcon(R.drawable.ic_favorite_border)
+        toolbarActionAddApodToFavorites.isEnabled = true
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -225,6 +230,7 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
         if (randomApod != null) {
             apod = randomApod
             view.bind(apod)
+            fetchFavoriteApodStatus()
         } else {
             messagesManager.showUnexpectedErrorOccurredMessage()
         }
@@ -244,7 +250,7 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
     }
 
     private fun onAddApodToFavoritesCompleted() {
-        setupAddToFavoritesToolbarActionForApodAlreadyFavorite()
+        setupAddToFavoritesToolbarActionForFavoriteApod()
         messagesManager.showApodAddedToFavoritesMessage()
     }
 
