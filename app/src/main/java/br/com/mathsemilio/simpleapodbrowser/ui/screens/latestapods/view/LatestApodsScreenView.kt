@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.latestapods.view
 
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-abstract class ApodListScreenView : BaseObservableView<ApodListScreenView.Listener>() {
+abstract class LatestApodsScreenView : BaseObservableView<LatestApodsScreenView.Listener>() {
 
     interface Listener {
         fun onApodClicked(apod: Apod)

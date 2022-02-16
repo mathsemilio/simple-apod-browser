@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.view
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetail.view
 
 import android.view.*
 import android.graphics.Bitmap

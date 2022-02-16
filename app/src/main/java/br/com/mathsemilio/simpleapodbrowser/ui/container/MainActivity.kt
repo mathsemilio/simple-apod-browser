@@ -95,7 +95,7 @@ class MainActivity : BaseActivity(), SystemUIDelegate.Listener, ContainerLayoutD
         setupActionBarWithNavController(
             navController,
             AppBarConfiguration(
-                topLevelDestinationIds = setOf(R.id.ApodListScreen, R.id.ApodFavoritesScreen)
+                topLevelDestinationIds = setOf(R.id.LatestApodsScreen, R.id.FavoriteApodsScreen)
             )
         )
 

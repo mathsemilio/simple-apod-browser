@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapods
 
 import android.view.*
 import android.os.Bundle
@@ -26,7 +26,7 @@ import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
 import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.favoriteapod.*
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.*
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapods.view.*
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
 import br.com.mathsemilio.simpleapodbrowser.ui.common.util.onQueryTextChangedListener
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.ContainerLayoutDelegate
@@ -101,7 +101,7 @@ class FavoriteApodsFragment : BaseFragment(), FavoriteApodsScreenView.Listener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_apod_favorites, menu)
+        inflater.inflate(R.menu.toolbar_favorite_apods, menu)
 
         val searchFavoritesMenuItem = menu.findItem(R.id.toolbar_action_search_favorites)
         val searchFavoritesSearchView = searchFavoritesMenuItem.actionView as SearchView

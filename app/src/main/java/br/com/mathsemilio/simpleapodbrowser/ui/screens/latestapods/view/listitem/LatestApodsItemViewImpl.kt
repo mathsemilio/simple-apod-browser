@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.listitem
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.latestapods.view.listitem
 
 import android.view.*
 import android.widget.*
@@ -23,10 +23,10 @@ import br.com.mathsemilio.simpleapodbrowser.common.*
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.ImageResourceManager
 
-class ApodListItemViewImpl(
+class LatestApodsItemViewImpl(
     layoutInflater: LayoutInflater,
     parent: ViewGroup?
-) : ApodListItemView() {
+) : LatestApodsItemView() {
 
     private lateinit var imageViewApod: ImageView
     private lateinit var textViewApodTitle: TextView

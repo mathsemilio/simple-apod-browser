@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/layout/apod_detail_screen.xml" value="0.335" />
         <entry key="app/src/main/res/layout/apod_favorites_list_item.xml" value="0.335" />
         <entry key="app/src/main/res/layout/apod_favorites_list_screen.xml" value="0.24375" />
+        <entry key="app/src/main/res/layout/apod_favorites_screen.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/apod_image_detail_screen.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/apod_list_item.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/apod_list_item_shimmer.xml" value="0.24375" />
@@ -28,6 +29,7 @@
         <entry key="app/src/main/res/layout/apod_list_shimmer.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/image_placeholder_shimmer.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/image_shimmer_placeholder.xml" value="0.24375" />
+        <entry key="app/src/main/res/layout/latest_apods_screen.xml" value="0.18055555555555555" />
         <entry key="app/src/main/res/layout/layout_info_dialog.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/layout_prompt_dialog.xml" value="0.24375" />
         <entry key="app/src/main/res/menu/bottom_navigation_app.xml" value="0.24375" />

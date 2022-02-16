@@ -14,17 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.listitem
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.latestapods
 
+import androidx.recyclerview.widget.DiffUtil
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-abstract class ApodFavoritesListItemView :
-    BaseObservableView<ApodFavoritesListItemView.Listener>() {
+class LatestApodsDiffUtilCallback : DiffUtil.ItemCallback<Apod>() {
 
-    interface Listener {
-        fun onFavoriteApodClicked(favoriteApod: Apod)
+    override fun areItemsTheSame(oldItem: Apod, newItem: Apod): Boolean {
+        return oldItem.date == newItem.date
     }
 
-    abstract fun bind(favoriteApod: Apod)
+    override fun areContentsTheSame(oldItem: Apod, newItem: Apod): Boolean {
+        return oldItem == newItem
+    }
 }

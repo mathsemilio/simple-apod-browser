@@ -14,22 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.view
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapods.view.listitem
 
-import android.graphics.Bitmap
+import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
 import br.com.mathsemilio.simpleapodbrowser.ui.common.view.BaseObservableView
 
-abstract class ApodImageDetailView : BaseObservableView<ApodImageDetailView.Listener>() {
+abstract class FavoriteApodsListItemView :
+    BaseObservableView<FavoriteApodsListItemView.Listener>() {
 
     interface Listener {
-        fun onToolbarNavigationIconClicked()
-
-        fun onToolbarActionExportApodImageClicked()
+        fun onFavoriteApodClicked(favoriteApod: Apod)
     }
 
-    abstract fun bind(apodImage: Bitmap)
-
-    abstract fun showToolbar()
-
-    abstract fun hideToolbar()
+    abstract fun bind(favoriteApod: Apod)
 }
