@@ -2,13 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/ApodListScreen">
+    app:startDestination="@id/LatestApodsScreen">
 
     <fragment
-        android:id="@+id/ApodListScreen"
-        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.ApodListFragment"
+        android:id="@+id/LatestApodsScreen"
+        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.latestapods.LatestApodsFragment"
         android:label="@string/latest"
-        tools:layout="@layout/apod_list_screen">
+        tools:layout="@layout/latest_apods_screen">
 
         <action
             android:id="@+id/action_apod_list_to_apod_detail_screen"
@@ -21,10 +21,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/ApodFavoritesScreen"
-        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.FavoriteApodsFragment"
+        android:id="@+id/FavoriteApodsScreen"
+        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapods.FavoriteApodsFragment"
         android:label="@string/favorites"
-        tools:layout="@layout/apod_favorites_list_screen">
+        tools:layout="@layout/apod_favorites_screen">
 
         <action
             android:id="@+id/action_apod_favorites_to_apod_detail_screen"
@@ -50,7 +50,7 @@
 
     <fragment
         android:id="@+id/ApodImageDetailScreen"
-        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.ApodImageDetailFragment"
+        android:name="br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetail.ApodImageDetailFragment"
         tools:layout="@layout/apod_image_detail_screen" />
 
     <fragment

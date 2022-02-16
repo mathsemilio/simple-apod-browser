@@ -14,31 +14,31 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.latestapods.view
 
 import android.view.*
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import br.com.mathsemilio.simpleapodbrowser.R
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.ApodListAdapter
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.latestapods.LatestApodsAdapter
 
-class ApodListScreenViewImpl(
+class LatestApodsScreenViewImpl(
     layoutInflater: LayoutInflater,
     container: ViewGroup?
-) : ApodListScreenView(),
-    ApodListAdapter.Listener {
+) : LatestApodsScreenView(),
+    LatestApodsAdapter.Listener {
 
     private lateinit var linearLayoutScreenErrorState: LinearLayout
-    private lateinit var swipeRefreshLayoutApods: SwipeRefreshLayout
-    private lateinit var recyclerViewApods: RecyclerView
+    private lateinit var swipeRefreshLayoutLatestApods: SwipeRefreshLayout
+    private lateinit var recyclerViewLatestApods: RecyclerView
 
-    private lateinit var apodListAdapter: ApodListAdapter
+    private lateinit var latestApodsAdapter: LatestApodsAdapter
 
     init {
-        rootView = layoutInflater.inflate(R.layout.apod_list_screen, container, false)
+        rootView = layoutInflater.inflate(R.layout.latest_apods_screen, container, false)
 
         initializeViews()
 
@@ -49,25 +49,25 @@ class ApodListScreenViewImpl(
 
     private fun initializeViews() {
         linearLayoutScreenErrorState = findViewById(R.id.linear_layout_screen_error_state)
-        swipeRefreshLayoutApods = findViewById(R.id.swipe_refresh_layout_apods)
-        recyclerViewApods = findViewById(R.id.recycler_view_apods)
+        swipeRefreshLayoutLatestApods = findViewById(R.id.swipe_refresh_layout_latest_apods)
+        recyclerViewLatestApods = findViewById(R.id.recycler_view_latest_apods)
     }
 
     private fun setupRecyclerView() {
-        apodListAdapter = ApodListAdapter(this)
+        latestApodsAdapter = LatestApodsAdapter(this)
 
-        recyclerViewApods.adapter = apodListAdapter
-        recyclerViewApods.setHasFixedSize(true)
+        recyclerViewLatestApods.adapter = latestApodsAdapter
+        recyclerViewLatestApods.setHasFixedSize(true)
     }
 
     private fun attachOnSwipeRefreshListener() {
-        swipeRefreshLayoutApods.setOnRefreshListener {
+        swipeRefreshLayoutLatestApods.setOnRefreshListener {
             notify { listener -> listener.onScreenSwipedToRefresh() }
         }
     }
 
     override fun bind(apods: List<Apod>) {
-        apodListAdapter.submitList(apods)
+        latestApodsAdapter.submitList(apods)
 
         if (apods.isEmpty())
             showNetworkRequestErrorState()
@@ -77,24 +77,24 @@ class ApodListScreenViewImpl(
 
     override fun showProgressIndicator() {
         linearLayoutScreenErrorState.isVisible = false
-        swipeRefreshLayoutApods.isRefreshing = true
-        recyclerViewApods.isVisible = false
+        swipeRefreshLayoutLatestApods.isRefreshing = true
+        recyclerViewLatestApods.isVisible = false
     }
 
     override fun hideProgressIndicator() {
         linearLayoutScreenErrorState.isVisible = false
-        swipeRefreshLayoutApods.isRefreshing = false
-        recyclerViewApods.isVisible = true
+        swipeRefreshLayoutLatestApods.isRefreshing = false
+        recyclerViewLatestApods.isVisible = true
     }
 
     override fun showNetworkRequestErrorState() {
         linearLayoutScreenErrorState.isVisible = true
-        recyclerViewApods.isVisible = false
+        recyclerViewLatestApods.isVisible = false
     }
 
     override fun hideNetworkRequestErrorState() {
         linearLayoutScreenErrorState.isVisible = false
-        recyclerViewApods.isVisible = true
+        recyclerViewLatestApods.isVisible = true
     }
 
     override fun onApodClicked(apod: Apod) {

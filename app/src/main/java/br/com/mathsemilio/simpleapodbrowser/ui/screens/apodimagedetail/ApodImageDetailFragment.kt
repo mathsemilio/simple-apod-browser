@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetail
 
 import android.view.*
 import android.Manifest
@@ -29,7 +29,7 @@ import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
 import br.com.mathsemilio.simpleapodbrowser.common.util.converter.toBitmap
 import br.com.mathsemilio.simpleapodbrowser.ui.common.delegate.SystemUIDelegate
 import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetailscreen.view.*
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodimagedetail.view.*
 
 class ApodImageDetailFragment : BaseFragment(),
     ApodImageDetailView.Listener,

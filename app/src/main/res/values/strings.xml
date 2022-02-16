@@ -63,7 +63,7 @@
 
     <!-- Preference strings -->
     <string name="preference_category_title_app_options">App options</string>
-    <string name="preference_category_title_advanced">Advanced</string>
+    <string name="preference_category_title_storage">Storage</string>
     <string name="preference_category_title_app_info">App info</string>
     <string name="preference_summary_clear_image_cache">Remove all cached images</string>
     <string name="preference_title_default_date_range">Default date range</string>

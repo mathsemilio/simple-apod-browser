@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapods.view
 
 import android.view.*
 import android.widget.LinearLayout
@@ -23,7 +23,7 @@ import br.com.mathsemilio.simpleapodbrowser.R
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.FavoriteApodsListAdapter
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapods.FavoriteApodsListAdapter
 
 class FavoriteApodsScreenViewImpl(
     layoutInflater: LayoutInflater,
@@ -38,7 +38,7 @@ class FavoriteApodsScreenViewImpl(
     private lateinit var favoriteApodsListAdapter: FavoriteApodsListAdapter
 
     init {
-        rootView = layoutInflater.inflate(R.layout.apod_favorites_list_screen, container, false)
+        rootView = layoutInflater.inflate(R.layout.apod_favorites_screen, container, false)
 
         initializeViews()
 

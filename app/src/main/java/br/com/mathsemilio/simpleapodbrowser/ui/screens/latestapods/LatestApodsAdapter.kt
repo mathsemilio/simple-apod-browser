@@ -14,31 +14,31 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.latestapods
 
 import android.view.*
 import androidx.recyclerview.widget.*
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.favoriteapodslist.view.listitem.*
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.latestapods.view.listitem.*
 
-class FavoriteApodsListAdapter(
+class LatestApodsAdapter(
     private val listener: Listener
-) : ListAdapter<Apod, FavoriteApodsListAdapter.ViewHolder>(FavoriteApodsDiffUtilCallback()),
-    ApodFavoritesListItemView.Listener {
+) : ListAdapter<Apod, LatestApodsAdapter.ViewHolder>(LatestApodsDiffUtilCallback()),
+    LatestApodsItemView.Listener {
 
     interface Listener {
-        fun onFavoriteApodClicked(favoriteApod: Apod)
+        fun onApodClicked(apod: Apod)
     }
 
     class ViewHolder(
-        private val listItemView: ApodFavoritesListItemView
+        private val listItemView: LatestApodsItemView
     ) : RecyclerView.ViewHolder(listItemView.rootView) {
 
         fun bind(apod: Apod) = listItemView.bind(apod)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(ApodFavoritesListItemViewImpl(
+        return ViewHolder(LatestApodsItemViewImpl(
             LayoutInflater.from(parent.context),
             parent
         ).also { view -> view.addObserver(this) })
@@ -48,7 +48,7 @@ class FavoriteApodsListAdapter(
         holder.bind(getItem(position))
     }
 
-    override fun onFavoriteApodClicked(favoriteApod: Apod) {
-        listener.onFavoriteApodClicked(favoriteApod)
+    override fun onApodClicked(apod: Apod) {
+        listener.onApodClicked(apod)
     }
 }

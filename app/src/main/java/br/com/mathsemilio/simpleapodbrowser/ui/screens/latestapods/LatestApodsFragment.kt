@@ -14,29 +14,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist
+package br.com.mathsemilio.simpleapodbrowser.ui.screens.latestapods
 
-import android.view.*
 import android.os.Bundle
-import kotlinx.coroutines.*
-import br.com.mathsemilio.simpleapodbrowser.R
+import android.view.*
 import androidx.navigation.fragment.findNavController
+import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.*
 import br.com.mathsemilio.simpleapodbrowser.domain.model.Apod
-import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.*
-import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
-import br.com.mathsemilio.simpleapodbrowser.ui.screens.apodlist.view.*
-import br.com.mathsemilio.simpleapodbrowser.ui.dialog.datepicker.DateSetEvent
-import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
-import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesRepository
-import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase.*
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodFromDateUseCase.*
 import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchApodsFromDateRangeUseCase.*
+import br.com.mathsemilio.simpleapodbrowser.domain.usecase.apod.FetchRandomApodUseCase.*
+import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesRepository
+import br.com.mathsemilio.simpleapodbrowser.ui.common.BaseFragment
+import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
+import br.com.mathsemilio.simpleapodbrowser.ui.common.navigation.ScreensNavigator
+import br.com.mathsemilio.simpleapodbrowser.ui.dialog.datepicker.DateSetEvent
+import br.com.mathsemilio.simpleapodbrowser.ui.screens.latestapods.view.*
+import kotlinx.coroutines.*
 
-class ApodListFragment : BaseFragment(), ApodListScreenView.Listener, EventListener {
+class LatestApodsFragment : BaseFragment(), LatestApodsScreenView.Listener, EventListener {
 
-    private lateinit var view: ApodListScreenView
+    private lateinit var view: LatestApodsScreenView
 
     private lateinit var preferencesRepository: PreferencesRepository
     private lateinit var screensNavigator: ScreensNavigator
@@ -73,7 +73,7 @@ class ApodListFragment : BaseFragment(), ApodListScreenView.Listener, EventListe
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        view = ApodListScreenViewImpl(inflater, container)
+        view = LatestApodsScreenViewImpl(inflater, container)
         return view.rootView
     }
 
@@ -134,7 +134,7 @@ class ApodListFragment : BaseFragment(), ApodListScreenView.Listener, EventListe
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_apod_list, menu)
+        inflater.inflate(R.menu.toolbar_latest_apods, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
