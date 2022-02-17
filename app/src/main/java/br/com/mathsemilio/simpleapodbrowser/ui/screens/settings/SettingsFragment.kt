@@ -17,15 +17,15 @@ limitations under the License.
 package br.com.mathsemilio.simpleapodbrowser.ui.screens.settings
 
 import android.os.Bundle
-import kotlinx.coroutines.*
 import androidx.preference.*
+import br.com.mathsemilio.simpleapodbrowser.BuildConfig
 import br.com.mathsemilio.simpleapodbrowser.R
 import br.com.mathsemilio.simpleapodbrowser.common.*
-import br.com.mathsemilio.simpleapodbrowser.BuildConfig
 import br.com.mathsemilio.simpleapodbrowser.common.eventbus.*
+import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesRepository
 import br.com.mathsemilio.simpleapodbrowser.ui.common.manager.*
 import br.com.mathsemilio.simpleapodbrowser.ui.dialog.promptdialog.PromptDialogEvent
-import br.com.mathsemilio.simpleapodbrowser.storage.preferences.PreferencesRepository
+import kotlinx.coroutines.*
 
 class SettingsFragment : BasePreferenceFragment(), EventListener {
 
@@ -86,8 +86,8 @@ class SettingsFragment : BasePreferenceFragment(), EventListener {
         }
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
-        if (preference?.key == CLEAR_IMAGE_CACHE_PREFERENCE_KEY)
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
+        if (preference.key == CLEAR_IMAGE_CACHE_PREFERENCE_KEY)
             dialogManager.showClearImageCacheDialog()
 
         return super.onPreferenceTreeClick(preference)
