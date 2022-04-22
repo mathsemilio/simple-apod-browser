@@ -78,6 +78,9 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
         deleteFavoriteApodUseCase = compositionRoot.deleteFavoriteApodUseCase
         fetchRandomApodUseCase = compositionRoot.fetchRandomApodUseCase
         fetchFavoriteApodStatusUseCase = compositionRoot.fetchFavoriteApodStatusUseCase
+
+        apod = requireArguments().getSerializable(ARG_APOD) as Apod
+        isRandomApod = requireArguments().getBoolean(ARG_IS_RANDOM_APOD, false)
     }
 
     override fun onCreateView(
@@ -87,13 +90,6 @@ class ApodDetailFragment : BaseFragment(), ApodDetailView.Listener, EventListene
     ): View {
         view = ApodDetailViewImpl(inflater, container)
         return view.rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        apod = requireArguments().getSerializable(ARG_APOD) as Apod
-        isRandomApod = requireArguments().getBoolean(ARG_IS_RANDOM_APOD, false)
     }
 
     override fun onApodImageClicked(apodImage: Bitmap) {
