@@ -1,23 +1,24 @@
 # Simple APOD Browser
 Astronomical Picture of the Day client application for Android.
 
-## What is APOD?
-APOD is short for [Astronomical Picture of the Day](https://en.wikipedia.org/wiki/Astronomy_Picture_of_the_Day), which is a website provided by NASA and the Michigan Technological University. According to the [official website](https://apod.nasa.gov/apod/astropix.html), "Each day a different image or photograph of our universe is featured, along with a brief explanation written by a professional astronomer."
+## Objective
+This application makes it easy to find and see the latest APODs. It also enables the user to bookmark their favorite ones for easy future access. The app also features other interesting features, like picking APOD by date and "Feeling lucky...", which picks an random APOD.
 
-## Application Objective
-This application makes it easy to find and see the latest APODs. It also enables the user to bookmark their favorite ones for easy future access. The app also features other interesting features, like picking APOD by date and "Feeling lucky...".
+### What is APOD?
+APOD is short for [Astronomical Picture of the Day](https://en.wikipedia.org/wiki/Astronomy_Picture_of_the_Day), which is a website provided by NASA and the Michigan Technological University. According to the [official website](https://apod.nasa.gov/apod/astropix.html): "Each day a different image or photograph of our universe is featured, along with a brief explanation written by a professional astronomer."
 
 **Important:** 
-This application makes use of the APOD API, which is part of the open APIs provided by NASA.
-For more info, please refer to this <a href="https://api.nasa.gov/">link.</a>
+This application makes use of the APOD API, which is part of the <a href="https://api.nasa.gov/">open APIs</a> provided by NASA.
 
 ## Build Instructions
-Before building the project, you either need to provide your API key or use the "DEMO_KEY".
+Before building the project, you either need to provide your own key or use the API's demo key.
 Open the ```ApodApi.kt``` file and replace all occurrences of ```APIKeyProvider.key``` with your key or with "DEMO_KEY".
 
 **Note:** You can generate an API key at the <a href="https://api.nasa.gov/">NASA Open APIs website</a>.
 
-## External Libraries Used
+## Development Technologies
+3rd party libriries used:
+
 1. <a href="https://developer.android.com/training/data-storage/room/">Room</a>;
 2. <a href="https://square.github.io/retrofit/">Retrofit</a>;
 3. <a href="https://github.com/bumptech/glide">Glide</a>;
@@ -25,7 +26,7 @@ Open the ```ApodApi.kt``` file and replace all occurrences of ```APIKeyProvider.
 5. <a href="https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout">Swipe-Refresh Layout</a>;
 6. <a href="https://github.com/Baseflow/PhotoView">PhotoView</a>;
 7. <a href="https://developer.android.com/guide/navigation/navigation-getting-started">Jetpack Navigation Component</a>;
-8. <a href="https://developer.android.com/jetpack/androidx/releases/preference/">Preferences (PreferenceX)</a>.
+8. <a href="https://developer.android.com/jetpack/androidx/releases/preference/">Jetpack Preference</a>.
 
 ## License
 ```
