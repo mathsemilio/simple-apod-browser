@@ -17,7 +17,7 @@ Open the ```ApodApi.kt``` file and replace all occurrences of ```APIKeyProvider.
 **Note:** You can generate an API key at the <a href="https://api.nasa.gov/">NASA Open APIs website</a>.
 
 ## Development Technologies
-3rd party libriries used:
+3rd party libraries used:
 
 1. <a href="https://developer.android.com/training/data-storage/room/">Room</a>;
 2. <a href="https://square.github.io/retrofit/">Retrofit</a>;
